@@ -1,9 +1,0 @@
-# ninja log v6
-11	667	7417653048182127	Generals-io_autogen/timestamp	f3ea9b3a545bf1bb
-11	667	7417653048182127	Generals-io_autogen/mocs_compilation.cpp	f3ea9b3a545bf1bb
-11	667	7417653048182127	C:/Users/23162/Downloads/Generals-io/build/Desktop_Qt_6_7_2_MinGW_64_bit-Debug/Generals-io_autogen/timestamp	f3ea9b3a545bf1bb
-11	667	7417653048182127	C:/Users/23162/Downloads/Generals-io/build/Desktop_Qt_6_7_2_MinGW_64_bit-Debug/Generals-io_autogen/mocs_compilation.cpp	f3ea9b3a545bf1bb
-668	2572	7417653049507089	CMakeFiles/Generals-io.dir/Generals-io_autogen/mocs_compilation.cpp.obj	592ae7c055195cc6
-674	2620	7417653049567078	CMakeFiles/Generals-io.dir/main.cpp.obj	6f3dfbcd02c6c30
-681	2660	7417653049627060	CMakeFiles/Generals-io.dir/mainwindow.cpp.obj	c28474a4c54a1c21
-2661	2966	7417653069420127	Generals-io.exe	417d6776ab246ec3
