@@ -1,0 +1,34 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Arrow-Down.png</file>
+        <file>Arrow-Left.png</file>
+        <file>Arrow-Right.png</file>
+        <file>Arrow-Up.png</file>
+        <file>CheckBox-Checked.png</file>
+        <file>CheckBox.png</file>
+        <file>City.png</file>
+        <file>CloseButton-Clicked.png</file>
+        <file>CloseButton-Hover.png</file>
+        <file>CloseButton.png</file>
+        <file>Focus.png</file>
+        <file>General-Blue.png</file>
+        <file>General-Gray.png</file>
+        <file>General-Lost.png</file>
+        <file>General-Won.png</file>
+        <file>General.png</file>
+        <file>Icon-Blue.ico</file>
+        <file>Icon-Blue.png</file>
+        <file>Icon.ico</file>
+        <file>Icon.png</file>
+        <file>MinimizeButton-Clicked.png</file>
+        <file>MinimizeButton-Hover.png</file>
+        <file>MinimizeButton.png</file>
+        <file>Mountain.png</file>
+        <file>Obstacle.png</file>
+        <file>RadioButton-Checked.png</file>
+        <file>RadioButton.png</file>
+        <file>res.qrc</file>
+        <file>resources.qrc</file>
+        <file>Swamp.png</file>
+    </qresource>
+</RCC>
