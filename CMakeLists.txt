@@ -9,18 +9,43 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+# set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(PROJECT_SOURCES
-        main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
-        res.rc
+include_directories(
+    src
+    src/model
+    src/viewmodel
+    src/viewmodel/commands
+    src/viewmodel/sinks
+    src/window
 )
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Gui Widgets WebSockets Multimedia)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Gui Widgets WebSockets Multimedia)
+
+set(
+    PROJECT_SOURCES
+
+    res.rc
+
+    src/main.cpp
+
+    src/model/GeneralsDataModel.cpp
+    src/model/GeneralsDataModel.h
+
+    src/viewmodel/commands/QueryCommand.cpp
+    src/viewmodel/commands/QueryCommand.h
+    src/viewmodel/sinks/GeneralsViewModelSink.cpp
+    src/viewmodel/sinks/GeneralsViewModelSink.h
+    src/viewmodel/GeneralsViewModel.cpp
+    src/viewmodel/GeneralsViewModel.h
+
+    src/window/mainwindow.cpp
+    src/window/mainwindow.h
+    src/window/mainwindow.ui
+)
+
+if(${QT_VERSION_MAJOR} GREATER_EQUAL 5)
     qt_add_executable(Generals-io
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
