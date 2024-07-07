@@ -31,6 +31,7 @@ set(
 
     src/main.cpp
 
+    src/common/etlbase.h
     src/common/MapInfo.cpp
     src/common/MapInfo.h
     src/common/GameInfo.cpp
@@ -39,6 +40,18 @@ set(
     src/model/GeneralsDataModel.cpp
     src/model/GeneralsDataModel.h
 
+    src/viewmodel/commands/PlayerConnectCommand.cpp
+    src/viewmodel/commands/PlayerConnectCommand.h
+    src/viewmodel/commands/PlayerDisconnectCommand.cpp
+    src/viewmodel/commands/PlayerDisconnectCommand.h
+    src/viewmodel/commands/PlayerReadyCommand.cpp
+    src/viewmodel/commands/PlayerReadyCommand.h
+    src/viewmodel/commands/ChatCommand.cpp
+    src/viewmodel/commands/ChatCommand.h
+    src/viewmodel/commands/MoveCommand.cpp
+    src/viewmodel/commands/MoveCommand.h
+    src/viewmodel/commands/SurrenderCommand.cpp
+    src/viewmodel/commands/SurrenderCommand.h
     src/viewmodel/sinks/GeneralsViewModelSink.cpp
     src/viewmodel/sinks/GeneralsViewModelSink.h
     src/viewmodel/GeneralsViewModel.cpp
@@ -73,7 +86,14 @@ else()
     endif()
 endif()
 
-target_link_libraries(Generals-io PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(
+    Generals-io PRIVATE
+    Qt${QT_VERSION_MAJOR}::Core
+    Qt${QT_VERSION_MAJOR}::Gui
+    Qt${QT_VERSION_MAJOR}::Widgets
+    Qt${QT_VERSION_MAJOR}::WebSockets
+    Qt${QT_VERSION_MAJOR}::Multimedia
+)
 
 target_include_directories(Generals-io PRIVATE "${CMAKE_BINARY_DIR}/Generals-io_autogen/include")
 
