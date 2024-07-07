@@ -17,6 +17,10 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
+        src/common/MapInfo.cpp
+        src/common/MapInfo.h
+        src/common/GameInfo.cpp
+        src/common/GameInfo.h
         res.rc
 )
 
