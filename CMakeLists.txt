@@ -13,6 +13,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include_directories(
     src
+    src/common
     src/model
     src/viewmodel
     src/viewmodel/commands
@@ -30,11 +31,14 @@ set(
 
     src/main.cpp
 
+    src/common/MapInfo.cpp
+    src/common/MapInfo.h
+    src/common/GameInfo.cpp
+    src/common/GameInfo.h
+
     src/model/GeneralsDataModel.cpp
     src/model/GeneralsDataModel.h
 
-    src/viewmodel/commands/QueryCommand.cpp
-    src/viewmodel/commands/QueryCommand.h
     src/viewmodel/sinks/GeneralsViewModelSink.cpp
     src/viewmodel/sinks/GeneralsViewModelSink.h
     src/viewmodel/GeneralsViewModel.cpp
@@ -49,6 +53,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 5)
     qt_add_executable(Generals-io
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+	img/resources.qrc
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Generals-io APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
