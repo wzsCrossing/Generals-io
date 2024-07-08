@@ -37,29 +37,18 @@ set(
     src/common/GameInfo.cpp
     src/common/GameInfo.h
 
-    src/model/GeneralsDataModel.cpp
-    src/model/GeneralsDataModel.h
-
-    src/viewmodel/commands/PlayerConnectCommand.cpp
-    src/viewmodel/commands/PlayerConnectCommand.h
-    src/viewmodel/commands/PlayerDisconnectCommand.cpp
-    src/viewmodel/commands/PlayerDisconnectCommand.h
-    src/viewmodel/commands/PlayerReadyCommand.cpp
-    src/viewmodel/commands/PlayerReadyCommand.h
-    src/viewmodel/commands/ChatCommand.cpp
-    src/viewmodel/commands/ChatCommand.h
-    src/viewmodel/commands/MoveCommand.cpp
-    src/viewmodel/commands/MoveCommand.h
-    src/viewmodel/commands/SurrenderCommand.cpp
-    src/viewmodel/commands/SurrenderCommand.h
-    src/viewmodel/sinks/GeneralsViewModelSink.cpp
-    src/viewmodel/sinks/GeneralsViewModelSink.h
-    src/viewmodel/GeneralsViewModel.cpp
-    src/viewmodel/GeneralsViewModel.h
-
     src/window/mainwindow.cpp
     src/window/mainwindow.h
     src/window/mainwindow.ui
+    src/window/mappage.cpp
+    src/window/mappage.h
+    src/window/mappage.ui
+    src/window/settingpage.cpp
+    src/window/settingpage.h
+    src/window/settingpage.ui
+    src/window/gamepage.cpp
+    src/window/gamepage.h
+    src/window/gamepage.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 5)
