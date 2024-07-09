@@ -34,7 +34,8 @@ private:
     int width_;
     int height_;
 public:
-    MapInfo(int width = 20, int height = 20)
+    MapInfo();
+    MapInfo(int width, int height)
         : width_(width), height_(height) {
         map_.resize(height);
         for (int i = 0; i < height; i++) {

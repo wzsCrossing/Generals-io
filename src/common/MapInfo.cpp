@@ -31,6 +31,21 @@ void Cell::addArmy(int army) {
     army_ += army;
 }
 
+MapInfo::MapInfo() {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> rnd(16, 25);
+
+    height_ = width_ = rnd(gen);
+    map_.resize(height_);
+    for (int i = 0; i < height_; i++) {
+        map_[i].resize(width_);
+        for (int j = 0; j < width_; j++) {
+            map_[i][j] = nullptr;
+        }
+    }
+}
+
 bool MapInfo::importMap(const QString& fileName) {
     return true;
 }
@@ -205,7 +220,7 @@ bool MapInfo::moveArmy(int playerId, int x1, int y1, int x2, int y2, int mode) {
 void MapInfo::increaseBlankArmy() {
     for (int i = 0; i < height_; i++) {
         for (int j = 0; j < width_; j++) {
-            if (map_[i][j]->getType() == BLANK) {
+            if (map_[i][j]->getType() == BLANK && map_[i][j]->getOwner() != -1) {
                 map_[i][j]->addArmy(1);
             }
         }
