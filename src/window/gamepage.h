@@ -23,16 +23,18 @@ public:
 
 private:
     Ui::GamePage *ui;
-    //Cell map[MaxSize][MaxSize];
     MapInfo *map;
     QPushButton *VisualMap[MaxSize][MaxSize];
-    QLabel *ArmyNumber[MaxSize][MaxSize];
-    QString getColor(int colorId) const;
     QBrush getBrush(int colorId) const;
-    void setFocusSignal(int x, int y);
+    QString getColor(int colorId, const QString &Pic) const;
+
+public slots:
+    void setFocusSignal(int x, int y) {
+        qDebug() << x << ' ' << y << Qt::endl;
+    }
 
 signals:
-    void focusSignal(int x, int y);
+    void mySignal(int x, int y);
 };
 
 #endif // GAMEPAGE_H

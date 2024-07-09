@@ -24,7 +24,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QTextEdit" name="boardcast">
+   <widget class="QTextEdit" name="board">
     <property name="geometry">
      <rect>
       <x>670</x>

@@ -6,7 +6,7 @@
 GamePage::GamePage(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::GamePage)
-    , map(new MapInfo(20, 20))
+    , map(new MapInfo(16, 16))
 {
     /*
      * Map Construct
@@ -19,14 +19,13 @@ GamePage::GamePage(QWidget *parent)
     int height = map->getHeight();
     map->generateRandomMap(80, 80);
     map->capitalDistribution(playerNum);
+
     for (int i = 0; i < height; i++)
         for (int j = 0; j < width; j++) {
             VisualMap[i][j] = new QPushButton(this);
-            connect(VisualMap[i][j], &QPushButton::clicked, this, [=] {setFocusSignal(i, j);});
-            ArmyNumber[i][j] = new QLabel(this);
-            ArmyNumber[i][j]->setStyleSheet("background: transparent");
-            ArmyNumber[i][j]->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+            connect(VisualMap[i][j], &QPushButton::clicked, this, [=]{setFocusSignal(i, j);});
         }
+
     /*
      * Ranking List
      */
@@ -84,40 +83,37 @@ GamePage::GamePage(QWidget *parent)
             URit->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
             URit->setFont(font);
         }
-
     /*
      * Board
      */
-    //ui->boardcast->
+    font.setBold(false);
+    font.setPointSize(15);
+    ui->board->setFont(font);
+    ui->board->setReadOnly(true);
+    ui->board->setText("Welcome to Generals.io!");
 }
 
 GamePage::~GamePage()
 {
     delete ui;
     for (int i = 0, h = map->getHeight(); i < h; i++)
-        for (int j = 0, w = map->getWidth(); j < w; j++) {
+        for (int j = 0, w = map->getWidth(); j < w; j++)
             delete VisualMap[i][j];
-            delete ArmyNumber[i][j];
-        }
     delete map;
 }
 
-void GamePage::setFocusSignal(int x, int y) {
-    emit focusSignal(x, y);
-}
-
-QString GamePage::getColor(int colorId) const{
-    QString temp = "QPushButton {border-radius: 0px; border: 1px solid black; background: ";
+QString GamePage::getColor(int colorId,const QString &Pic) const{
+    QString temp = "QPushButton{border-radius: 0px; border: 2px solid black; background: ";
     switch (colorId) {
-        case 0: return temp + "green}";
-        case 1: return temp + "#9575CD}";
-        case 2: return temp + "#5A7A85}";
-        case 3: return temp + "#0021FF}";
-        case 4: return temp + "#FF0970}";
-        case 5: return temp + "#137FEA}";
-        case 6: return temp + "#E243EA}";
-        case 7: return temp + "#663AFF}";
-        default : return temp + "#303030}";
+        case 0: return temp + "green; border-image: url(" + Pic + ");}";
+        case 1: return temp + "#9575CD; border-image: url(" + Pic + ");}";
+        case 2: return temp + "#5A7A85; border-image: url(" + Pic + ");}";
+        case 3: return temp + "#0021FF; border-image: url(" + Pic + ");}";
+        case 4: return temp + "#FF0970; border-image: url(" + Pic + ");}";
+        case 5: return temp + "#137FEA; border-image: url(" + Pic + ");}";
+        case 6: return temp + "#E243EA; border-image: url(" + Pic + ");}";
+        case 7: return temp + "#663AFF; border-image: url(" + Pic + ");}";
+        default : return temp + "#303030; border-image: url(" + Pic + ");}";
     }
 }
 
@@ -152,30 +148,26 @@ void GamePage::paintEvent(QPaintEvent *event) {
     for (int i = 0; i < height; i++)
         for (int j = 0; j < width; j++) {
             VisualMap[i][j]->setGeometry(i * ButtonSize, j * ButtonSize, ButtonSize, ButtonSize);
-            ArmyNumber[i][j]->setGeometry(i * ButtonSize, j * ButtonSize, ButtonSize, ButtonSize);
+            VisualMap[i][j]->setFont(font);
             switch (map->getCell(i, j)->getType()) {
                 case CellType::BLANK :
-                VisualMap[i][j]->setStyleSheet(map->getCell(i, j)->getArmy() > 0 ? getColor(map->getCell(i, j)->getOwner()) : "QPushButton {background: white; border-radius: 0px; border: 1px solid black}");
-                    ArmyNumber[i][j]->setText(map->getCell(i, j)->getArmy() > 0 ? QString::number(map->getCell(i, j)->getArmy()) : "");
+                    VisualMap[i][j]->setStyleSheet(map->getCell(i, j)->getArmy() > 0 ? getColor(map->getCell(i, j)->getOwner(), "") : "QPushButton {background: white; border-radius: 0px; border: 1px solid black}");
+                    VisualMap[i][j]->setText(map->getCell(i, j)->getArmy() > 0 ? QString::number(map->getCell(i, j)->getArmy()) : "");
                     break;
                 case CellType::CAPITAL :
-                    VisualMap[i][j]->setIcon(QIcon(":/General.png"));
-                    VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner()));
-                    ArmyNumber[i][j]->setText(QString::number(map->getCell(i, j)->getArmy()));
+                    VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner(), ":/General.png"));
+                    VisualMap[i][j]->setText(QString::number(map->getCell(i, j)->getArmy()));
                     break;
                 case CellType::CITY :
-                    VisualMap[i][j]->setIcon(QIcon(":/City.png"));
-                    VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner()));
-                    ArmyNumber[i][j]->setText(QString::number(map->getCell(i, j)->getArmy()));
+                    VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner(), ":/City.png"));
+                    VisualMap[i][j]->setText(QString::number(map->getCell(i, j)->getArmy()));
                     break;
                 case CellType::MOUNTAIN :
                     VisualMap[i][j]->setIcon(QIcon(":/Mountain.png"));
-                    VisualMap[i][j]->setStyleSheet("QPushButton {background: grey; border-radius: 0px; border: 1px solid black}");
-                    ArmyNumber[i][j]->setText("");
+                    VisualMap[i][j]->setIconSize(QSize(ButtonSize, ButtonSize));
+                    VisualMap[i][j]->setStyleSheet("QPushButton {background: grey; border-radius: 0px; border: 1px solid black;}");
                     break;
             }
-            VisualMap[i][j]->setIconSize(QSize(ButtonSize, ButtonSize));
-            ArmyNumber[i][j]->setFont(font);
         }
     /*
      * To construct ranking list
@@ -183,7 +175,7 @@ void GamePage::paintEvent(QPaintEvent *event) {
     ui->rankinglist->move(this->size().rwidth() - ui->rankinglist->size().rwidth(), 0);
     int playerNum= 8;
     int playerList[8];
-    for (int i = 0; i < 8; i++) playerList[i] = i;
+    for (int i = 0; i < playerNum; i++) playerList[i] = i;
     QTableWidget *UR = ui->rankinglist;
     for (int i = 2; i < playerNum + 2; i++) {
         UR->item(i, 0)->setBackground(getBrush(playerList[i - 2]));
@@ -193,4 +185,9 @@ void GamePage::paintEvent(QPaintEvent *event) {
         UR->item(i, 1)->setText("1");
         UR->item(i, 2)->setText("1");
     }
+
+    /*
+     * To construct board
+     */
+    ui->board->setGeometry((width + 1) * ButtonSize, 50 * (playerNum + 3), this->size().rwidth() - (width + 1) * ButtonSize, this->size().rheight() - 50 * (playerNum + 3));
 }

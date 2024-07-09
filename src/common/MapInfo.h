@@ -2,6 +2,7 @@
 
 #include <QVector>
 #include <QString>
+#include <QDebug>
 
 enum CellType {
     MOUNTAIN,
@@ -33,6 +34,8 @@ private:
     QVector<QVector<Cell*>> map_;
     int width_;
     int height_;
+    int focus_x;
+    int focus_y;
 public:
     MapInfo();
     MapInfo(int width, int height)
@@ -60,6 +63,8 @@ public:
 
     int getWidth();
     int getHeight();
+    int getFocusX();
+    int getFocusY();
     QVector<QVector<Cell*>> getMap();
     Cell* getCell(int x, int y);
 
@@ -78,4 +83,12 @@ public:
      * @brief Increase the number of armies in the city and capital cell
      */
     void increaseCityArmy();
+public slots:
+    void setFocus(int x, int y) {
+        focus_x = x;
+        focus_y = y;
+        qDebug() << x << ' ' << y << Qt::endl;
+    }
+signals:
+    void mySignal(int x, int y);
 };
