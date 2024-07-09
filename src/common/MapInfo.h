@@ -53,11 +53,13 @@ public:
         }
     }
 
-    bool importMap(const QString& fileName);
+    void importMap(const QString& fileName);
     void exportMap(const QString& fileName);
     void generateRandomMap(int cityDense, int mountainDense);
     void capitalDistribution(int playerNum);
 
+    int getWidth();
+    int getHeight();
     QVector<QVector<Cell*>> getMap();
     Cell* getCell(int x, int y);
 

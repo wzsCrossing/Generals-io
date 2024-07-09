@@ -46,8 +46,8 @@ MapInfo::MapInfo() {
     }
 }
 
-bool MapInfo::importMap(const QString& fileName) {
-    return true;
+void MapInfo::importMap(const QString& fileName) {
+
 }
 
 void MapInfo::exportMap(const QString& fileName) {
@@ -182,6 +182,14 @@ void MapInfo::capitalDistribution(int playerNum) {
         map_[capitalPos[i][0]][capitalPos[i][1]]->setOwner(i);
         map_[capitalPos[i][0]][capitalPos[i][1]]->setArmy(1);
     }
+}
+
+int MapInfo::getWidth() {
+    return width_;
+}
+
+int MapInfo::getHeight() {
+    return height_;
 }
 
 QVector<QVector<Cell*>> MapInfo::getMap() {
