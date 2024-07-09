@@ -29,6 +29,10 @@ private:
     QLabel *ArmyNumber[MaxSize][MaxSize];
     QString getColor(int colorId) const;
     QBrush getBrush(int colorId) const;
+    void setFocusSignal(int x, int y);
+
+signals:
+    void focusSignal(int x, int y);
 };
 
 #endif // GAMEPAGE_H

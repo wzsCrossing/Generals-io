@@ -6,7 +6,7 @@
 GamePage::GamePage(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::GamePage)
-    , map(new MapInfo(25, 25))
+    , map(new MapInfo(20, 20))
 {
     /*
      * Map Construct
@@ -22,6 +22,7 @@ GamePage::GamePage(QWidget *parent)
     for (int i = 0; i < height; i++)
         for (int j = 0; j < width; j++) {
             VisualMap[i][j] = new QPushButton(this);
+            connect(VisualMap[i][j], &QPushButton::clicked, this, [=] {setFocusSignal(i, j);});
             ArmyNumber[i][j] = new QLabel(this);
             ArmyNumber[i][j]->setStyleSheet("background: transparent");
             ArmyNumber[i][j]->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
@@ -99,6 +100,10 @@ GamePage::~GamePage()
             delete ArmyNumber[i][j];
         }
     delete map;
+}
+
+void GamePage::setFocusSignal(int x, int y) {
+    emit focusSignal(x, y);
 }
 
 QString GamePage::getColor(int colorId) const{

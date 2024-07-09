@@ -36,6 +36,8 @@ set(
     src/common/MapInfo.h
     src/common/GameInfo.cpp
     src/common/GameInfo.h
+    src/common/PlayerInfo.cpp
+    src/common/PlayerInfo.h
 
     src/window/mainwindow.cpp
     src/window/mainwindow.h
