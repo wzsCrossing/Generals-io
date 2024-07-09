@@ -22,20 +22,22 @@ class MainWindow : public QMainWindow
         MainWindow(QWidget *parent = nullptr);
         ~MainWindow();
 
-        /*
-         * The function paintEvent is to load all the components on the mainwindow.
-         * It includes the load of labels, lineedits and buttons
+        /**
+         * @brief The function paintEvent is to load all the components on the mainwindow.
+         *        It includes the load of labels, lineedits and buttons
+         * @param not important
          */
         void paintEvent(QPaintEvent *event);
 
-        /*
-         * The function expandTextbox is to expand the width of a lineedit textbox
+        /**
+         * @brief The function expandTextbox is to expand the width of a lineedit textbox
          * when the number of characters exceeds the maximum capacity.
+         * @param text: The text string in the current box.
          */
         void expandTextbox(const QString &text);
 
-        /*
-         * The function setNickname is used to show a message box where player should enter his/her nickname.
+        /**
+         * @brief The function setNickname is used to show a message box where player should enter his/her nickname.
          */
         void setNickname();
 

@@ -2,11 +2,11 @@
 #define GAMEPAGE_H
 
 #include <QMainWindow>
-#include <MapInfo.h>
+#include "MapInfo.h"
 #include <QPushButton>
 #include <QLabel>
 #include <QScopedPointer>
-#define MaxSize 16
+#define MaxSize 25
 
 namespace Ui {
 class GamePage;
@@ -23,10 +23,12 @@ public:
 
 private:
     Ui::GamePage *ui;
-    Cell map[MaxSize][MaxSize];
+    //Cell map[MaxSize][MaxSize];
+    MapInfo *map;
     QPushButton *VisualMap[MaxSize][MaxSize];
     QLabel *ArmyNumber[MaxSize][MaxSize];
     QString getColor(int colorId) const;
+    QBrush getBrush(int colorId) const;
 };
 
 #endif // GAMEPAGE_H

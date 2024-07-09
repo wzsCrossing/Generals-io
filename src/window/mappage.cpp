@@ -8,9 +8,10 @@ MapPage::MapPage(QWidget *parent)
     , gamepage(new GamePage)
 {
     ui->setupUi(this);
-    this->resize(840, 840);
+    this->resize(1280, 840);
     this->setWindowTitle("Generals.io");
     connect(ui->StartGame, &QPushButton::clicked, this, &MapPage::goToGamePage);
+    //ui->StartGame->setGeometry();
 }
 
 MapPage::~MapPage()

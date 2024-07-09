@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     this->setWindowTitle("Generals.io");
-    this->resize(840, 840);
+    this->resize(1280, 840);
     QMenu *SubMenu = new QMenu("Log In");
     QAction *Set_Nickname = new QAction("Set Nickname");
     QAction *Set_Server_Address = new QAction("Set Server Address");
