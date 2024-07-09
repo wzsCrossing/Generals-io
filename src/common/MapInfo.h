@@ -3,6 +3,7 @@
 #include <QVector>
 #include <QString>
 #include <QDebug>
+#include <QObject>
 
 enum CellType {
     MOUNTAIN,
@@ -29,7 +30,9 @@ public:
     void addArmy(int army);
 };
 
-class MapInfo {
+class MapInfo : public QObject {
+    Q_OBJECT
+
 private:
     QVector<QVector<Cell*>> map_;
     int width_;
@@ -87,7 +90,6 @@ public slots:
     void setFocus(int x, int y) {
         focus_x = x;
         focus_y = y;
-        qDebug() << x << ' ' << y << Qt::endl;
     }
 signals:
     void mySignal(int x, int y);

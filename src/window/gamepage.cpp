@@ -2,11 +2,14 @@
 #include "ui_gamepage.h"
 #include <QPushButton>
 #include <QIcon>
+#include <QPainter>
 
 GamePage::GamePage(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::GamePage)
     , map(new MapInfo(16, 16))
+    , focus_X(-1)
+    , focus_Y(-1)
 {
     /*
      * Map Construct
@@ -25,7 +28,7 @@ GamePage::GamePage(QWidget *parent)
             VisualMap[i][j] = new QPushButton(this);
             connect(VisualMap[i][j], &QPushButton::clicked, this, [=]{setFocusSignal(i, j);});
         }
-
+    connect(this, &GamePage::mySignal, map, &MapInfo::setFocus);
     /*
      * Ranking List
      */
@@ -102,8 +105,9 @@ GamePage::~GamePage()
     delete map;
 }
 
-QString GamePage::getColor(int colorId,const QString &Pic) const{
-    QString temp = "QPushButton{border-radius: 0px; border: 2px solid black; background: ";
+QString GamePage::getColor(int colorId, const QString &Pic, bool isFocus) const{
+    QString temp = isFocus ? "QPushButton{border-radius: 0px; border: 3px solid black; background: ":
+                             "QPushButton{border-radius: 0px; border: 1px solid black; background: "        ;
     switch (colorId) {
         case 0: return temp + "green; border-image: url(" + Pic + ");}";
         case 1: return temp + "#9575CD; border-image: url(" + Pic + ");}";
@@ -113,6 +117,7 @@ QString GamePage::getColor(int colorId,const QString &Pic) const{
         case 5: return temp + "#137FEA; border-image: url(" + Pic + ");}";
         case 6: return temp + "#E243EA; border-image: url(" + Pic + ");}";
         case 7: return temp + "#663AFF; border-image: url(" + Pic + ");}";
+        case 8: return temp + "white; border-image: url(" + Pic + ");}";
         default : return temp + "#303030; border-image: url(" + Pic + ");}";
     }
 }
@@ -134,6 +139,12 @@ QBrush GamePage::getBrush(int colorId) const {
     return brush;
 }
 
+void GamePage::setFocusSignal(int x, int y) {
+    focus_X = x;
+    focus_Y = y;
+    emit mySignal(x, y);
+}
+
 void GamePage::paintEvent(QPaintEvent *event) {
     /*
      * To construct map
@@ -151,21 +162,22 @@ void GamePage::paintEvent(QPaintEvent *event) {
             VisualMap[i][j]->setFont(font);
             switch (map->getCell(i, j)->getType()) {
                 case CellType::BLANK :
-                    VisualMap[i][j]->setStyleSheet(map->getCell(i, j)->getArmy() > 0 ? getColor(map->getCell(i, j)->getOwner(), "") : "QPushButton {background: white; border-radius: 0px; border: 1px solid black}");
+                VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getArmy() > 0 ? map->getCell(i, j)->getOwner() : 8, "", (i == focus_X && j == focus_Y)));
                     VisualMap[i][j]->setText(map->getCell(i, j)->getArmy() > 0 ? QString::number(map->getCell(i, j)->getArmy()) : "");
                     break;
                 case CellType::CAPITAL :
-                    VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner(), ":/General.png"));
+                    VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner(), (i == focus_X && j == focus_Y) ? ":/General-Focus.png" : ":/General.png", false));
                     VisualMap[i][j]->setText(QString::number(map->getCell(i, j)->getArmy()));
                     break;
                 case CellType::CITY :
-                    VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner(), ":/City.png"));
+                    VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner(), (i == focus_X && j == focus_Y) ? ":/City-Focus.png" : ":/City.png", false));
                     VisualMap[i][j]->setText(QString::number(map->getCell(i, j)->getArmy()));
                     break;
                 case CellType::MOUNTAIN :
                     VisualMap[i][j]->setIcon(QIcon(":/Mountain.png"));
                     VisualMap[i][j]->setIconSize(QSize(ButtonSize, ButtonSize));
-                    VisualMap[i][j]->setStyleSheet("QPushButton {background: grey; border-radius: 0px; border: 1px solid black;}");
+                    if (i == focus_X && j == focus_Y) VisualMap[i][j]->setStyleSheet("QPushButton {background: grey; border-radius: 0px; border: 3px solid black;}");
+                        else VisualMap[i][j]->setStyleSheet("QPushButton {background: grey; border-radius: 0px; border: 1px solid black;}");
                     break;
             }
         }
