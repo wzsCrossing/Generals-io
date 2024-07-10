@@ -13,7 +13,10 @@ enum Direction {
 struct Move {
     int x, y;
     Direction dir;
-    int mode;
+    bool half;
+    Move() = default;
+    Move(int _x, int _y, Direction _dir, bool _half)
+        : x(_x), y(_y), dir(_dir), half(_half) {}
 };
 
 class PlayerInfo {
@@ -43,7 +46,7 @@ public:
     void setAlive(bool isAlive);
     void setSlientRound(int silentRound);
 
-    void addMove(int x, int y, Direction dir, int mode);
+    void addMove(int x, int y, Direction dir, bool half);
     Move getFirstMove();
     bool hasMove();
     void clearMoveList();

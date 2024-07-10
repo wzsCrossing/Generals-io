@@ -48,8 +48,8 @@ void PlayerInfo::setSlientRound(int silentRound) {
     silentRound_ = silentRound;
 }
 
-void PlayerInfo::addMove(int x, int y, Direction dir, int mode) {
-    moveList_.push_back((Move) {x, y, dir, mode});
+void PlayerInfo::addMove(int x, int y, Direction dir, bool half) {
+    moveList_.push_back((Move) {x, y, dir, half});
 }
 
 Move PlayerInfo::getFirstMove() {
@@ -65,4 +65,3 @@ bool PlayerInfo::hasMove() {
 void PlayerInfo::clearMoveList() {
     moveList_.clear();
 }
-

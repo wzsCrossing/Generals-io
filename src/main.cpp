@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+#include "GeneralsApp.h"
 
 #include <QApplication>
 #include <QPushButton>
@@ -11,7 +11,9 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    QSharedPointer<GeneralsViewModel> ViewModel(new GeneralsViewModel);
-    MainWindow w(nullptr, ViewModel);
+
+    GeneralsApp generalsApp;
+    generalsApp.show();
+
     return a.exec();
 }

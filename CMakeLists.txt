@@ -16,9 +16,8 @@ include_directories(
     src/common
     src/model
     src/viewmodel
-    src/viewmodel/commands
-    src/viewmodel/sinks
     src/window
+    src/app
 )
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Gui Widgets WebSockets Multimedia)
@@ -31,13 +30,18 @@ set(
 
     src/main.cpp
 
-    src/common/etlbase.h
+    src/common/PlayerInfo.cpp
+    src/common/PlayerInfo.h
     src/common/MapInfo.cpp
     src/common/MapInfo.h
     src/common/GameInfo.cpp
     src/common/GameInfo.h
-    src/common/PlayerInfo.cpp
-    src/common/PlayerInfo.h
+
+    src/model/GeneralsGameModel.cpp
+    src/model/GeneralsGameModel.h
+
+    src/viewmodel/GeneralsViewModel.cpp
+    src/viewmodel/GeneralsViewModel.h
 
     src/window/mainwindow.cpp
     src/window/mainwindow.h
@@ -51,8 +55,9 @@ set(
     src/window/gamepage.cpp
     src/window/gamepage.h
     src/window/gamepage.ui
-    src/viewmodel/sinks/generalsviewmodel.cpp
-    src/viewmodel/sinks/generalsviewmodel.h
+
+    src/app/GeneralsApp.cpp
+    src/app/GeneralsApp.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 5)
