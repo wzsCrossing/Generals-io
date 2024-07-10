@@ -86,7 +86,7 @@ void GameInfo::excuteMove() {
         auto move = player->getFirstMove();
         int x = move.x, y = move.y;
         int nx = x + dx[move.dir], ny = y + dy[move.dir];
-        if (!map_->moveArmy(player->getPlayerId(), x, y, nx, ny, move.mode)) {
+        if (!map_->moveArmy(player->getPlayerId(), x, y, nx, ny, move.half)) {
             player->clearMoveList();
         }
     }
