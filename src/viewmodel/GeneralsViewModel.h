@@ -6,7 +6,6 @@
 #include <QString>
 #include <QVector>
 #include "PlayerInfo.h"
-#include "GameInfo.h"
 #include "GeneralsGameModel.h"
 
 class GeneralsViewModel : public QObject {

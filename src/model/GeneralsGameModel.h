@@ -3,8 +3,8 @@
 
 #include <cmath>
 #include <algorithm>
+#include "PlayerInfo.h"
 #include "MapInfo.h"
-#include "GameInfo.h"
 
 class GeneralsGameModel {
 public:
