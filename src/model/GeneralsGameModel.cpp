@@ -13,6 +13,10 @@ int GeneralsGameModel::getPlayerNum() {
     return cntPlayer;
 }
 
+int GeneralsGameModel::getRound() {
+    return round;
+}
+
 void GeneralsGameModel::generateRandomGame(int cityDense, int mountainDense, int playerNum) {
     cntPlayer = playerNum;
     playerInfos.push_back(std::make_shared<PlayerInfo>(playerName, 0));
@@ -61,10 +65,11 @@ void GeneralsGameModel::setFocus(int x, int y) {
     focus = std::make_shared<Focus>(x, y);
 }
 
-void GeneralsGameModel::move(int playerID, int x, int y, Direction dir, bool half) {
+bool GeneralsGameModel::move(int playerID, int x, int y, Direction dir, bool half) {
     int x_ = x + directions[dir].first, y_ = y + directions[dir].second;
-    if (x_ < 0 || x_ >= height || y_ < 0 || y_ >= width || playerMap->getCell(x_, y_)->getType() == MOUNTAIN) return;
+    if (x_ < 0 || x_ >= height || y_ < 0 || y_ >= width || playerMap->getCell(x_, y_)->getType() == MOUNTAIN) return false;
     playerInfos[playerID]->addMove(x, y, dir, half);
+    return true;
 }
 
 void GeneralsGameModel::addRound() {

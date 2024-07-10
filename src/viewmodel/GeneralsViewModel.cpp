@@ -27,7 +27,7 @@ void GeneralsViewModel::setPlayerName(const QString &nickname) {
 void GeneralsViewModel::startGame() {
     m_GeneralsModel->startGame();
     gameTimer->start(500);
-    emit gameStarted(this->getMapInfo(), this->getRankList());
+    emit mapChanged(this->getMapInfo(), this->getRankList(), m_GeneralsModel->getRound());
 }
 
 void GeneralsViewModel::setFocus(int x, int y) {
@@ -35,7 +35,7 @@ void GeneralsViewModel::setFocus(int x, int y) {
 }
 
 void GeneralsViewModel::move(int x, int y, Direction dir, bool half) {
-    m_GeneralsModel->move(0, x, y, dir, half);
+    if (m_GeneralsModel->move(0, x, y, dir, half)) emit successfulMove(dir);
 }
 
 void GeneralsViewModel::surrender() {
@@ -45,5 +45,5 @@ void GeneralsViewModel::surrender() {
 void GeneralsViewModel::updateGame() {
     m_GeneralsModel->execMove();
     m_GeneralsModel->addRound();
-    emit mapChanged();
+    emit mapChanged(this->getMapInfo(), this->getRankList(), m_GeneralsModel->getRound());
 }

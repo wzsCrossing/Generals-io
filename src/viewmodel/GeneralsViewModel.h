@@ -28,8 +28,9 @@ public slots:
     void surrender();
 
 signals:
-    void mapChanged();
-    void gameStarted(std::shared_ptr<MapInfo> map, QVector<std::shared_ptr<PlayerInfo>> ranklist);
+    void mapChanged(std::shared_ptr<MapInfo> map, QVector<std::shared_ptr<PlayerInfo>> ranklist, int round);
+    void successfulMove(Direction dir);
+    void playerDie(const QString &playerName);
 
 private slots:
     void updateGame();

@@ -17,6 +17,7 @@ public:
     explicit MapPage(QWidget *parent = nullptr);
     ~MapPage();
     QString playerName;
+    GamePage *getGamePage();
 
 private:
     Ui::MapPage *ui;
@@ -30,8 +31,6 @@ private:
 signals:
     void backToMain();
     void startGame();
-public slots:
-    void gameStarted(std::shared_ptr<MapInfo> map, QVector<std::shared_ptr<PlayerInfo>> ranklist);
 };
 
 #endif // MAPPAGE_H

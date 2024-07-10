@@ -8,10 +8,15 @@ GeneralsApp::GeneralsApp() {
     viewModel->setModel(model);
 
     mainWindow = new MainWindow();
+    MapPage *mappage = mainWindow->getMapPage();
+    GamePage *gamepage = mappage->getGamePage();
     connect(mainWindow, &MainWindow::startGame, viewModel, &GeneralsViewModel::startGame);
     connect(mainWindow, &MainWindow::sendNickname, viewModel, &GeneralsViewModel::setPlayerName);
-    connect(viewModel, &GeneralsViewModel::gameStarted, mainWindow, &MainWindow::initFinished);
     connect(mainWindow, &MainWindow::sendNickname, viewModel, &GeneralsViewModel::setPlayerName);
+    connect(gamepage, &GamePage::moveSignal, viewModel, &GeneralsViewModel::move);
+    connect(viewModel, &GeneralsViewModel::mapChanged, gamepage, &GamePage::Init);
+    connect(viewModel, &GeneralsViewModel::successfulMove, gamepage, &GamePage::moveFocus);
+    connect(viewModel, &GeneralsViewModel::playerDie, gamepage, &GamePage::playerDie);
 }
 
 void GeneralsApp::show() const {

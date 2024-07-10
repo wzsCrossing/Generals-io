@@ -34,7 +34,6 @@ MainWindow::MainWindow(QWidget *parent)
                                                       mappage->hide();
                                                      });
     connect(mappage, &MapPage::startGame, this, [=] {emit startGame();});
-    connect(this, &MainWindow::gameStarted, mappage, &MapPage::gameStarted);
     this->show();
 }
 
@@ -44,8 +43,8 @@ MainWindow::~MainWindow()
     delete mappage;
 }
 
-void MainWindow::initFinished(std::shared_ptr<MapInfo> map, QVector<std::shared_ptr<PlayerInfo>> ranklist) {
-    emit gameStarted(map, ranklist);
+MapPage* MainWindow::getMapPage() {
+    return mappage;
 }
 
 void MainWindow::expandTextbox(const QString &text) {

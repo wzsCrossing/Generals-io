@@ -24,8 +24,8 @@ MapPage::~MapPage()
     //delete gamepage;
 }
 
-void MapPage::gameStarted(std::shared_ptr<MapInfo> map, QVector<std::shared_ptr<PlayerInfo>> ranklist) {
-    gamepage->Init(map, ranklist);
+GamePage* MapPage::getGamePage() {
+    return gamepage;
 }
 
 void MapPage::paintEvent(QPaintEvent *event) {

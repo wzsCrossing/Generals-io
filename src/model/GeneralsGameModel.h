@@ -11,11 +11,12 @@ public:
     GeneralsGameModel();
     std::shared_ptr<MapInfo> getMapInfo() throw();
     int getPlayerNum();
+    int getRound();
     QVector<std::shared_ptr<PlayerInfo>> getRankList();
     void setPlayerName(const QString &nickname);
     void startGame();
     void setFocus(int x, int y);
-    void move(int playerID, int x, int y, Direction dir, bool half);
+    bool move(int playerID, int x, int y, Direction dir, bool half);
     void clearMove();
     void cancelMove();
     void surrender();
@@ -25,7 +26,7 @@ public:
 private:
     void generateRandomGame(int cityDense, int mountainDense, int playerNum);
 
-    const std::pair<int, int> directions[4] = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    const std::pair<int, int> directions[4] = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
     bool gameStarted{}, surrendered{};
     int gameMode{}, cntPlayer{};
     int width, height, round;

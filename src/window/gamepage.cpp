@@ -18,6 +18,32 @@ GamePage::GamePage(QWidget *parent)
             VisualMap[i][j] = new QPushButton(this);
             connect(VisualMap[i][j], &QPushButton::clicked, this, [=]{focus_X = i; focus_Y = j;});
         }
+    QFont font("Consolas", 17);
+    font.setBold(true);
+    ui->ChangeHalf->setFont(font);
+    ui->ChangeHalf->setStyleSheet("QPushButton:hover{background:#81D4FA;}"\
+                                  "QPushButton:pressed{background:blue;}"\
+                                  "QPushButton{background: #029FFF; border-radius: 8px;}");
+    ui->ChangeHalf->setText("full");
+    connect(ui->ChangeHalf, &QPushButton::clicked, this, [=] {
+        half = not half;
+        if (half) ui->ChangeHalf->setText("half");
+            else ui->ChangeHalf->setText("full");
+    });
+
+    /*
+     * board
+     */
+    font.setBold(false);
+    font.setPointSize(15);
+    ui->board->setFont(font);
+    ui->board->setReadOnly(true);
+    ui->board->setText("Hello! " + playerName + "!");
+    ui->board->append("Welcome to Generals.io!");
+    ui->board->append("Press W/A/S/D to move up/left/down/right.");
+    ui->board->append("After you clicked move mode button, you can press space to change the move mode faster!");
+    ui->board->append("Good luck to YOU!");
+
     this->hide();
 }
 
@@ -30,13 +56,14 @@ GamePage::~GamePage()
     delete map;
 }
 
-void GamePage::Init(std::shared_ptr<MapInfo> NewMap, QVector<std::shared_ptr<PlayerInfo>> ranklist) {
+void GamePage::Init(std::shared_ptr<MapInfo> map, QVector<std::shared_ptr<PlayerInfo>> ranklist, int round) {
     /*
      * Map Construct
      */
     this->show();
-    map = NewMap.get();
+    this->map = map.get();
     this->ranklist = ranklist;
+    this->round = round;
     width = map->getWidth();
     height = map->getHeight();
     for (int i = 0; i < MaxSize; i++)
@@ -69,7 +96,7 @@ void GamePage::Init(std::shared_ptr<MapInfo> NewMap, QVector<std::shared_ptr<Pla
 
     UR->setItem(0, 0, new QTableWidgetItem);
     QTableWidgetItem *URit = UR->item(0, 0);
-    URit->setText("Round : 0");
+    URit->setText("Round : " + QString::number(round));
     URit->setBackground(getBrush(-1));
     URit->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     URit->setFont(font);
@@ -102,13 +129,6 @@ void GamePage::Init(std::shared_ptr<MapInfo> NewMap, QVector<std::shared_ptr<Pla
             URit->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
             URit->setFont(font);
         }
-    /*
-     * Board
-     */
-    font.setBold(false);
-    font.setPointSize(15);
-    ui->board->setFont(font);
-    ui->board->setReadOnly(true);
 }
 
 QString GamePage::getColor(int colorId, const QString &Pic, bool isFocus) const{
@@ -179,9 +199,21 @@ void GamePage::paintEvent(QPaintEvent *event) {
                     break;
             }
         }
+
+    /*
+     * To construct half button
+     */
+    font.setBold(true);
+    int Half_Button_Width = 80;
+    int Half_Button_Height = 40;
+    int Half_Button_X = width * ButtonSize / 2 - Half_Button_Width / 2;
+    int Half_Button_Y = height * ButtonSize + ButtonSize / 2;
+    ui->ChangeHalf->setGeometry(Half_Button_X, Half_Button_Y, Half_Button_Width, Half_Button_Height);
+
     /*
      * To construct ranking list
      */
+    //ui->rankinglist->item(0, 0)->setText("Round : " + QString::number(ranklist))
     ui->rankinglist->move(this->size().rwidth() - ui->rankinglist->size().rwidth(), 0);
     QTableWidget *UR = ui->rankinglist;
     for (int i = 2; i < playerNum + 2; i++) {
@@ -189,34 +221,58 @@ void GamePage::paintEvent(QPaintEvent *event) {
         UR->item(i, 1)->setBackground(getBrush(8));
         UR->item(i, 2)->setBackground(getBrush(8));
         UR->item(i, 0)->setText(ranklist[i - 2]->getNickName());
-        UR->item(i, 1)->setText(QString::number(ranklist[i - 2]->getArmyNum()));
-        UR->item(i, 2)->setText(QString::number(ranklist[i - 2]->getLandNum()));
+        if (ranklist[i - 2]->isAlive()) {
+            UR->item(i, 1)->setText(QString::number(ranklist[i - 2]->getArmyNum()));
+            UR->item(i, 2)->setText(QString::number(ranklist[i - 2]->getLandNum()));
+        } else {
+            UR->item(i, 1)->setText("OUT");
+            UR->item(i, 2)->setText("OUT");
+        }
     }
 
     /*
      * To construct board
      */
-    ui->board->setText("Hello! " + playerName + "!\nWelcome to Generals.io!\nPress W/A/S/D to move up/left/down/right.");
     ui->board->setGeometry((width + 1) * ButtonSize, 50 * (playerNum + 3), this->size().rwidth() - (width + 1) * ButtonSize, this->size().rheight() - 50 * (playerNum + 3));
 }
 
 void GamePage::keyPressEvent(QKeyEvent * event) {
     switch (event->key()) {
         case  Qt::Key_W :
-            emit moveSignal(focus_X, focus_Y, Direction::UP, false);
-            focus_Y--;
+            emit moveSignal(focus_X, focus_Y, Direction::UP, half);
             break;
         case Qt::Key_A:
-            emit moveSignal(focus_X, focus_Y, Direction::LEFT, false);
-            focus_X--;
+            emit moveSignal(focus_X, focus_Y, Direction::LEFT, half);
             break;
         case Qt::Key_S:
-            emit moveSignal(focus_X, focus_Y, Direction::DOWN, false);
-            focus_Y++;
+            emit moveSignal(focus_X, focus_Y, Direction::DOWN, half);
             break;
         case Qt::Key_D:
-            emit moveSignal(focus_X, focus_Y, Direction::RIGHT, false);
+            emit moveSignal(focus_X, focus_Y, Direction::RIGHT, half);
+            break;
+        case Qt::Key_Space:
+            emit ui->ChangeHalf->clicked();
+            break;
+    }
+}
+
+void GamePage::moveFocus(Direction dir) {
+    switch (dir) {
+        case Direction::UP :
+            focus_Y--;
+            break;
+        case Direction::DOWN :
+            focus_Y++;
+            break;
+        case Direction::LEFT :
+            focus_X--;
+            break;
+        case Direction::RIGHT :
             focus_X++;
             break;
     }
+}
+
+void GamePage::playerDie(const QString &playerName) {
+    ui->board->append("Oh no! Player " + playerName + " dies!");
 }
