@@ -13,6 +13,12 @@ GamePage::GamePage(QWidget *parent)
     ui->setupUi(this);
     this->setWindowTitle("Generals.io");
     this->resize(1280, 840);
+    for (int i = 0; i < MaxSize; i++)
+        for (int j = 0; j < MaxSize; j++) {
+            VisualMap[i][j] = new QPushButton(this);
+            connect(VisualMap[i][j], &QPushButton::clicked, this, [=]{focus_X = i; focus_Y = j;});
+        }
+    this->hide();
 }
 
 GamePage::~GamePage()
@@ -21,28 +27,27 @@ GamePage::~GamePage()
     for (int i = 0, h = map->getHeight(); i < h; i++)
         for (int j = 0, w = map->getWidth(); j < w; j++)
             delete VisualMap[i][j];
+    delete map;
 }
 
-void GamePage::Init() {
+void GamePage::Init(std::shared_ptr<MapInfo> NewMap, QVector<std::shared_ptr<PlayerInfo>> ranklist) {
     /*
      * Map Construct
      */
-
-    int playerNum =8; //ViewModel->getRankList().size();
-    int width = 16;//map->getWidth();
-    int height = 16;//map->getHeight();
-    map->generateRandomMap(80, 80);
-    map->capitalDistribution(playerNum);
-
-    for (int i = 0; i < height; i++)
-        for (int j = 0; j < width; j++) {
-            VisualMap[i][j] = new QPushButton(this);
-            //VisualMap[i][j]->setFocus()
-            connect(VisualMap[i][j], &QPushButton::clicked, this, [=]{focus_X = i; focus_Y = j;});
-        }
+    this->show();
+    map = NewMap.get();
+    this->ranklist = ranklist;
+    width = map->getWidth();
+    height = map->getHeight();
+    for (int i = 0; i < MaxSize; i++)
+        for (int j = 0; j < MaxSize; j++)
+            if (i < height && j < width) VisualMap[i][j]->show();
+                else VisualMap[i][j]->hide();
     /*
      * Ranking List
      */
+
+    playerNum = ranklist.size();
     QTableWidget *UR = ui->rankinglist;
     QFont font("Consolas", 20);
     font.setBold(true);
@@ -144,8 +149,6 @@ void GamePage::paintEvent(QPaintEvent *event) {
     /*
      * To construct map
      */
-    int width = map->getWidth();
-    int height = map->getHeight();
     int max = width > height ? width : height;
     int ButtonSize = this->size().rheight();
     if (ButtonSize > this->size().rwidth()) ButtonSize = this->size().rwidth();
@@ -180,17 +183,14 @@ void GamePage::paintEvent(QPaintEvent *event) {
      * To construct ranking list
      */
     ui->rankinglist->move(this->size().rwidth() - ui->rankinglist->size().rwidth(), 0);
-    int playerNum= 8;
-    int playerList[8];
-    for (int i = 0; i < playerNum; i++) playerList[i] = i;
     QTableWidget *UR = ui->rankinglist;
     for (int i = 2; i < playerNum + 2; i++) {
-        UR->item(i, 0)->setBackground(getBrush(playerList[i - 2]));
+        UR->item(i, 0)->setBackground(getBrush(ranklist[i - 2]->getPlayerId()));
         UR->item(i, 1)->setBackground(getBrush(8));
         UR->item(i, 2)->setBackground(getBrush(8));
-        UR->item(i, 0)->setText(QString(char(i + 65)));
-        UR->item(i, 1)->setText("1");
-        UR->item(i, 2)->setText("1");
+        UR->item(i, 0)->setText(ranklist[i - 2]->getNickName());
+        UR->item(i, 1)->setText(QString::number(ranklist[i - 2]->getArmyNum()));
+        UR->item(i, 2)->setText(QString::number(ranklist[i - 2]->getLandNum()));
     }
 
     /*

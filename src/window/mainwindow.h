@@ -6,6 +6,7 @@
 #include <QLabel>
 #include <QString>
 #include <QStackedWidget>
+#include "mappage.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -24,6 +25,7 @@ class MainWindow : public QMainWindow
     private:
         Ui::MainWindow *ui;
         int Nickname_Input_Width = 200;
+        MapPage *mappage = nullptr;
         /**
          * @brief The function paintEvent is to load all the components on the mainwindow.
          *        It includes the load of labels, lineedits and buttons
@@ -40,6 +42,9 @@ class MainWindow : public QMainWindow
 
     signals:
         void sendNickname(const QString &nickname);
-        void goToMapPage();
+        void startGame();
+        void gameStarted(std::shared_ptr<MapInfo> map, QVector<std::shared_ptr<PlayerInfo>> ranklist);
+    public slots:
+        void initFinished(std::shared_ptr<MapInfo> map, QVector<std::shared_ptr<PlayerInfo>> ranklist);
 };
 #endif // MAINWINDOW_H

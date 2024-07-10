@@ -29,6 +29,7 @@ public slots:
 
 signals:
     void mapChanged();
+    void gameStarted(std::shared_ptr<MapInfo> map, QVector<std::shared_ptr<PlayerInfo>> ranklist);
 
 private slots:
     void updateGame();

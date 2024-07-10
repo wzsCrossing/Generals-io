@@ -4,14 +4,14 @@
 
 GeneralsApp::GeneralsApp() {
     std::shared_ptr<GeneralsGameModel> model(new GeneralsGameModel);
-    std::shared_ptr<GeneralsViewModel> viewModel(new GeneralsViewModel);
+    GeneralsViewModel *viewModel = new GeneralsViewModel;
     viewModel->setModel(model);
 
-    mainWindow = new MainWindow;
-    mapPage = new MapPage;
-    gamePage = new GamePage;
-
-   // connect(mainWindow, &MainWindow::goToMapPage, mapPage, &MapPage::show);
+    mainWindow = new MainWindow();
+    connect(mainWindow, &MainWindow::startGame, viewModel, &GeneralsViewModel::startGame);
+    connect(mainWindow, &MainWindow::sendNickname, viewModel, &GeneralsViewModel::setPlayerName);
+    connect(viewModel, &GeneralsViewModel::gameStarted, mainWindow, &MainWindow::initFinished);
+    connect(mainWindow, &MainWindow::sendNickname, viewModel, &GeneralsViewModel::setPlayerName);
 }
 
 void GeneralsApp::show() const {

@@ -27,6 +27,7 @@ void GeneralsViewModel::setPlayerName(const QString &nickname) {
 void GeneralsViewModel::startGame() {
     m_GeneralsModel->startGame();
     gameTimer->start(500);
+    emit gameStarted(this->getMapInfo(), this->getRankList());
 }
 
 void GeneralsViewModel::setFocus(int x, int y) {

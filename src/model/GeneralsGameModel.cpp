@@ -50,7 +50,7 @@ void GeneralsGameModel::setPlayerName(const QString &nickname) {
 
 void GeneralsGameModel::startGame() {
     if (gameStarted) return;
-    generateRandomGame(100, 100, 2); // TODO
+    generateRandomGame(100, 100, 4); // TODO
     width = playerMap->getWidth();
     height = playerMap->getHeight();
     gameStarted = true;
