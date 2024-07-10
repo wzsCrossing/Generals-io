@@ -37,8 +37,6 @@ private:
     QVector<QVector<Cell*>> map_;
     int width_;
     int height_;
-    int focus_x;
-    int focus_y;
 public:
     MapInfo();
     MapInfo(int width, int height)
@@ -66,8 +64,6 @@ public:
 
     int getWidth();
     int getHeight();
-    int getFocusX();
-    int getFocusY();
     QVector<QVector<Cell*>> getMap();
     Cell* getCell(int x, int y);
 
