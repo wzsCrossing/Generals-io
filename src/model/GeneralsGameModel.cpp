@@ -13,6 +13,10 @@ int GeneralsGameModel::getPlayerNum() {
     return cntPlayer;
 }
 
+int GeneralsGameModel::getRound() {
+    return round;
+}
+
 void GeneralsGameModel::generateRandomGame(int cityDense, int mountainDense, int playerNum) {
     cntPlayer = playerNum;
     playerInfos.push_back(std::make_shared<PlayerInfo>(playerName, 0));
@@ -54,21 +58,22 @@ void GeneralsGameModel::setPlayerName(const QString &nickname) {
 
 void GeneralsGameModel::startGame() {
     if (gameStarted) return;
-    generateRandomGame(100, 100, 2); // TODO
+    generateRandomGame(100, 100, 4); // TODO
     width = playerMap->getWidth();
     height = playerMap->getHeight();
     gameStarted = true;
 }
 
 void GeneralsGameModel::setFocus(int x, int y) {
-    if (x < 0 || x >= width || y < 0 || y >= height || playerMap->getCell(x, y)->getType() == MOUNTAIN) return;
+    if (!gameStarted || surrendered || x < 0 || x >= width || y < 0 || y >= height) return;
     focus = std::make_shared<Focus>(x, y);
 }
 
-void GeneralsGameModel::move(int playerID, int x, int y, Direction dir, bool half) {
+bool GeneralsGameModel::move(int playerID, int x, int y, Direction dir, bool half) {
     int x_ = x + directions[dir].first, y_ = y + directions[dir].second;
-    if (x_ < 0 || x_ >= height || y_ < 0 || y_ >= width || playerMap->getCell(x_, y_)->getType() == MOUNTAIN) return;
+    if (x_ < 0 || x_ >= height || y_ < 0 || y_ >= width || playerMap->getCell(x_, y_)->getType() == MOUNTAIN) return false;
     playerInfos[playerID]->addMove(x, y, dir, half);
+    return true;
 }
 
 void GeneralsGameModel::addRound() {

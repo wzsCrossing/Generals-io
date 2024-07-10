@@ -14,9 +14,10 @@ class MapPage : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MapPage(QWidget *parent = nullptr, QSharedPointer<GeneralsViewModel> ViewModel = nullptr);
+    explicit MapPage(QWidget *parent = nullptr);
     ~MapPage();
     QString playerName;
+    GamePage *getGamePage();
 
 private:
     Ui::MapPage *ui;
@@ -24,14 +25,12 @@ private:
     int width;
     int height;
     QPushButton *VisualMap[MaxSize][MaxSize];
-    QSharedPointer<GeneralsViewModel> ViewModel;
 
     void paintEvent(QPaintEvent *event);
-    void setViewModel();
-
 
 signals:
     void backToMain();
+    void startGame();
 };
 
 #endif // MAPPAGE_H

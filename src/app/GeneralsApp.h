@@ -12,4 +12,5 @@ public:
     ~GeneralsApp();
 private:
     MainWindow* mainWindow;
+    GeneralsViewModel *viewModel;
 };

@@ -6,6 +6,7 @@
 #include <QString>
 #include <QVector>
 #include "PlayerInfo.h"
+#include "MapInfo.h"
 #include "GeneralsGameModel.h"
 
 class GeneralsViewModel : public QObject {
@@ -28,7 +29,9 @@ public slots:
     void surrender();
 
 signals:
-    void mapChanged();
+    void mapChanged(std::shared_ptr<MapInfo> map, QVector<std::shared_ptr<PlayerInfo>> ranklist, int round);
+    void successfulMove(Direction dir);
+    void playerDie(const QString &playerName);
 
 private slots:
     void updateGame();

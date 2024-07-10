@@ -1,28 +1,31 @@
 #include "mappage.h"
 #include "ui_mappage.h"
-#include "generalsviewmodel.h"
 #include <QPushButton>
 #include <QFont>
 
-MapPage::MapPage(QWidget *parent, QSharedPointer<GeneralsViewModel> ViewModel)
+MapPage::MapPage(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MapPage)
     , gamepage(new GamePage)
-    , ViewModel(ViewModel)
 {
     ui->setupUi(this);
     this->resize(1280, 840);
     this->setWindowTitle("Generals.io");
     connect(ui->StartGame, &QPushButton::clicked, this, [=] {this->hide();
+                                                             emit startGame();
                                                              gamepage->playerName = playerName;
-                                                             gamepage->show();});
+                                                            });
     connect(ui->BackToMain, &QPushButton::clicked, this, [=] {emit backToMain();});
 }
 
 MapPage::~MapPage()
 {
     delete ui;
-    delete gamepage;
+    //delete gamepage;
+}
+
+GamePage* MapPage::getGamePage() {
+    return gamepage;
 }
 
 void MapPage::paintEvent(QPaintEvent *event) {
