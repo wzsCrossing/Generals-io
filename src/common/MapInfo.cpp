@@ -192,14 +192,6 @@ int MapInfo::getHeight() {
     return height_;
 }
 
-int MapInfo::getFocusX() {
-    return focus_x;
-}
-
-int MapInfo::getFocusY() {
-    return focus_y;
-}
-
 QVector<QVector<Cell*>> MapInfo::getMap() {
     return map_;
 }

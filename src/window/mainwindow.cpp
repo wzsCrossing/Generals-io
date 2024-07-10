@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "./ui_mainwindow.h"
+#include "ui_mainwindow.h"
 #include <QPainter>
 #include <QDebug>
 #include <QFont>
@@ -16,29 +16,24 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     this->setWindowTitle("Generals.io");
-    this->resize(1280, 840);
-    QMenu *SubMenu = new QMenu("Log In");
-    QAction *Set_Nickname = new QAction("Set Nickname");
-    QAction *Set_Server_Address = new QAction("Set Server Address");
-    QAction *Start_Game = new QAction("Start Game");
-    ui->Tool->addMenu(SubMenu);
-    SubMenu->addAction(Set_Nickname);
-    SubMenu->addAction(Set_Server_Address);
-    ui->Tool->addAction(Start_Game);
-    connect(Set_Nickname, &QAction::triggered, this, &MainWindow::setNickname);
-    connect(Set_Server_Address, &QAction::triggered, this, &MainWindow::setServerAddress);
+    this->resize(960, 840);
     connect(ui->Input_Nickname, &QLineEdit::textChanged, this, &MainWindow::expandTextbox);
     connect(ui->Input_Nickname, &QLineEdit::returnPressed, this, [=] {
                                                                         this->hide();
                                                                         mappage->show();
+                                                                        mappage->playerName = ui->Input_Nickname->text();
                                                                         emit sendNickname(ui->Input_Nickname->text());
                                                                      });
     connect(ui->Ready_Button, &QPushButton::clicked, this, [=]  {
                                                                     this->hide();
                                                                     mappage->show();
+                                                                    mappage->playerName = ui->Input_Nickname->text();
                                                                     emit sendNickname(ui->Input_Nickname->text());
                                                                 });
     connect(this, SIGNAL(sendNickname(QString)), commands, SLOT(setPlayerName(QString)));
+    connect(mappage, &MapPage::backToMain, this, [=] {this->show();
+                                                      mappage->hide();
+                                                     });
     this->show();
 }
 
@@ -61,48 +56,6 @@ void MainWindow::expandTextbox(const QString &text) {
     Nickname_Input_Width = (TextSize > 200) ? TextSize : 200;
     ui->Input_Nickname->resize(Nickname_Input_Width, 40);
 }
-
-void MainWindow::setNickname() {
-    QScopedPointer<QInputDialog> Nickname_Dialog(new QInputDialog(this));
-    Nickname_Dialog->setWindowTitle("Set Nickname");
-    Nickname_Dialog->setLabelText("Please enter your nickname");
-    Nickname_Dialog->setInputMode(QInputDialog::TextInput);
-    Nickname_Dialog->setFixedSize(500, 500);
-    QString style = "QPushButton{background:rgb(26,179,148); color:rgb(255,255,255); border-radius:3px; min-height:30px; min-width:60px; font:13px \"Consolas\";}"
-                    "QPushButton:hover{background:rgb(24,166,137);}"
-                    "QPushButton:pressed{background:rgb(32,75,148);}"
-                    "QLineEdit{border:2px;padding:4px;padding-left:10px;border-radius:3px;font:13px \"Consolas\";}"
-                    "QLineEdit:focus{border:2px;}"
-                    "QLabel{font:12px \"Consolas\"; font-weight:bold;}";
-    Nickname_Dialog->setStyleSheet(style);
-    if (Nickname_Dialog->exec() == QInputDialog::Accepted) {
-        QString Nickname = Nickname_Dialog->textValue();
-        if (Nickname.size() > 50) {
-            QMessageBox::information(this, "Warning", "Your name must be no more than 50 characters!");
-            return;
-        }
-        ui->Input_Nickname->setText(Nickname);
-    }
-}
-
-void MainWindow::setServerAddress() {
-    QScopedPointer<QInputDialog> Address_Dialog(new QInputDialog(this));
-    Address_Dialog->setWindowTitle("Set Server Address");
-    Address_Dialog->setLabelText("Please enter your server address");
-    Address_Dialog->setInputMode(QInputDialog::TextInput);
-    Address_Dialog->setFixedSize(500, 500);
-    QString style = "QPushButton{background:rgb(26,179,148); color:rgb(255,255,255); border-radius:3px; min-height:30px; min-width:60px; font:13px \"Consolas\";}"
-                    "QPushButton:hover{background:rgb(24,166,137);}"
-                    "QPushButton:pressed{background:rgb(32,75,148);}"
-                    "QLineEdit{border:2px;padding:4px;padding-left:10px;border-radius:3px;font:13px \"Consolas\";}"
-                    "QLineEdit:focus{border:2px;}"
-                    "QLabel{font:12px \"Consolas\"; font-weight:bold;}";
-    Address_Dialog->setStyleSheet(style);
-    if (Address_Dialog->exec() == QInputDialog::Accepted) {
-        ui->Input_Address->setText(Address_Dialog->textValue());
-    }
-}
-
 
 void MainWindow::paintEvent(QPaintEvent *event) {
 
@@ -137,7 +90,7 @@ void MainWindow::paintEvent(QPaintEvent *event) {
      * Load the Nickname Label
      */
 
-    int Nickname_Label_Y = Pix_Y + Pic_Height ;
+    int Nickname_Label_Y = Pix_Y + Pic_Height + Window_Height * 0.03;
     ui->Nickname_Label->setGeometry(0, Nickname_Label_Y, Window_Width, 40);
     font.setPointSize(17);
     ui->Nickname_Label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
@@ -154,7 +107,6 @@ void MainWindow::paintEvent(QPaintEvent *event) {
     ui->Input_Nickname->setFont(font);
     ui->Input_Nickname->setPlaceholderText("Anonymous");
     ui->Input_Nickname->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-    ui->Input_Nickname->setClearButtonEnabled(true);
     /*
      * Load the Address Label
      */
@@ -175,9 +127,9 @@ void MainWindow::paintEvent(QPaintEvent *event) {
     ui->Input_Address->setGeometry(Address_Input_X, Address_Input_Y, Address_Input_Width, 40);
     font.setPointSize(17);
     ui->Input_Address->setFont(font);
-    ui->Input_Address->setPlaceholderText("Anonymous");
+    ui->Input_Address->setPlaceholderText("Coming Soon!");
     ui->Input_Address->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-    ui->Input_Address->setClearButtonEnabled(true);
+    ui->Input_Address->setReadOnly(true);
 
     /*
      * Load the Connect Button

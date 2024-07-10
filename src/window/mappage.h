@@ -14,12 +14,16 @@ class MapPage : public QMainWindow
 
 public:
     explicit MapPage(QWidget *parent = nullptr);
+    QString playerName;
     ~MapPage();
-    void goToGamePage();
 
 private:
     Ui::MapPage *ui;
     GamePage *gamepage;
+    void paintEvent(QPaintEvent *event);
+
+signals:
+    void backToMain();
 };
 
 #endif // MAPPAGE_H

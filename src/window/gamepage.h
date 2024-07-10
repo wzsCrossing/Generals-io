@@ -22,10 +22,11 @@ public:
     ~GamePage();
     void paintEvent(QPaintEvent *event);
     void keyPressEvent(QKeyEvent *event);
-    int focus_X;
-    int focus_Y;
+    QString playerName;
 
 private:
+    int focus_X;
+    int focus_Y;
     Ui::GamePage *ui;
     MapInfo *map;
     QPushButton *VisualMap[MaxSize][MaxSize];
@@ -33,11 +34,7 @@ private:
     QString getColor(int colorId, const QString &Pic, bool isFocus) const;
     GeneralsViewModel *commands;
 
-public slots:
-    void setFocusSignal(int x, int y);
-
 signals:
-    void focusSignal(int x, int y);
     void moveSignal(int x, int y, Direction dir, bool half);
 };
 

@@ -17,9 +17,6 @@ public slots:
     void setPlayerName(const QString &nickname) {
         qDebug() << nickname << Qt::endl;
     }
-    void setFocus(int x, int y) {
-        qDebug() << x << ' ' << y << Qt::endl;
-    }
     void move(int x, int y, Direction dir, bool half) {
         qDebug() << x << ' ' << y << ' ';
         switch (dir) {
