@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "./ui_mainwindow.h"
 #include <QPainter>
 #include <QDebug>
 #include <QFont>
@@ -11,27 +11,42 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , mappage(new MapPage)
+    , commands(new GeneralsViewModel)
 {
     ui->setupUi(this);
-    this->resize(840, 840);
+    this->setWindowTitle("Generals.io");
+    this->resize(1280, 840);
     QMenu *SubMenu = new QMenu("Log In");
     QAction *Set_Nickname = new QAction("Set Nickname");
     QAction *Set_Server_Address = new QAction("Set Server Address");
-    QAction *Set_Both = new QAction("Set Both Nickname and Server Address");
-    QAction *Create_Map = new QAction("Create Map");
     QAction *Start_Game = new QAction("Start Game");
     ui->Tool->addMenu(SubMenu);
     SubMenu->addAction(Set_Nickname);
     SubMenu->addAction(Set_Server_Address);
-    ui->Tool->addAction(Create_Map);
     ui->Tool->addAction(Start_Game);
     connect(Set_Nickname, &QAction::triggered, this, &MainWindow::setNickname);
     connect(Set_Server_Address, &QAction::triggered, this, &MainWindow::setServerAddress);
+    connect(ui->Input_Nickname, &QLineEdit::textChanged, this, &MainWindow::expandTextbox);
+    connect(ui->Input_Nickname, &QLineEdit::returnPressed, this, [=] {
+                                                                        this->hide();
+                                                                        mappage->show();
+                                                                        emit sendNickname(ui->Input_Nickname->text());
+                                                                     });
+    connect(ui->Ready_Button, &QPushButton::clicked, this, [=]  {
+                                                                    this->hide();
+                                                                    mappage->show();
+                                                                    emit sendNickname(ui->Input_Nickname->text());
+                                                                });
+    connect(this, SIGNAL(sendNickname(QString)), commands, SLOT(setPlayerName(QString)));
+    this->show();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete mappage;
+    delete commands;
 }
 
 void MainWindow::expandTextbox(const QString &text) {
@@ -88,6 +103,7 @@ void MainWindow::setServerAddress() {
     }
 }
 
+
 void MainWindow::paintEvent(QPaintEvent *event) {
 
     /*
@@ -139,7 +155,6 @@ void MainWindow::paintEvent(QPaintEvent *event) {
     ui->Input_Nickname->setPlaceholderText("Anonymous");
     ui->Input_Nickname->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     ui->Input_Nickname->setClearButtonEnabled(true);
-    connect(ui->Input_Nickname, &QLineEdit::textChanged, this, &MainWindow::expandTextbox, Qt::UniqueConnection);
     /*
      * Load the Address Label
      */
@@ -169,7 +184,7 @@ void MainWindow::paintEvent(QPaintEvent *event) {
      */
     int Connect_Button_Width = 160;
     int Connect_Button_Height = 40;
-    int Connect_Button_X = Window_Width * 0.1;
+    int Connect_Button_X = Window_Width * 0.3 - Connect_Button_Width / 2;
     int Connect_Button_Y = Address_Input_Y + Window_Height * 0.2;
     ui->Connect_Button->setGeometry(Connect_Button_X, Connect_Button_Y, Connect_Button_Width, Connect_Button_Height);
     ui->Connect_Button->setFont(font);
@@ -182,7 +197,7 @@ void MainWindow::paintEvent(QPaintEvent *event) {
      */
     int Ready_Button_Width = 160;
     int Ready_Button_Height = 40;
-    int Ready_Button_X = Window_Width * 0.4;
+    int Ready_Button_X = Window_Width * 0.7 - Ready_Button_Width / 2;
     int Ready_Button_Y = Connect_Button_Y;
     ui->Ready_Button->setGeometry(Ready_Button_X, Ready_Button_Y, Ready_Button_Width, Ready_Button_Height);
     ui->Ready_Button->setFont(font);
@@ -190,16 +205,4 @@ void MainWindow::paintEvent(QPaintEvent *event) {
                                     "QPushButton:pressed{background:blue;}"\
                                     "QPushButton{background: #029FFF; border-radius: 8px;}");
 
-    /*
-     * Load the Create Button
-     */
-    int Create_Button_Width = 160;
-    int Create_Button_Height = 40;
-    int Create_Button_X = Window_Width * 0.7;
-    int Create_Button_Y = Connect_Button_Y;
-    ui->Create_Button->setGeometry(Create_Button_X, Create_Button_Y, Create_Button_Width, Create_Button_Height);
-    ui->Create_Button->setFont(font);
-    ui->Create_Button->setStyleSheet("QPushButton:hover{background:#81D4FA;}"\
-                                     "QPushButton:pressed{background:blue;}"\
-                                     "QPushButton{background: #029FFF; border-radius: 8px;}");
 }
