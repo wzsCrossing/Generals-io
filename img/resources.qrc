@@ -30,5 +30,7 @@
         <file>res.qrc</file>
         <file>resources.qrc</file>
         <file>Swamp.png</file>
+        <file>General-Focus.png</file>
+        <file>City-Focus.png</file>
     </qresource>
 </RCC>

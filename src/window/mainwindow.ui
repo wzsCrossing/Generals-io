@@ -147,7 +147,7 @@
    <widget class="QPushButton" name="Ready_Button">
     <property name="geometry">
      <rect>
-      <x>260</x>
+      <x>500</x>
       <y>480</y>
       <width>80</width>
       <height>18</height>
@@ -155,19 +155,6 @@
     </property>
     <property name="text">
      <string>Ready</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="Create_Button">
-    <property name="geometry">
-     <rect>
-      <x>470</x>
-      <y>480</y>
-      <width>80</width>
-      <height>18</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Create</string>
     </property>
    </widget>
   </widget>

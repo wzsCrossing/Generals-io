@@ -5,6 +5,9 @@
 #include <QLineEdit>
 #include <QLabel>
 #include <QString>
+#include <QStackedWidget>
+#include <mappage.h>
+#include "generalsviewmodel.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -20,20 +23,22 @@ class MainWindow : public QMainWindow
         MainWindow(QWidget *parent = nullptr);
         ~MainWindow();
 
-        /*
-         * The function paintEvent is to load all the components on the mainwindow.
-         * It includes the load of labels, lineedits and buttons
+        /**
+         * @brief The function paintEvent is to load all the components on the mainwindow.
+         *        It includes the load of labels, lineedits and buttons
+         * @param not important
          */
         void paintEvent(QPaintEvent *event);
 
-        /*
-         * The function expandTextbox is to expand the width of a lineedit textbox
+        /**
+         * @brief The function expandTextbox is to expand the width of a lineedit textbox
          * when the number of characters exceeds the maximum capacity.
+         * @param text: The text string in the current box.
          */
         void expandTextbox(const QString &text);
 
-        /*
-         * The function setNickname is used to show a message box where player should enter his/her nickname.
+        /**
+         * @brief The function setNickname is used to show a message box where player should enter his/her nickname.
          */
         void setNickname();
 
@@ -45,5 +50,10 @@ class MainWindow : public QMainWindow
     private:
         Ui::MainWindow *ui;
         int Nickname_Input_Width = 200;
+        MapPage *mappage = nullptr;
+        GeneralsViewModel *commands;
+
+    signals:
+        void sendNickname(const QString &nickname);
 };
 #endif // MAINWINDOW_H
