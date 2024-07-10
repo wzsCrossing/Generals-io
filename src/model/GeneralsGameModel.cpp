@@ -23,6 +23,10 @@ void GeneralsGameModel::generateRandomGame(int cityDense, int mountainDense, int
     playerMap->capitalDistribution(cntPlayer);
 }
 
+QString GeneralsGameModel::getPlayerName() {
+    return playerName;
+}
+
 QVector<std::shared_ptr<PlayerInfo>> GeneralsGameModel::getRankList() {
     for (auto &player : playerInfos) {
         player->setLandNum(0);
@@ -57,7 +61,7 @@ void GeneralsGameModel::startGame() {
 }
 
 void GeneralsGameModel::setFocus(int x, int y) {
-    if (!gameStarted || surrendered || x < 0 || x >= width || y < 0 || y >= height) return;
+    if (x < 0 || x >= width || y < 0 || y >= height || playerMap->getCell(x, y)->getType() == MOUNTAIN) return;
     focus = std::make_shared<Focus>(x, y);
 }
 

@@ -18,6 +18,7 @@ public:
     GeneralsGameModel& getModel() throw();
 
     std::shared_ptr<MapInfo> getMapInfo() throw();
+    QString getPlayerName();
     QVector<std::shared_ptr<PlayerInfo>> getRankList() throw();
 
 public slots:
