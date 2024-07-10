@@ -2,6 +2,7 @@
 #define MOVE_COMMAND_H
 
 #include "etlbase.h"
+#include "PlayerInfo.h"
 
 class GeneralsViewModel;
 
@@ -13,8 +14,9 @@ public:
 
 private:
     GeneralsViewModel *m_pVM;
-    int m_player_id;
-    int m_x, m_y, m_dx, m_dy;
+    int m_x, m_y;
+    Direction m_dir;
+    bool m_half;
 };
 
 #endif // MOVE_COMMAND_H

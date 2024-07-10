@@ -32,22 +32,20 @@ set(
     src/main.cpp
 
     src/common/etlbase.h
+    src/common/PlayerInfo.cpp
+    src/common/PlayerInfo.h
     src/common/MapInfo.cpp
     src/common/MapInfo.h
     src/common/GameInfo.cpp
     src/common/GameInfo.h
 
-    src/model/GeneralsDataModel.cpp
-    src/model/GeneralsDataModel.h
+    src/model/GeneralsGameModel.cpp
+    src/model/GeneralsGameModel.h
 
-    src/viewmodel/commands/PlayerConnectCommand.cpp
-    src/viewmodel/commands/PlayerConnectCommand.h
-    src/viewmodel/commands/PlayerDisconnectCommand.cpp
-    src/viewmodel/commands/PlayerDisconnectCommand.h
-    src/viewmodel/commands/PlayerReadyCommand.cpp
-    src/viewmodel/commands/PlayerReadyCommand.h
-    src/viewmodel/commands/ChatCommand.cpp
-    src/viewmodel/commands/ChatCommand.h
+    src/viewmodel/commands/StartGameCommand.cpp
+    src/viewmodel/commands/StartGameCommand.h
+    src/viewmodel/commands/SetFocusCommand.cpp
+    src/viewmodel/commands/SetFocusCommand.h
     src/viewmodel/commands/MoveCommand.cpp
     src/viewmodel/commands/MoveCommand.h
     src/viewmodel/commands/SurrenderCommand.cpp
