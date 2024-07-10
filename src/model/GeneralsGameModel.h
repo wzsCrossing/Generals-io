@@ -12,16 +12,17 @@ public:
     std::shared_ptr<MapInfo> getMapInfo() throw();
     int getPlayerNum();
     QVector<std::shared_ptr<PlayerInfo>> getRankList();
-    void startGame(const QString &nickname);
+    void setPlayerName(const QString &nickname);
+    void startGame();
     void setFocus(int x, int y);
-    void move(int x, int y, Direction dir, bool half);
+    void move(int playerID, int x, int y, Direction dir, bool half);
     void clearMove();
     void cancelMove();
     void surrender();
     void addRound();
+    void execMove();
 
 private:
-    void execMove();
     void generateRandomGame(int cityDense, int mountainDense, int playerNum);
 
     const std::pair<int, int> directions[4] = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};

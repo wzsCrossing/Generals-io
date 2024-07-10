@@ -20,9 +20,13 @@ QVector<std::shared_ptr<PlayerInfo>> GeneralsViewModel::getRankList() throw() {
     return m_GeneralsModel->getRankList();
 }
 
-void GeneralsViewModel::startGame(const QString &nickname) {
+void GeneralsViewModel::setPlayerName(const QString &nickname) {
+    m_GeneralsModel->setPlayerName(nickname);
+}
+
+void GeneralsViewModel::startGame() {
+    m_GeneralsModel->startGame();
     gameTimer->start(500);
-    m_GeneralsModel->startGame(nickname);
 }
 
 void GeneralsViewModel::setFocus(int x, int y) {
@@ -30,7 +34,7 @@ void GeneralsViewModel::setFocus(int x, int y) {
 }
 
 void GeneralsViewModel::move(int x, int y, Direction dir, bool half) {
-    m_GeneralsModel->move(x, y, dir, half);
+    m_GeneralsModel->move(0, x, y, dir, half);
 }
 
 void GeneralsViewModel::surrender() {
@@ -38,6 +42,7 @@ void GeneralsViewModel::surrender() {
 }
 
 void GeneralsViewModel::updateGame() {
+    m_GeneralsModel->execMove();
     m_GeneralsModel->addRound();
     emit mapChanged();
 }

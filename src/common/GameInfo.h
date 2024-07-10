@@ -7,6 +7,7 @@
 
 struct Focus {
     int x, y;
+    Focus(int x, int y) : x(x), y(y) {}
 };
 
 class GameInfo {

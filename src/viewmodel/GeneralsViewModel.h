@@ -21,7 +21,8 @@ public:
     QVector<std::shared_ptr<PlayerInfo>> getRankList() throw();
 
 public slots:
-    void startGame(const QString &nickname);
+    void setPlayerName(const QString &nickname);
+    void startGame();
     void setFocus(int x, int y);
     void move(int x, int y, Direction dir, bool half);
     void surrender();
