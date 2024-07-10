@@ -20,9 +20,14 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
     public:
-        MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr, QSharedPointer<GeneralsViewModel> ViewModel = nullptr);
         ~MainWindow();
 
+    private:
+        Ui::MainWindow *ui;
+        int Nickname_Input_Width = 200;
+        MapPage *mappage = nullptr;
+        QSharedPointer<GeneralsViewModel> ViewModel;
         /**
          * @brief The function paintEvent is to load all the components on the mainwindow.
          *        It includes the load of labels, lineedits and buttons
@@ -37,21 +42,6 @@ class MainWindow : public QMainWindow
          */
         void expandTextbox(const QString &text);
 
-        /**
-         * @brief The function setNickname is used to show a message box where player should enter his/her nickname.
-         */
-        void setNickname();
-
-        /*
-         * The function setServerAddress is used to show a message box where player should enter his/her server address.
-         */
-        void setServerAddress();
-
-    private:
-        Ui::MainWindow *ui;
-        int Nickname_Input_Width = 200;
-        MapPage *mappage = nullptr;
-        GeneralsViewModel *commands;
 
     signals:
         void sendNickname(const QString &nickname);

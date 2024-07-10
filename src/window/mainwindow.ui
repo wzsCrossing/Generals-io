@@ -168,12 +168,6 @@
      <height>17</height>
     </rect>
    </property>
-   <widget class="QMenu" name="Tool">
-    <property name="title">
-     <string>Tools</string>
-    </property>
-   </widget>
-   <addaction name="Tool"/>
   </widget>
  </widget>
  <resources/>

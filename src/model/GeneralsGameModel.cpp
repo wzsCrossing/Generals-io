@@ -42,7 +42,7 @@ QVector<std::shared_ptr<PlayerInfo>> GeneralsGameModel::getRankList() {
         }
     }
     QVector<std::shared_ptr<PlayerInfo>> rankList = playerInfos;
-    std::sort(rankList.begin(), rankList.end(), [](PlayerInfo* a, PlayerInfo* b) {
+    std::sort(rankList.begin(), rankList.end(), [](std::shared_ptr<PlayerInfo> a, std::shared_ptr<PlayerInfo> b) {
         return a->getArmyNum() > b->getArmyNum() || (a->getArmyNum() == b->getArmyNum() && a->getLandNum() > b->getLandNum());
     });
     return rankList;

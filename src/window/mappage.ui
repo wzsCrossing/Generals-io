@@ -27,6 +27,19 @@
      <string>Start Game</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="BackToMain">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>310</y>
+      <width>80</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Back</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -37,12 +50,6 @@
      <height>17</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menu1">
-    <property name="title">
-     <string>1</string>
-    </property>
-   </widget>
-   <addaction name="menu1"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

@@ -17,6 +17,7 @@ include_directories(
     src/model
     src/viewmodel
     src/window
+    src/app
 )
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Gui Widgets WebSockets Multimedia)
@@ -54,6 +55,9 @@ set(
     src/window/gamepage.cpp
     src/window/gamepage.h
     src/window/gamepage.ui
+
+    src/app/GeneralsApp.cpp
+    src/app/GeneralsApp.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 5)

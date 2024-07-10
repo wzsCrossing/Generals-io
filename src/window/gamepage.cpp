@@ -4,13 +4,13 @@
 #include <QIcon>
 #include <QPainter>
 
-GamePage::GamePage(QWidget *parent)
+GamePage::GamePage(QWidget *parent, QSharedPointer<GeneralsViewModel> ViewModel)
     : QMainWindow(parent)
     , ui(new Ui::GamePage)
     , map(new MapInfo(16, 16))
     , focus_X(-1)
     , focus_Y(-1)
-    , commands(new GeneralsViewModel)
+    , ViewModel(ViewModel)
 {
     /*
      * Map Construct
@@ -28,9 +28,8 @@ GamePage::GamePage(QWidget *parent)
         for (int j = 0; j < width; j++) {
             VisualMap[i][j] = new QPushButton(this);
             //VisualMap[i][j]->setFocus()
-            connect(VisualMap[i][j], &QPushButton::clicked, this, [=]{setFocusSignal(i, j);});
+            connect(VisualMap[i][j], &QPushButton::clicked, this, [=]{focus_X = i; focus_Y = j;});
         }
-    connect(this, SIGNAL(focusSignal(int,int)), commands, SLOT(setFocus(int,int)));
     /*
      * Ranking List
      */
@@ -95,7 +94,6 @@ GamePage::GamePage(QWidget *parent)
     font.setPointSize(15);
     ui->board->setFont(font);
     ui->board->setReadOnly(true);
-    ui->board->setText("Welcome to Generals.io!");
 }
 
 GamePage::~GamePage()
@@ -105,7 +103,6 @@ GamePage::~GamePage()
         for (int j = 0, w = map->getWidth(); j < w; j++)
             delete VisualMap[i][j];
     delete map;
-    delete commands;
 }
 
 QString GamePage::getColor(int colorId, const QString &Pic, bool isFocus) const{
@@ -140,12 +137,6 @@ QBrush GamePage::getBrush(int colorId) const {
         default : brush.setColor(QColor::fromRgb(0x80, 0x80, 0x80));break;
     }
     return brush;
-}
-
-void GamePage::setFocusSignal(int x, int y) {
-    focus_X = x;
-    focus_Y = y;
-    emit focusSignal(x, y);
 }
 
 void GamePage::paintEvent(QPaintEvent *event) {
@@ -204,6 +195,7 @@ void GamePage::paintEvent(QPaintEvent *event) {
     /*
      * To construct board
      */
+    ui->board->setText("Hello! " + playerName + "!\nWelcome to Generals.io!\nPress W/A/S/D to move up/left/down/right.");
     ui->board->setGeometry((width + 1) * ButtonSize, 50 * (playerNum + 3), this->size().rwidth() - (width + 1) * ButtonSize, this->size().rheight() - 50 * (playerNum + 3));
 }
 
