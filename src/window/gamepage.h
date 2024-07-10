@@ -18,7 +18,7 @@ class GamePage : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit GamePage(QWidget *parent = nullptr);
+    explicit GamePage(QWidget *parent = nullptr, QSharedPointer<GeneralsViewModel> ViewModel = nullptr);
     ~GamePage();
     void paintEvent(QPaintEvent *event);
     void keyPressEvent(QKeyEvent *event);
@@ -32,7 +32,7 @@ private:
     QPushButton *VisualMap[MaxSize][MaxSize];
     QBrush getBrush(int colorId) const;
     QString getColor(int colorId, const QString &Pic, bool isFocus) const;
-    GeneralsViewModel *commands;
+    QSharedPointer<GeneralsViewModel> ViewModel;
 
 signals:
     void moveSignal(int x, int y, Direction dir, bool half);

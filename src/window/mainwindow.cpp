@@ -8,11 +8,11 @@
 #include <QInputDialog>
 #include <QScopedPointer>
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(QWidget *parent, QSharedPointer<GeneralsViewModel> ViewModel)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , mappage(new MapPage)
-    , commands(new GeneralsViewModel)
+    , mappage(new MapPage(parent, ViewModel))
+    , ViewModel(ViewModel)
 {
     ui->setupUi(this);
     this->setWindowTitle("Generals.io");
@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
                                                                     mappage->playerName = ui->Input_Nickname->text();
                                                                     emit sendNickname(ui->Input_Nickname->text());
                                                                 });
-    connect(this, SIGNAL(sendNickname(QString)), commands, SLOT(setPlayerName(QString)));
+    connect(this, SIGNAL(sendNickname(QString)), ViewModel.data(), SLOT(setPlayerName(QString)));
     connect(mappage, &MapPage::backToMain, this, [=] {this->show();
                                                       mappage->hide();
                                                      });
@@ -41,7 +41,6 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete mappage;
-    delete commands;
 }
 
 void MainWindow::expandTextbox(const QString &text) {

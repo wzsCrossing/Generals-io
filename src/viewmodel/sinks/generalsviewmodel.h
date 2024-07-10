@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QDebug>
 #include <GameInfo.h>
+#include <QSharedPointer>
 
 class GeneralsViewModel : public QObject
 {

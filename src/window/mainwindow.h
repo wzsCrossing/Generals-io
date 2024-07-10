@@ -20,14 +20,14 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
     public:
-        MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr, QSharedPointer<GeneralsViewModel> ViewModel = nullptr);
         ~MainWindow();
 
     private:
         Ui::MainWindow *ui;
         int Nickname_Input_Width = 200;
         MapPage *mappage = nullptr;
-        GeneralsViewModel *commands;
+        QSharedPointer<GeneralsViewModel> ViewModel;
         /**
          * @brief The function paintEvent is to load all the components on the mainwindow.
          *        It includes the load of labels, lineedits and buttons

@@ -6,10 +6,12 @@
 #include <QPainter>
 #include <QLabel>
 #include <QVBoxLayout>
+#include <generalsviewmodel.h>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
+    QSharedPointer<GeneralsViewModel> ViewModel(new GeneralsViewModel);
+    MainWindow w(nullptr, ViewModel);
     return a.exec();
 }

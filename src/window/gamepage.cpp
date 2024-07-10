@@ -4,13 +4,13 @@
 #include <QIcon>
 #include <QPainter>
 
-GamePage::GamePage(QWidget *parent)
+GamePage::GamePage(QWidget *parent, QSharedPointer<GeneralsViewModel> ViewModel)
     : QMainWindow(parent)
     , ui(new Ui::GamePage)
     , map(new MapInfo(16, 16))
     , focus_X(-1)
     , focus_Y(-1)
-    , commands(new GeneralsViewModel)
+    , ViewModel(ViewModel)
 {
     /*
      * Map Construct
@@ -103,7 +103,6 @@ GamePage::~GamePage()
         for (int j = 0, w = map->getWidth(); j < w; j++)
             delete VisualMap[i][j];
     delete map;
-    delete commands;
 }
 
 QString GamePage::getColor(int colorId, const QString &Pic, bool isFocus) const{
