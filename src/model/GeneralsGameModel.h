@@ -11,6 +11,7 @@ public:
     GeneralsGameModel();
     std::shared_ptr<MapInfo> getMapInfo() throw();
     int getPlayerNum();
+    QString getPlayerName();
     QVector<std::shared_ptr<PlayerInfo>> getRankList();
     void setPlayerName(const QString &nickname);
     void startGame();

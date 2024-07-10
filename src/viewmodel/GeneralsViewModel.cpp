@@ -16,6 +16,10 @@ std::shared_ptr<MapInfo> GeneralsViewModel::getMapInfo() throw() {
     return m_GeneralsModel->getMapInfo();
 }
 
+QString GeneralsViewModel::getPlayerName() {
+    return m_GeneralsModel->getPlayerName();
+}
+
 QVector<std::shared_ptr<PlayerInfo>> GeneralsViewModel::getRankList() throw() {
     return m_GeneralsModel->getRankList();
 }
