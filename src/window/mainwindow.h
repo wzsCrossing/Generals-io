@@ -7,6 +7,7 @@
 #include <QString>
 #include <QStackedWidget>
 #include <mappage.h>
+#include "generalsviewmodel.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -46,14 +47,13 @@ class MainWindow : public QMainWindow
          */
         void setServerAddress();
 
-        /*
-         * The functionn goToMapPage is used to transfer from current page to map page
-         */
-        void goToMapPage();
-
     private:
         Ui::MainWindow *ui;
         int Nickname_Input_Width = 200;
         MapPage *mappage = nullptr;
+        GeneralsViewModel *commands;
+
+    signals:
+        void sendNickname(const QString &nickname);
 };
 #endif // MAINWINDOW_H

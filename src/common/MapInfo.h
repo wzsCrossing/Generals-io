@@ -86,11 +86,4 @@ public:
      * @brief Increase the number of armies in the city and capital cell
      */
     void increaseCityArmy();
-public slots:
-    void setFocus(int x, int y) {
-        focus_x = x;
-        focus_y = y;
-    }
-signals:
-    void mySignal(int x, int y);
 };

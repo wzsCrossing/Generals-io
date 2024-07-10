@@ -1,5 +1,6 @@
 #include "mappage.h"
 #include "ui_mappage.h"
+#include "generalsviewmodel.h"
 #include <QPushButton>
 
 MapPage::MapPage(QWidget *parent)

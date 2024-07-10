@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , mappage(new MapPage)
+    , commands(new GeneralsViewModel)
 {
     ui->setupUi(this);
     this->setWindowTitle("Generals.io");
@@ -27,7 +28,17 @@ MainWindow::MainWindow(QWidget *parent)
     connect(Set_Nickname, &QAction::triggered, this, &MainWindow::setNickname);
     connect(Set_Server_Address, &QAction::triggered, this, &MainWindow::setServerAddress);
     connect(ui->Input_Nickname, &QLineEdit::textChanged, this, &MainWindow::expandTextbox);
-    connect(ui->Ready_Button, &QPushButton::clicked, this, &MainWindow::goToMapPage);
+    connect(ui->Input_Nickname, &QLineEdit::returnPressed, this, [=] {
+                                                                        this->hide();
+                                                                        mappage->show();
+                                                                        emit sendNickname(ui->Input_Nickname->text());
+                                                                     });
+    connect(ui->Ready_Button, &QPushButton::clicked, this, [=]  {
+                                                                    this->hide();
+                                                                    mappage->show();
+                                                                    emit sendNickname(ui->Input_Nickname->text());
+                                                                });
+    connect(this, SIGNAL(sendNickname(QString)), commands, SLOT(setPlayerName(QString)));
     this->show();
 }
 
@@ -35,11 +46,7 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete mappage;
-}
-
-void MainWindow::goToMapPage() {
-    this->hide();
-    mappage->show();
+    delete commands;
 }
 
 void MainWindow::expandTextbox(const QString &text) {

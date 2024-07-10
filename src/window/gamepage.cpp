@@ -10,6 +10,7 @@ GamePage::GamePage(QWidget *parent)
     , map(new MapInfo(16, 16))
     , focus_X(-1)
     , focus_Y(-1)
+    , commands(new GeneralsViewModel)
 {
     /*
      * Map Construct
@@ -26,9 +27,10 @@ GamePage::GamePage(QWidget *parent)
     for (int i = 0; i < height; i++)
         for (int j = 0; j < width; j++) {
             VisualMap[i][j] = new QPushButton(this);
+            //VisualMap[i][j]->setFocus()
             connect(VisualMap[i][j], &QPushButton::clicked, this, [=]{setFocusSignal(i, j);});
         }
-    connect(this, &GamePage::mySignal, map, &MapInfo::setFocus);
+    connect(this, SIGNAL(focusSignal(int,int)), commands, SLOT(setFocus(int,int)));
     /*
      * Ranking List
      */
@@ -103,6 +105,7 @@ GamePage::~GamePage()
         for (int j = 0, w = map->getWidth(); j < w; j++)
             delete VisualMap[i][j];
     delete map;
+    delete commands;
 }
 
 QString GamePage::getColor(int colorId, const QString &Pic, bool isFocus) const{
@@ -142,7 +145,7 @@ QBrush GamePage::getBrush(int colorId) const {
 void GamePage::setFocusSignal(int x, int y) {
     focus_X = x;
     focus_Y = y;
-    emit mySignal(x, y);
+    emit focusSignal(x, y);
 }
 
 void GamePage::paintEvent(QPaintEvent *event) {
@@ -202,4 +205,25 @@ void GamePage::paintEvent(QPaintEvent *event) {
      * To construct board
      */
     ui->board->setGeometry((width + 1) * ButtonSize, 50 * (playerNum + 3), this->size().rwidth() - (width + 1) * ButtonSize, this->size().rheight() - 50 * (playerNum + 3));
+}
+
+void GamePage::keyPressEvent(QKeyEvent * event) {
+    switch (event->key()) {
+        case  Qt::Key_W :
+            emit moveSignal(focus_X, focus_Y, Direction::UP, false);
+            focus_Y--;
+            break;
+        case Qt::Key_A:
+            emit moveSignal(focus_X, focus_Y, Direction::LEFT, false);
+            focus_X--;
+            break;
+        case Qt::Key_S:
+            emit moveSignal(focus_X, focus_Y, Direction::DOWN, false);
+            focus_Y++;
+            break;
+        case Qt::Key_D:
+            emit moveSignal(focus_X, focus_Y, Direction::RIGHT, false);
+            focus_X++;
+            break;
+    }
 }

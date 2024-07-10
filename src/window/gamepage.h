@@ -2,10 +2,11 @@
 #define GAMEPAGE_H
 
 #include <QMainWindow>
-#include "GameInfo.h"
+#include "generalsviewmodel.h"
 #include <QPushButton>
 #include <QLabel>
 #include <QScopedPointer>
+#include <QKeyEvent>
 #define MaxSize 25
 
 namespace Ui {
@@ -20,6 +21,7 @@ public:
     explicit GamePage(QWidget *parent = nullptr);
     ~GamePage();
     void paintEvent(QPaintEvent *event);
+    void keyPressEvent(QKeyEvent *event);
     int focus_X;
     int focus_Y;
 
@@ -29,12 +31,14 @@ private:
     QPushButton *VisualMap[MaxSize][MaxSize];
     QBrush getBrush(int colorId) const;
     QString getColor(int colorId, const QString &Pic, bool isFocus) const;
+    GeneralsViewModel *commands;
 
 public slots:
     void setFocusSignal(int x, int y);
 
 signals:
-    void mySignal(int x, int y);
+    void focusSignal(int x, int y);
+    void moveSignal(int x, int y, Direction dir, bool half);
 };
 
 #endif // GAMEPAGE_H

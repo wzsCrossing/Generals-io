@@ -51,13 +51,15 @@ set(
     src/window/gamepage.cpp
     src/window/gamepage.h
     src/window/gamepage.ui
+    src/viewmodel/sinks/generalsviewmodel.cpp
+    src/viewmodel/sinks/generalsviewmodel.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 5)
     qt_add_executable(Generals-io
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-	img/resources.qrc
+        img/resources.qrc
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Generals-io APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
