@@ -16,8 +16,6 @@ include_directories(
     src/common
     src/model
     src/viewmodel
-    src/viewmodel/commands
-    src/viewmodel/sinks
     src/window
 )
 
@@ -31,7 +29,6 @@ set(
 
     src/main.cpp
 
-    src/common/etlbase.h
     src/common/PlayerInfo.cpp
     src/common/PlayerInfo.h
     src/common/MapInfo.cpp
@@ -44,16 +41,6 @@ set(
     src/model/GeneralsGameModel.cpp
     src/model/GeneralsGameModel.h
 
-    src/viewmodel/commands/StartGameCommand.cpp
-    src/viewmodel/commands/StartGameCommand.h
-    src/viewmodel/commands/SetFocusCommand.cpp
-    src/viewmodel/commands/SetFocusCommand.h
-    src/viewmodel/commands/MoveCommand.cpp
-    src/viewmodel/commands/MoveCommand.h
-    src/viewmodel/commands/SurrenderCommand.cpp
-    src/viewmodel/commands/SurrenderCommand.h
-    src/viewmodel/sinks/GeneralsViewModelSink.cpp
-    src/viewmodel/sinks/GeneralsViewModelSink.h
     src/viewmodel/GeneralsViewModel.cpp
     src/viewmodel/GeneralsViewModel.h
 

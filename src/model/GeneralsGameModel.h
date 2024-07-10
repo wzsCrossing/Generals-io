@@ -1,37 +1,38 @@
 #ifndef GANERALS_GAME_MODEL_H
 #define GANERALS_GAME_MODEL_H
 
-#include <queue>
 #include <cmath>
-
-#include "etlbase.h"
+#include <algorithm>
 #include "MapInfo.h"
 #include "GameInfo.h"
 
-class GeneralsGameModel : public Proxy_PropertyNotification<GeneralsGameModel> {
+class GeneralsGameModel {
 public:
     GeneralsGameModel();
     std::shared_ptr<MapInfo> getMapInfo() throw();
-    bool startGame(const QString &nickname);
-    bool setFocus(int x, int y);
-    bool move(int x, int y, Direction dir, bool half);
-    bool clearMove();
-    bool cancelMove();
-    bool surrender();
+    int getPlayerNum();
+    QVector<std::shared_ptr<PlayerInfo>> getRankList();
+    void startGame(const QString &nickname);
+    void setFocus(int x, int y);
+    void move(int x, int y, Direction dir, bool half);
+    void clearMove();
+    void cancelMove();
+    void surrender();
     void addRound();
 
 private:
+    void execMove();
+    void generateRandomGame(int cityDense, int mountainDense, int playerNum);
+
     const std::pair<int, int> directions[4] = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
     bool gameStarted{}, surrendered{};
-    int gameMode{};
-    int width, height;
+    int gameMode{}, cntPlayer{};
+    int width, height, round;
 
     std::shared_ptr<Focus> focus{};
-
     QString playerName;
     std::shared_ptr<MapInfo> playerMap;
-
-    std::deque<Move> moveQueue;
+    QVector<std::shared_ptr<PlayerInfo>> playerInfos; // 0: player, 1 ~ cntPlayer - 1: bots
 };
 
 #endif // GANERALS_GAME_MODEL_H
