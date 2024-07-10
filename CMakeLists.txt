@@ -35,8 +35,6 @@ set(
     src/common/MapInfo.h
     src/common/GameInfo.cpp
     src/common/GameInfo.h
-    src/common/PlayerInfo.cpp
-    src/common/PlayerInfo.h
 
     src/model/GeneralsGameModel.cpp
     src/model/GeneralsGameModel.h
@@ -56,8 +54,6 @@ set(
     src/window/gamepage.cpp
     src/window/gamepage.h
     src/window/gamepage.ui
-    src/viewmodel/sinks/generalsviewmodel.cpp
-    src/viewmodel/sinks/generalsviewmodel.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 5)
