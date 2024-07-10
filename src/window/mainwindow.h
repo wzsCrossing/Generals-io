@@ -6,8 +6,6 @@
 #include <QLabel>
 #include <QString>
 #include <QStackedWidget>
-#include <mappage.h>
-#include "generalsviewmodel.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -20,14 +18,12 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
     public:
-    explicit MainWindow(QWidget *parent = nullptr, QSharedPointer<GeneralsViewModel> ViewModel = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr);
         ~MainWindow();
 
     private:
         Ui::MainWindow *ui;
         int Nickname_Input_Width = 200;
-        MapPage *mappage = nullptr;
-        QSharedPointer<GeneralsViewModel> ViewModel;
         /**
          * @brief The function paintEvent is to load all the components on the mainwindow.
          *        It includes the load of labels, lineedits and buttons
@@ -42,8 +38,8 @@ class MainWindow : public QMainWindow
          */
         void expandTextbox(const QString &text);
 
-
     signals:
         void sendNickname(const QString &nickname);
+        void goToMapPage();
 };
 #endif // MAINWINDOW_H

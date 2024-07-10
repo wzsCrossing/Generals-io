@@ -7,9 +7,11 @@ GeneralsApp::GeneralsApp() {
     std::shared_ptr<GeneralsViewModel> viewModel(new GeneralsViewModel);
     viewModel->setModel(model);
 
-    GeneralsViewModel* ptr = viewModel.get();
-    QSharedPointer<GeneralsViewModel> sharedViewModel(ptr);
-    mainWindow = new MainWindow(nullptr, sharedViewModel);
+    mainWindow = new MainWindow;
+    mapPage = new MapPage;
+    gamePage = new GamePage;
+
+   // connect(mainWindow, &MainWindow::goToMapPage, mapPage, &MapPage::show);
 }
 
 void GeneralsApp::show() const {

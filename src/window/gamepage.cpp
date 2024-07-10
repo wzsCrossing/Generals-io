@@ -4,23 +4,33 @@
 #include <QIcon>
 #include <QPainter>
 
-GamePage::GamePage(QWidget *parent, QSharedPointer<GeneralsViewModel> ViewModel)
+GamePage::GamePage(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::GamePage)
-    , map(new MapInfo(16, 16))
     , focus_X(-1)
     , focus_Y(-1)
-    , ViewModel(ViewModel)
 {
-    /*
-     * Map Construct
-     */
-    int playerNum = 8;
     ui->setupUi(this);
     this->setWindowTitle("Generals.io");
     this->resize(1280, 840);
-    int width = map->getWidth();
-    int height = map->getHeight();
+}
+
+GamePage::~GamePage()
+{
+    delete ui;
+    for (int i = 0, h = map->getHeight(); i < h; i++)
+        for (int j = 0, w = map->getWidth(); j < w; j++)
+            delete VisualMap[i][j];
+}
+
+void GamePage::Init() {
+    /*
+     * Map Construct
+     */
+
+    int playerNum =8; //ViewModel->getRankList().size();
+    int width = 16;//map->getWidth();
+    int height = 16;//map->getHeight();
     map->generateRandomMap(80, 80);
     map->capitalDistribution(playerNum);
 
@@ -94,15 +104,6 @@ GamePage::GamePage(QWidget *parent, QSharedPointer<GeneralsViewModel> ViewModel)
     font.setPointSize(15);
     ui->board->setFont(font);
     ui->board->setReadOnly(true);
-}
-
-GamePage::~GamePage()
-{
-    delete ui;
-    for (int i = 0, h = map->getHeight(); i < h; i++)
-        for (int j = 0, w = map->getWidth(); j < w; j++)
-            delete VisualMap[i][j];
-    delete map;
 }
 
 QString GamePage::getColor(int colorId, const QString &Pic, bool isFocus) const{

@@ -8,39 +8,34 @@
 #include <QInputDialog>
 #include <QScopedPointer>
 
-MainWindow::MainWindow(QWidget *parent, QSharedPointer<GeneralsViewModel> ViewModel)
+MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , mappage(new MapPage(parent, ViewModel))
-    , ViewModel(ViewModel)
 {
     ui->setupUi(this);
     this->setWindowTitle("Generals.io");
     this->resize(960, 840);
     connect(ui->Input_Nickname, &QLineEdit::textChanged, this, &MainWindow::expandTextbox);
-    connect(ui->Input_Nickname, &QLineEdit::returnPressed, this, [=] {
+    /*connect(ui->Input_Nickname, &QLineEdit::returnPressed, this, [=] {
                                                                         this->hide();
                                                                         mappage->show();
                                                                         mappage->playerName = ui->Input_Nickname->text();
                                                                         emit sendNickname(ui->Input_Nickname->text());
-                                                                     });
+                                                                     });*/
     connect(ui->Ready_Button, &QPushButton::clicked, this, [=]  {
                                                                     this->hide();
-                                                                    mappage->show();
-                                                                    mappage->playerName = ui->Input_Nickname->text();
                                                                     emit sendNickname(ui->Input_Nickname->text());
                                                                 });
-    connect(this, SIGNAL(sendNickname(QString)), ViewModel.data(), SLOT(setPlayerName(QString)));
+    /*connect(this, SIGNAL(sendNickname(QString)), ViewModel.data(), SLOT(setPlayerName(QString)));
     connect(mappage, &MapPage::backToMain, this, [=] {this->show();
                                                       mappage->hide();
-                                                     });
+                                                     });*/
     this->show();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete mappage;
 }
 
 void MainWindow::expandTextbox(const QString &text) {
