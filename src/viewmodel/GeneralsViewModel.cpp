@@ -7,8 +7,8 @@ void GeneralsViewModel::setModel(const std::shared_ptr<GeneralsGameModel>& model
     m_GeneralsModel = model;
 }
 
-GeneralsGameModel& GeneralsViewModel::getModel() throw() {
-    return *m_GeneralsModel;
+std::shared_ptr<GeneralsGameModel> GeneralsViewModel::getModel() throw() {
+    return m_GeneralsModel;
 }
 
 std::shared_ptr<MapInfo> GeneralsViewModel::getMapInfo() throw() {
@@ -29,7 +29,7 @@ void GeneralsViewModel::setPlayerName(const QString &nickname) {
 
 void GeneralsViewModel::startGame() {
     m_GeneralsModel->startGame();
-    emit mapChanged(this->getMapInfo(), this->getRankList(), m_GeneralsModel->getRound());
+    emit mapChanged();
 }
 
 void GeneralsViewModel::setFocus(int x, int y) {
@@ -47,5 +47,5 @@ void GeneralsViewModel::surrender() {
 void GeneralsViewModel::updateGame() {
     m_GeneralsModel->execMove();
     m_GeneralsModel->addRound();
-    emit mapChanged(this->getMapInfo(), this->getRankList(), m_GeneralsModel->getRound());
+    emit mapChanged();
 }
