@@ -79,7 +79,7 @@ void GamePage::changeMapInfo() {
      * Ranking List
      */
 
-    playerNum = ranklist.size();
+    playerNum = ranklist->size();
     QTableWidget *UR = ui->rankinglist;
     QFont font("Consolas", 20);
     font.setBold(true);

@@ -27,7 +27,11 @@ void GeneralsGameModel::generateRandomGame(int cityDense, int mountainDense, int
     playerMap->capitalDistribution(cntPlayer);
 }
 
-QVector<std::shared_ptr<PlayerInfo>> GeneralsGameModel::getRankList() {
+QString GeneralsGameModel::getPlayerName() {
+    return playerName;
+}
+
+std::shared_ptr<QVector<std::shared_ptr<PlayerInfo>>> GeneralsGameModel::getRankList() {
     for (auto &player : playerInfos) {
         player->setLandNum(0);
         player->setArmyNum(0);
@@ -45,7 +49,7 @@ QVector<std::shared_ptr<PlayerInfo>> GeneralsGameModel::getRankList() {
     std::sort(rankList.begin(), rankList.end(), [](std::shared_ptr<PlayerInfo> a, std::shared_ptr<PlayerInfo> b) {
         return a->getArmyNum() > b->getArmyNum() || (a->getArmyNum() == b->getArmyNum() && a->getLandNum() > b->getLandNum());
     });
-    return rankList;
+    return std::make_shared<QVector<std::shared_ptr<PlayerInfo>>>(rankList);
 }
 
 void GeneralsGameModel::setPlayerName(const QString &nickname) {
@@ -93,8 +97,51 @@ void GeneralsGameModel::execMove() {
         auto move = player->getFirstMove();
         int x = move.x, y = move.y;
         int x_ = x + directions[move.dir].first, y_ = y + directions[move.dir].second;
-        if (!playerMap->moveArmy(player->getPlayerId(), x, y, x_, y_, move.half)) {
+        if (!moveArmy(player->getPlayerId(), x, y, x_, y_, move.half)) {
             player->clearMoveList();
         }
     }
+}
+
+void GeneralsGameModel::changeOwner(int owner, int new_owner) {
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            if (playerMap->getCell(i, j)->getOwner() == owner) {
+                playerMap->getCell(i, j)->setOwner(new_owner);
+            }
+        }
+    }
+}
+
+bool GeneralsGameModel::moveArmy(int playerId, int x1, int y1, int x2, int y2, int mode) {
+    auto map = playerMap->getMap();
+
+    if (map[x1][y1]->getOwner() != playerId) {
+        return false;
+    }
+
+    int army = map[x1][y1]->getArmy();
+    army = (mode == 0) ? army - 1 : army / 2;
+
+    if (map[x2][y2]->getOwner() == playerId) {
+        map[x2][y2]->addArmy(army);
+        map[x1][y1]->addArmy(-army);
+    } else {
+        int army2 = map[x2][y2]->getArmy();
+        if (army > army2) {
+            map[x2][y2]->setArmy(army - army2);
+            if (map[x2][y2]->getType() == CAPITAL) {
+                map[x2][y2]->setType(CITY);
+                playerInfos[map[x2][y2]->getOwner()]->setAlive(false);
+                changeOwner(map[x2][y2]->getOwner(), playerId);
+            } else {
+                map[x2][y2]->setOwner(playerId);
+            }
+        } else {
+            map[x2][y2]->addArmy(-army);
+        }
+        map[x1][y1]->addArmy(-army);
+    }
+
+    return true;
 }

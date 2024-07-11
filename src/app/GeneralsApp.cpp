@@ -1,15 +1,15 @@
 #include "GeneralsApp.h"
 #include <memory>
-#include <QSharedMemory>
 
 GeneralsApp::GeneralsApp() {
     std::shared_ptr<GeneralsGameModel> model(new GeneralsGameModel);
-    GeneralsViewModel *viewModel = new GeneralsViewModel;
+    viewModel = new GeneralsViewModel;
     viewModel->setModel(model);
 
     mainWindow = new MainWindow();
     MapPage *mappage = mainWindow->getMapPage();
     GamePage *gamepage = mappage->getGamePage();
+
     connect(mainWindow, &MainWindow::startGame, viewModel, &GeneralsViewModel::startGame);
     connect(mainWindow, &MainWindow::sendNickname, viewModel, &GeneralsViewModel::setPlayerName);
     connect(mainWindow, &MainWindow::sendNickname, viewModel, &GeneralsViewModel::setPlayerName);

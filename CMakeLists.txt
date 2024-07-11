@@ -34,8 +34,6 @@ set(
     src/common/PlayerInfo.h
     src/common/MapInfo.cpp
     src/common/MapInfo.h
-    src/common/GameInfo.cpp
-    src/common/GameInfo.h
 
     src/model/GeneralsGameModel.cpp
     src/model/GeneralsGameModel.h
