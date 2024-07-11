@@ -26,18 +26,14 @@ public slots:
     void setFocus(int x, int y);
     void move(int x, int y, Direction dir, bool half);
     void surrender();
+    void updateGame();
 
 signals:
     void mapChanged(std::shared_ptr<MapInfo> map, QVector<std::shared_ptr<PlayerInfo>> ranklist, int round);
     void successfulMove(Direction dir);
     void playerDie(const QString &playerName);
 
-private slots:
-    void updateGame();
-
 private:
-    QTimer *gameTimer;
-
     std::shared_ptr<GeneralsGameModel> m_GeneralsModel;
 };
 
