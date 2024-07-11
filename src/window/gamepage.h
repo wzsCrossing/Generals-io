@@ -25,7 +25,7 @@ public:
     void paintEvent(QPaintEvent *event);
     void keyPressEvent(QKeyEvent *event);
     void setMap(std::shared_ptr<MapInfo> map) {this->map = map;}
-    void setRanklist(const QVector<std::shared_ptr<PlayerInfo>> & ranklist) {this->ranklist = ranklist;}
+    void setRanklist(std::shared_ptr<QVector<std::shared_ptr<PlayerInfo>>> ranklist) {this->ranklist = ranklist;}
     void setRound(int round) {this->round = round;};
     void Init();
     QTimer* getTimer();
@@ -39,14 +39,16 @@ private:
     bool half = false;
     Ui::GamePage *ui;
     std::shared_ptr<MapInfo> map;
-    QVector<std::shared_ptr<PlayerInfo>> ranklist;
+    std::shared_ptr<QVector<std::shared_ptr<PlayerInfo>>> ranklist;
     QPushButton *VisualMap[MaxSize][MaxSize];
     QTimer *gameTimer;
     QBrush getBrush(int colorId) const;
     QString getColor(int colorId, const QString &Pic, bool isFocus) const;
+    void paintFocus(int origin_x, int origin_y, int new_x, int new_y);
 
 signals:
     void moveSignal(int x, int y, Direction dir, bool half);
+    void surrender();
 
 public slots:
     void changeMapInfo();

@@ -20,7 +20,7 @@ GamePage::GamePage(QWidget *parent)
     for (int i = 0; i < MaxSize; i++)
         for (int j = 0; j < MaxSize; j++) {
             VisualMap[i][j] = new QPushButton(this);
-            connect(VisualMap[i][j], &QPushButton::clicked, this, [=]{focus_X = i; focus_Y = j;});
+            connect(VisualMap[i][j], &QPushButton::clicked, this, [=]{paintFocus(focus_X, focus_Y, i, j);focus_X = i; focus_Y = j;});
         }
     QFont font("Consolas", 17);
     font.setBold(true);
@@ -35,6 +35,12 @@ GamePage::GamePage(QWidget *parent)
             else ui->ChangeHalf->setText("full");
     });
 
+    ui->surrender->setFont(font);
+    ui->surrender->setStyleSheet("QPushButton:hover{background:#81D4FA;}"\
+                                  "QPushButton:pressed{background:blue;}"\
+                                  "QPushButton{background: #029FFF; border-radius: 8px;}");
+    ui->surrender->setText("Serrender");
+    connect(ui->surrender, &QPushButton::clicked, this, [=] {emit surrender();});
 
     this->hide();
 }
@@ -44,6 +50,7 @@ void GamePage::Init() {
     /*
      * board
      */
+    this->show();
     QFont font("Consolas", 17);
     font.setBold(false);
     font.setPointSize(15);
@@ -68,7 +75,6 @@ void GamePage::changeMapInfo() {
     /*
      * Map Construct
      */
-    this->show();
     width = map->getWidth();
     height = map->getHeight();
     for (int i = 0; i < MaxSize; i++)
@@ -136,6 +142,37 @@ void GamePage::changeMapInfo() {
         }
 
     gameTimer->start(500);
+
+    int max = width > height ? width : height;
+    int ButtonSize = this->size().rheight();
+    if (ButtonSize > this->size().rwidth()) ButtonSize = this->size().rwidth();
+    ButtonSize /= (max * 1.2);
+    font.setPointSize(ButtonSize / 2.5);
+    font.setBold(false);
+    for (int i = 0; i < height; i++)
+        for (int j = 0; j < width; j++) {
+            VisualMap[i][j]->setGeometry(i * ButtonSize, j * ButtonSize, ButtonSize, ButtonSize);
+            VisualMap[i][j]->setFont(font);
+            switch (map->getCell(i, j)->getType()) {
+            case CellType::BLANK :
+                VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getArmy() > 0 ? map->getCell(i, j)->getOwner() : 8, "", false));
+                VisualMap[i][j]->setText(map->getCell(i, j)->getArmy() > 0 ? QString::number(map->getCell(i, j)->getArmy()) : "");
+                break;
+            case CellType::CAPITAL :
+                VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner(), ":/General.png", false));
+                VisualMap[i][j]->setText(QString::number(map->getCell(i, j)->getArmy()));
+                break;
+            case CellType::CITY :
+                VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner(), ":/City.png", false));
+                VisualMap[i][j]->setText(QString::number(map->getCell(i, j)->getArmy()));
+                break;
+            case CellType::MOUNTAIN :
+                VisualMap[i][j]->setIcon(QIcon(":/Mountain.png"));
+                VisualMap[i][j]->setIconSize(QSize(ButtonSize, ButtonSize));
+                VisualMap[i][j]->setStyleSheet("QPushButton {background: grey; border-radius: 0px; border: 1px solid black;}");
+                break;
+            }
+        }
 }
 
 QString GamePage::getColor(int colorId, const QString &Pic, bool isFocus) const{
@@ -181,31 +218,27 @@ void GamePage::paintEvent(QPaintEvent *event) {
     if (ButtonSize > this->size().rwidth()) ButtonSize = this->size().rwidth();
     ButtonSize /= (max * 1.2);
     QFont font("Consolas", ButtonSize / 2.5);
-    for (int i = 0; i < height; i++)
-        for (int j = 0; j < width; j++) {
-            VisualMap[i][j]->setGeometry(i * ButtonSize, j * ButtonSize, ButtonSize, ButtonSize);
-            VisualMap[i][j]->setFont(font);
-            switch (map->getCell(i, j)->getType()) {
-                case CellType::BLANK :
-                VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getArmy() > 0 ? map->getCell(i, j)->getOwner() : 8, "", (i == focus_X && j == focus_Y)));
-                    VisualMap[i][j]->setText(map->getCell(i, j)->getArmy() > 0 ? QString::number(map->getCell(i, j)->getArmy()) : "");
-                    break;
-                case CellType::CAPITAL :
-                    VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner(), (i == focus_X && j == focus_Y) ? ":/General-Focus.png" : ":/General.png", false));
-                    VisualMap[i][j]->setText(QString::number(map->getCell(i, j)->getArmy()));
-                    break;
-                case CellType::CITY :
-                    VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner(), (i == focus_X && j == focus_Y) ? ":/City-Focus.png" : ":/City.png", false));
-                    VisualMap[i][j]->setText(QString::number(map->getCell(i, j)->getArmy()));
-                    break;
-                case CellType::MOUNTAIN :
-                    VisualMap[i][j]->setIcon(QIcon(":/Mountain.png"));
-                    VisualMap[i][j]->setIconSize(QSize(ButtonSize, ButtonSize));
-                    if (i == focus_X && j == focus_Y) VisualMap[i][j]->setStyleSheet("QPushButton {background: grey; border-radius: 0px; border: 3px solid black;}");
-                        else VisualMap[i][j]->setStyleSheet("QPushButton {background: grey; border-radius: 0px; border: 1px solid black;}");
-                    break;
-            }
+    if (focus_X >= 0 && focus_X < width && focus_Y >= 0 && focus_Y < height) {
+        int i = focus_X, j = focus_Y;
+        VisualMap[i][j]->setGeometry(i * ButtonSize, j * ButtonSize, ButtonSize, ButtonSize);
+        VisualMap[i][j]->setFont(font);
+        switch (map->getCell(i, j)->getType()) {
+        case CellType::BLANK :
+            VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getArmy() > 0 ? map->getCell(i, j)->getOwner() : 8, "", true));
+            break;
+        case CellType::CAPITAL :
+            VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner(), ":/General-Focus.png", false));
+            break;
+        case CellType::CITY :
+            VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner(), ":/City-Focus.png" , false));
+            break;
+        case CellType::MOUNTAIN :
+            VisualMap[i][j]->setIcon(QIcon(":/Mountain.png"));
+            VisualMap[i][j]->setIconSize(QSize(ButtonSize, ButtonSize));
+            VisualMap[i][j]->setStyleSheet("QPushButton {background: grey; border-radius: 0px; border: 3px solid black;}");
+            break;
         }
+    }
 
     /*
      * To construct half button
@@ -218,19 +251,30 @@ void GamePage::paintEvent(QPaintEvent *event) {
     ui->ChangeHalf->setGeometry(Half_Button_X, Half_Button_Y, Half_Button_Width, Half_Button_Height);
 
     /*
+     * To construct surrender button
+     */
+
+    font.setBold(true);
+    int Surrender_Button_Width = 140;
+    int Surrender_Button_Height = 40;
+    int Surrender_Button_X = width * ButtonSize / 2 - Surrender_Button_Width / 2;
+    int Surrender_Button_Y = Half_Button_Y + Half_Button_Height + ButtonSize / 2;
+    ui->surrender->setGeometry(Surrender_Button_X, Surrender_Button_Y, Surrender_Button_Width, Surrender_Button_Height);
+
+    /*
      * To construct ranking list
      */
     //ui->rankinglist->item(0, 0)->setText("Round : " + QString::number(ranklist))
     ui->rankinglist->move(this->size().rwidth() - ui->rankinglist->size().rwidth(), 0);
     QTableWidget *UR = ui->rankinglist;
     for (int i = 2; i < playerNum + 2; i++) {
-        UR->item(i, 0)->setBackground(getBrush(ranklist[i - 2]->getPlayerId()));
+        UR->item(i, 0)->setBackground(getBrush((*ranklist)[i - 2]->getPlayerId()));
         UR->item(i, 1)->setBackground(getBrush(8));
         UR->item(i, 2)->setBackground(getBrush(8));
-        UR->item(i, 0)->setText(ranklist[i - 2]->getNickName());
-        if (ranklist[i - 2]->isAlive()) {
-            UR->item(i, 1)->setText(QString::number(ranklist[i - 2]->getArmyNum()));
-            UR->item(i, 2)->setText(QString::number(ranklist[i - 2]->getLandNum()));
+        UR->item(i, 0)->setText((*ranklist)[i - 2]->getNickName());
+        if ((*ranklist)[i - 2]->isAlive()) {
+            UR->item(i, 1)->setText(QString::number((*ranklist)[i - 2]->getArmyNum()));
+            UR->item(i, 2)->setText(QString::number((*ranklist)[i - 2]->getLandNum()));
         } else {
             UR->item(i, 1)->setText("OUT");
             UR->item(i, 2)->setText("OUT");
@@ -263,18 +307,74 @@ void GamePage::keyPressEvent(QKeyEvent * event) {
     }
 }
 
+void GamePage::paintFocus(int origin_x, int origin_y, int new_x, int new_y) {
+    int max = width > height ? width : height;
+    int ButtonSize = this->size().rheight();
+
+    if (ButtonSize > this->size().rwidth()) ButtonSize = this->size().rwidth();
+    ButtonSize /= (max * 1.2);
+    QFont font("Consolas", ButtonSize / 2.5);
+    if (origin_x >= 0 && origin_x < width && origin_y >= 0 && origin_y < height) {
+        int i = origin_x, j = origin_y;
+        VisualMap[i][j]->setGeometry(i * ButtonSize, j * ButtonSize, ButtonSize, ButtonSize);
+        VisualMap[i][j]->setFont(font);
+        switch (map->getCell(i, j)->getType()) {
+        case CellType::BLANK :
+            VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getArmy() > 0 ? map->getCell(i, j)->getOwner() : 8, "", false));
+            break;
+        case CellType::CAPITAL :
+            VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner(), ":/General.png", false));
+            break;
+        case CellType::CITY :
+            VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner(), ":/City.png", false));
+            break;
+        case CellType::MOUNTAIN :
+            VisualMap[i][j]->setIcon(QIcon(":/Mountain.png"));
+            VisualMap[i][j]->setIconSize(QSize(ButtonSize, ButtonSize));
+            VisualMap[i][j]->setStyleSheet("QPushButton {background: grey; border-radius: 0px; border: 1px solid black;}");
+            break;
+        }
+    }
+
+    if (new_x >= 0 && new_x < width && new_y >= 0 && new_y < height) {
+        int i = new_x, j = new_y;
+        VisualMap[i][j]->setGeometry(i * ButtonSize, j * ButtonSize, ButtonSize, ButtonSize);
+        VisualMap[i][j]->setFont(font);
+        switch (map->getCell(i, j)->getType()) {
+        case CellType::BLANK :
+            VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getArmy() > 0 ? map->getCell(i, j)->getOwner() : 8, "", true));
+            break;
+        case CellType::CAPITAL :
+            VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner(), ":/General-Focus.png", false));
+            break;
+        case CellType::CITY :
+            VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner(), ":/City-Focus.png" , false));
+            break;
+        case CellType::MOUNTAIN :
+            VisualMap[i][j]->setIcon(QIcon(":/Mountain.png"));
+            VisualMap[i][j]->setIconSize(QSize(ButtonSize, ButtonSize));
+            VisualMap[i][j]->setStyleSheet("QPushButton {background: grey; border-radius: 0px; border: 3px solid black;}");
+            break;
+        }
+    }
+}
+
 void GamePage::moveFocus(Direction dir) {
     switch (dir) {
         case Direction::UP :
+            paintFocus(focus_X, focus_Y, focus_X, focus_Y - 1);
             focus_Y--;
             break;
         case Direction::DOWN :
+            paintFocus(focus_X, focus_Y, focus_X, focus_Y + 1);
             focus_Y++;
             break;
         case Direction::LEFT :
+            paintFocus(focus_X, focus_Y, focus_X - 1, focus_Y);
             focus_X--;
             break;
         case Direction::RIGHT :
+            paintFocus(focus_X, focus_Y, focus_X + 1, focus_Y);
             focus_X++;
             break;
     }

@@ -35,7 +35,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(mappage, &MapPage::backToMain, this, [=] {this->show();
                                                       mappage->hide();
                                                      });
-    connect(mappage, &MapPage::startGame, this, [=] {emit startGame();});
     this->show();
 }
 
