@@ -1,7 +1,6 @@
 #include "GeneralsViewModel.h"
 
-GeneralsViewModel::GeneralsViewModel() : gameTimer(new QTimer(this)) {
-    connect(gameTimer, &QTimer::timeout, this, &GeneralsViewModel::updateGame);
+GeneralsViewModel::GeneralsViewModel() {
 }
 
 void GeneralsViewModel::setModel(const std::shared_ptr<GeneralsGameModel>& model) {
@@ -30,7 +29,6 @@ void GeneralsViewModel::setPlayerName(const QString &nickname) {
 
 void GeneralsViewModel::startGame() {
     m_GeneralsModel->startGame();
-    gameTimer->start(500);
     emit mapChanged(this->getMapInfo(), this->getRankList(), m_GeneralsModel->getRound());
 }
 

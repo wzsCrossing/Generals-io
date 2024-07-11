@@ -6,6 +6,7 @@
 #include <QLabel>
 #include <QScopedPointer>
 #include <QKeyEvent>
+#include <QTimer>
 #include "MapInfo.h"
 #include "PlayerInfo.h"
 #define MaxSize 25
@@ -23,6 +24,7 @@ public:
     ~GamePage();
     void paintEvent(QPaintEvent *event);
     void keyPressEvent(QKeyEvent *event);
+    QTimer* getTimer();
     QString playerName;
 
 private:
@@ -35,6 +37,7 @@ private:
     MapInfo *map;
     QVector<std::shared_ptr<PlayerInfo>> ranklist;
     QPushButton *VisualMap[MaxSize][MaxSize];
+    QTimer *gameTimer;
     QBrush getBrush(int colorId) const;
     QString getColor(int colorId, const QString &Pic, bool isFocus) const;
 

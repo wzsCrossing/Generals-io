@@ -9,6 +9,7 @@ GamePage::GamePage(QWidget *parent)
     , ui(new Ui::GamePage)
     , focus_X(-1)
     , focus_Y(-1)
+    , gameTimer(new QTimer(this))
 {
     ui->setupUi(this);
     this->setWindowTitle("Generals.io");
@@ -129,6 +130,8 @@ void GamePage::Init(std::shared_ptr<MapInfo> map, std::shared_ptr<QVector<std::s
             URit->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
             URit->setFont(font);
         }
+
+    gameTimer->start(500);
 }
 
 QString GamePage::getColor(int colorId, const QString &Pic, bool isFocus) const{
@@ -275,4 +278,8 @@ void GamePage::moveFocus(Direction dir) {
 
 void GamePage::playerDie(const QString &playerName) {
     ui->board->append("Oh no! Player " + playerName + " dies!");
+}
+
+QTimer* GamePage::getTimer() {
+    return gameTimer;
 }
