@@ -200,31 +200,6 @@ Cell* MapInfo::getCell(int x, int y) {
     return map_[x][y];
 }
 
-bool MapInfo::moveArmy(int playerId, int x1, int y1, int x2, int y2, int mode) {
-    if (map_[x1][y1]->getOwner() != playerId) {
-        return false;
-    }
-
-    int army = map_[x1][y1]->getArmy();
-    army = (mode == 0) ? army - 1 : army / 2;
-
-    if (map_[x2][y2]->getOwner() == playerId) {
-        map_[x2][y2]->addArmy(army);
-        map_[x1][y1]->addArmy(-army);
-    } else {
-        int army2 = map_[x2][y2]->getArmy();
-        if (army > army2) {
-            map_[x2][y2]->setArmy(army - army2);
-            map_[x2][y2]->setOwner(playerId);
-        } else {
-            map_[x2][y2]->addArmy(-army);
-        }
-        map_[x1][y1]->addArmy(-army);
-    }
-
-    return true;
-}
-
 void MapInfo::increaseBlankArmy() {
     for (int i = 0; i < height_; i++) {
         for (int j = 0; j < width_; j++) {

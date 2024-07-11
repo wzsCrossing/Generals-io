@@ -73,13 +73,6 @@ public:
     Cell* getCell(int x, int y);
 
     /**
-     * @brief Move the army from (x1, y1) to (x2, y2)
-     * @param mode 0: all, 1: half
-     * @return true if the move is successful, false otherwise
-     */
-    bool moveArmy(int playerId, int x1, int y1, int x2, int y2, int mode);
-
-    /**
      * @brief Increase the number of armies in the blank cell
      */
     void increaseBlankArmy();

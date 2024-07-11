@@ -18,6 +18,8 @@ public:
     void startGame();
     void setFocus(int x, int y);
     bool move(int playerID, int x, int y, Direction dir, bool half);
+    void changeOwner(int owner, int new_owner);
+    bool moveArmy(int playerId, int x1, int y1, int x2, int y2, int mode);
     void clearMove();
     void cancelMove();
     void surrender();
