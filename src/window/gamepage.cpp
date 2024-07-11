@@ -52,7 +52,7 @@ void GamePage::Init() {
     ui->board->setText("Hello! " + playerName + "!");
     ui->board->append("Welcome to Generals.io!");
     ui->board->append("Press W/A/S/D to move up/left/down/right.");
-    ui->board->append("After you clicked move mode button, you can press space to change the move mode faster!");
+    ui->board->append("Press P to change move mode(full/half)!");
     ui->board->append("Good luck to YOU!");
 }
 
@@ -257,7 +257,7 @@ void GamePage::keyPressEvent(QKeyEvent * event) {
         case Qt::Key_D:
             emit moveSignal(focus_X, focus_Y, Direction::RIGHT, half);
             break;
-        case Qt::Key_Space:
+        case Qt::Key_P:
             emit ui->ChangeHalf->clicked();
             break;
     }

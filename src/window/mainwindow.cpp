@@ -32,7 +32,6 @@ MainWindow::MainWindow(QWidget *parent)
                                                                     mappage->playerName = ui->Input_Nickname->text();
                                                                     emit sendNickname(ui->Input_Nickname->text());
                                                                 });
-    //connect(this, SIGNAL(sendNickname(QString)), ViewModel.data(), SLOT(setPlayerName(QString)));
     connect(mappage, &MapPage::backToMain, this, [=] {this->show();
                                                       mappage->hide();
                                                      });
