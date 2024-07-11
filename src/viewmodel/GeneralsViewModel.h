@@ -6,7 +6,7 @@
 #include <QString>
 #include <QVector>
 #include "PlayerInfo.h"
-#include "GameInfo.h"
+#include "MapInfo.h"
 #include "GeneralsGameModel.h"
 
 class GeneralsViewModel : public QObject {
@@ -18,7 +18,8 @@ public:
     std::shared_ptr<GeneralsGameModel> getModel() throw();
 
     std::shared_ptr<MapInfo> getMapInfo() throw();
-    QVector<std::shared_ptr<PlayerInfo>> getRankList() throw();
+    QString getPlayerName();
+    std::shared_ptr<QVector<std::shared_ptr<PlayerInfo>>> getRankList() throw();
 
 public slots:
     void setPlayerName(const QString &nickname);
