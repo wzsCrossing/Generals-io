@@ -11,9 +11,13 @@ MapPage::MapPage(QWidget *parent)
     ui->setupUi(this);
     this->resize(1280, 840);
     this->setWindowTitle("Generals.io");
+    QPalette pal;
+    pal.setColor(QPalette::Window, QColor(QColor::fromRgb(36, 36, 36)));
+    this->setPalette(pal);
     connect(ui->StartGame, &QPushButton::clicked, this, [=] {this->hide();
                                                              emit startGame();
                                                              gamepage->playerName = playerName;
+                                                             gamepage->Init();
                                                             });
     connect(ui->BackToMain, &QPushButton::clicked, this, [=] {emit backToMain();});
 }

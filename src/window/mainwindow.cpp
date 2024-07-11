@@ -16,6 +16,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     this->setWindowTitle("Generals.io");
     this->resize(960, 840);
+    QPalette pal;
+    pal.setColor(QPalette::Window, QColor(QColor::fromRgb(36, 36, 36)));
+    this->setPalette(pal);
     connect(ui->Input_Nickname, &QLineEdit::textChanged, this, &MainWindow::expandTextbox);
     connect(ui->Input_Nickname, &QLineEdit::returnPressed, this, [=] {
                                                                         this->hide();

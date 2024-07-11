@@ -14,6 +14,9 @@ GamePage::GamePage(QWidget *parent)
     ui->setupUi(this);
     this->setWindowTitle("Generals.io");
     this->resize(1280, 840);
+    QPalette pal;
+    pal.setColor(QPalette::Window, QColor(QColor::fromRgb(36, 36, 36)));
+    this->setPalette(pal);
     for (int i = 0; i < MaxSize; i++)
         for (int j = 0; j < MaxSize; j++) {
             VisualMap[i][j] = new QPushButton(this);
@@ -32,9 +35,16 @@ GamePage::GamePage(QWidget *parent)
             else ui->ChangeHalf->setText("full");
     });
 
+
+    this->hide();
+}
+
+void GamePage::Init() {
+
     /*
      * board
      */
+    QFont font("Consolas", 17);
     font.setBold(false);
     font.setPointSize(15);
     ui->board->setFont(font);
@@ -44,8 +54,6 @@ GamePage::GamePage(QWidget *parent)
     ui->board->append("Press W/A/S/D to move up/left/down/right.");
     ui->board->append("After you clicked move mode button, you can press space to change the move mode faster!");
     ui->board->append("Good luck to YOU!");
-
-    this->hide();
 }
 
 GamePage::~GamePage()
@@ -54,17 +62,13 @@ GamePage::~GamePage()
     for (int i = 0, h = map->getHeight(); i < h; i++)
         for (int j = 0, w = map->getWidth(); j < w; j++)
             delete VisualMap[i][j];
-    delete map;
 }
 
-void GamePage::Init(std::shared_ptr<MapInfo> map, QVector<std::shared_ptr<PlayerInfo>> ranklist, int round) {
+void GamePage::changeMapInfo() {
     /*
      * Map Construct
      */
     this->show();
-    this->map = map.get();
-    this->ranklist = ranklist;
-    this->round = round;
     width = map->getWidth();
     height = map->getHeight();
     for (int i = 0; i < MaxSize; i++)
@@ -135,8 +139,8 @@ void GamePage::Init(std::shared_ptr<MapInfo> map, QVector<std::shared_ptr<Player
 }
 
 QString GamePage::getColor(int colorId, const QString &Pic, bool isFocus) const{
-    QString temp = isFocus ? "QPushButton{border-radius: 0px; border: 3px solid black; background: ":
-                             "QPushButton{border-radius: 0px; border: 1px solid black; background: "        ;
+    QString temp = isFocus ? "QPushButton{color: white; border-radius: 0px; border: 3px solid black; background: ":
+                             "QPushButton{color: white; border-radius: 0px; border: 1px solid black; background: "        ;
     switch (colorId) {
         case 0: return temp + "green; border-image: url(" + Pic + ");}";
         case 1: return temp + "#9575CD; border-image: url(" + Pic + ");}";

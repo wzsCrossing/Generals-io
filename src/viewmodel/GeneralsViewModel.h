@@ -15,7 +15,7 @@ public:
     GeneralsViewModel();
 
     void setModel(const std::shared_ptr<GeneralsGameModel>& model);
-    GeneralsGameModel& getModel() throw();
+    std::shared_ptr<GeneralsGameModel> getModel() throw();
 
     std::shared_ptr<MapInfo> getMapInfo() throw();
     QVector<std::shared_ptr<PlayerInfo>> getRankList() throw();
@@ -29,7 +29,7 @@ public slots:
     void updateGame();
 
 signals:
-    void mapChanged(std::shared_ptr<MapInfo> map, QVector<std::shared_ptr<PlayerInfo>> ranklist, int round);
+    void mapChanged();
     void successfulMove(Direction dir);
     void playerDie(const QString &playerName);
 
