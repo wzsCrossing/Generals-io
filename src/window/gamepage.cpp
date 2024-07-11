@@ -224,13 +224,13 @@ void GamePage::paintEvent(QPaintEvent *event) {
     ui->rankinglist->move(this->size().rwidth() - ui->rankinglist->size().rwidth(), 0);
     QTableWidget *UR = ui->rankinglist;
     for (int i = 2; i < playerNum + 2; i++) {
-        UR->item(i, 0)->setBackground(getBrush(ranklist[i - 2]->getPlayerId()));
+        UR->item(i, 0)->setBackground(getBrush((*ranklist)[i - 2]->getPlayerId()));
         UR->item(i, 1)->setBackground(getBrush(8));
         UR->item(i, 2)->setBackground(getBrush(8));
-        UR->item(i, 0)->setText(ranklist[i - 2]->getNickName());
-        if (ranklist[i - 2]->isAlive()) {
-            UR->item(i, 1)->setText(QString::number(ranklist[i - 2]->getArmyNum()));
-            UR->item(i, 2)->setText(QString::number(ranklist[i - 2]->getLandNum()));
+        UR->item(i, 0)->setText((*ranklist)[i - 2]->getNickName());
+        if ((*ranklist)[i - 2]->isAlive()) {
+            UR->item(i, 1)->setText(QString::number((*ranklist)[i - 2]->getArmyNum()));
+            UR->item(i, 2)->setText(QString::number((*ranklist)[i - 2]->getLandNum()));
         } else {
             UR->item(i, 1)->setText("OUT");
             UR->item(i, 2)->setText("OUT");
