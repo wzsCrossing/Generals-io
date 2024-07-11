@@ -19,7 +19,7 @@ public:
 
     std::shared_ptr<MapInfo> getMapInfo() throw();
     QString getPlayerName();
-    QVector<std::shared_ptr<PlayerInfo>> getRankList() throw();
+    std::shared_ptr<QVector<std::shared_ptr<PlayerInfo>>> getRankList() throw();
 
 public slots:
     void setPlayerName(const QString &nickname);
@@ -29,7 +29,7 @@ public slots:
     void surrender();
 
 signals:
-    void mapChanged(std::shared_ptr<MapInfo> map, QVector<std::shared_ptr<PlayerInfo>> ranklist, int round);
+    void mapChanged(std::shared_ptr<MapInfo> map, std::shared_ptr<QVector<std::shared_ptr<PlayerInfo>>> ranklist, int round);
     void successfulMove(Direction dir);
     void playerDie(const QString &playerName);
 

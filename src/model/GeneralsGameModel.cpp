@@ -31,7 +31,7 @@ QString GeneralsGameModel::getPlayerName() {
     return playerName;
 }
 
-QVector<std::shared_ptr<PlayerInfo>> GeneralsGameModel::getRankList() {
+std::shared_ptr<QVector<std::shared_ptr<PlayerInfo>>> GeneralsGameModel::getRankList() {
     for (auto &player : playerInfos) {
         player->setLandNum(0);
         player->setArmyNum(0);
@@ -49,7 +49,7 @@ QVector<std::shared_ptr<PlayerInfo>> GeneralsGameModel::getRankList() {
     std::sort(rankList.begin(), rankList.end(), [](std::shared_ptr<PlayerInfo> a, std::shared_ptr<PlayerInfo> b) {
         return a->getArmyNum() > b->getArmyNum() || (a->getArmyNum() == b->getArmyNum() && a->getLandNum() > b->getLandNum());
     });
-    return rankList;
+    return std::make_shared<QVector<std::shared_ptr<PlayerInfo>>>(rankList);
 }
 
 void GeneralsGameModel::setPlayerName(const QString &nickname) {

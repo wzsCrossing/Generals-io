@@ -56,13 +56,13 @@ GamePage::~GamePage()
     delete map;
 }
 
-void GamePage::Init(std::shared_ptr<MapInfo> map, QVector<std::shared_ptr<PlayerInfo>> ranklist, int round) {
+void GamePage::Init(std::shared_ptr<MapInfo> map, std::shared_ptr<QVector<std::shared_ptr<PlayerInfo>>> ranklist, int round) {
     /*
      * Map Construct
      */
     this->show();
     this->map = map.get();
-    this->ranklist = ranklist;
+    this->ranklist = *ranklist;
     this->round = round;
     width = map->getWidth();
     height = map->getHeight();
@@ -74,7 +74,7 @@ void GamePage::Init(std::shared_ptr<MapInfo> map, QVector<std::shared_ptr<Player
      * Ranking List
      */
 
-    playerNum = ranklist.size();
+    playerNum = ranklist->size();
     QTableWidget *UR = ui->rankinglist;
     QFont font("Consolas", 20);
     font.setBold(true);

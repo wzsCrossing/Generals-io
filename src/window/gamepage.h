@@ -42,7 +42,7 @@ signals:
     void moveSignal(int x, int y, Direction dir, bool half);
 
 public slots:
-    void Init(std::shared_ptr<MapInfo> map, QVector<std::shared_ptr<PlayerInfo>> ranklist, int round);
+    void Init(std::shared_ptr<MapInfo> map, std::shared_ptr<QVector<std::shared_ptr<PlayerInfo>>> ranklist, int round);
     void moveFocus(Direction dir);
     void playerDie(const QString &playerName);
 };

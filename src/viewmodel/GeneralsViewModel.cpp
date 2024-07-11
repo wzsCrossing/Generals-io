@@ -20,7 +20,7 @@ QString GeneralsViewModel::getPlayerName() {
     return m_GeneralsModel->getPlayerName();
 }
 
-QVector<std::shared_ptr<PlayerInfo>> GeneralsViewModel::getRankList() throw() {
+std::shared_ptr<QVector<std::shared_ptr<PlayerInfo>>> GeneralsViewModel::getRankList() throw() {
     return m_GeneralsModel->getRankList();
 }
 
