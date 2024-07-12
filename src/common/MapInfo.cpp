@@ -169,6 +169,9 @@ void MapInfo::capitalDistribution(int playerNum) {
         while (true) {
             int pos = rnd(gen);
             int x = pos / width_, y = pos % width_;
+            if (map_[x][y]->getType() != BLANK) {
+                continue;
+            }
 
             bool flag = true;
             for (int j = 0; j < i; j++) {
@@ -237,12 +240,14 @@ void MapInfo::increaseCityArmy() {
 }
 
 void MapInfo::initMap() {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> rnd(40, 55);
+
     for (int i = 0; i < height_; ++i) {
         for (int j = 0; j < width_; ++j) {
-            map_[i][j]->setArmy(0);
-            map_[i][j]->setOwner(-1);
-            if (map_[i][j]->getType() == CAPITAL) {
-                map_[i][j]->setType(BLANK);
+            if (map_[i][j]->getType() == CITY) {
+                map_[i][j]->setArmy(rnd(gen));
             }
         }
     }
