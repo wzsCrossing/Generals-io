@@ -15,7 +15,8 @@ public:
     int getRound();
     std::shared_ptr<QVector<std::shared_ptr<PlayerInfo>>> getRankList();
     void setPlayerName(const QString &nickname);
-    void startGame();
+    void startGame(int playerNum, bool mode);
+    void startGame(int playerNum, bool mode, std::shared_ptr<MapInfo> map);
     bool move(int playerID, int x, int y, Direction dir, bool half);
     void changeOwner(int owner, int new_owner);
     bool moveArmy(int playerID, int x1, int y1, int x2, int y2, int mode);
@@ -33,11 +34,13 @@ private:
     void moveOutward(int playerID);
     bool moveToward(int playerID);
     bool findMoveWay(int playerID, int x1, int y1, int x2, int y2);
+    void initPlayers(int playerNum);
     void endGame();
 
     const std::pair<int, int> directions[4] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
     bool gameStarted{}, surrendered{};
-    int gameMode{}, cntPlayer{};
+    bool gameMode{}; // true: leapfrog
+    int cntPlayer{};
     int width, height, round;
 
     QString playerName;

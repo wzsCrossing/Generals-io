@@ -3,6 +3,8 @@
 #include <QString>
 #include <QQueue>
 
+using Point = std::pair<int, int>;
+
 enum Direction {
     UP,
     DOWN,
@@ -28,6 +30,7 @@ private:
     bool isAlive_;
     int silentRound_;
     int loseRound_;
+    Point capital_{};
     QQueue<Move> moveList_;
 public:
     PlayerInfo(const QString& nickName, int playerId)
@@ -37,13 +40,15 @@ public:
     int getLandNum();
     int getArmyNum();
     int getPlayerId();
-    bool isReady();
     bool isAlive();
     int getSlientRound();
     void setLandNum(int landNum);
     void setArmyNum(int armyNum);
     void setLose(int loseRound);
+    int getLoseRound();
     void setSlientRound(int silentRound);
+    void setCapital(Point capital);
+    Point getCapital();
 
     void addMove(int x, int y, Direction dir, bool half);
     Move getFirstMove();

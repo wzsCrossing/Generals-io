@@ -12,11 +12,6 @@ enum CellType {
     BLANK
 };
 
-struct Focus {
-    int x, y;
-    Focus(int x, int y) : x(x), y(y) {}
-};
-
 class Cell {
 private:
     CellType type_;
