@@ -45,6 +45,7 @@ private:
     QBrush getBrush(int colorId) const;
     QString getColor(int colorId, const QString &Pic, bool isFocus) const;
     void paintFocus(int origin_x, int origin_y, int new_x, int new_y);
+    void drawVisualMap(int i, int j, bool focus);
 
 signals:
     void moveSignal(int x, int y, Direction dir, bool half);

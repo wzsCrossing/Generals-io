@@ -86,6 +86,52 @@
      <string>width:</string>
     </property>
    </widget>
+   <widget class="QLabel" name="playerNumberLabel">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>240</y>
+      <width>40</width>
+      <height>12</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Player Number:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="playerNumberInput">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>240</y>
+      <width>113</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="playerNameLabel">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>280</y>
+      <width>40</width>
+      <height>12</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Your Name:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="playerNameInput">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>290</y>
+      <width>113</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

@@ -31,7 +31,7 @@ private:
     void initPlayers(int playerNum);
     void endGame();
 
-    const std::pair<int, int> directions[4] = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
+    const std::pair<int, int> directions[4] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
     bool gameStarted{}, surrendered{};
     int cntPlayer{};
     GameMode gameMode{};
