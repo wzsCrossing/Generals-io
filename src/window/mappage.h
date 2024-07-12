@@ -30,6 +30,7 @@ private:
     QString getColor(int colorId, const QString &Pic) const;
 
     void paintEvent(QPaintEvent *event);
+    void drawVisualMap(int i, int j);
 
 signals:
     void backToMain();

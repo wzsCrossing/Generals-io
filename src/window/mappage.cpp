@@ -2,6 +2,7 @@
 #include "ui_mappage.h"
 #include <QPushButton>
 #include <QFont>
+#include <QMessageBox>
 
 MapPage::MapPage(QWidget *parent)
     : QMainWindow(parent)
@@ -16,6 +17,7 @@ MapPage::MapPage(QWidget *parent)
     QPalette pal;
     pal.setColor(QPalette::Window, QColor(QColor::fromRgb(36, 36, 36)));
     this->setPalette(pal);
+
     connect(ui->StartGame, &QPushButton::clicked, this, [=] {this->hide();
                                                              emit startGame();
                                                              gamepage->playerName = playerName;
@@ -24,9 +26,44 @@ MapPage::MapPage(QWidget *parent)
     connect(ui->BackToMain, &QPushButton::clicked, this, [=] {emit backToMain();});
     connect(gamepage, &GamePage::surrender, this, [=] {this->show();gamepage->hide();});
 
+    ui->heightInput->setText("25");
+    ui->widthInput->setText("25");
+    connect(ui->heightInput, &QLineEdit::editingFinished, this, [=] {
+        int h = ui->heightInput->text().toInt();
+        if (h < 16 || h > 25) {
+            QMessageBox::information(this, "Warning", "Invalid height! The height must be an integer between 16 and 25!");
+            ui->heightInput->setText("");
+        } else this->height = ui->heightInput->text().toInt();
+        changeMap();
+    });
+    connect(ui->widthInput, &QLineEdit::editingFinished, this, [=] {
+        int w = ui->widthInput->text().toInt();
+        if (w < 16 || w > 25) {
+            QMessageBox::information(this, "Warning", "Invalid width! The width must be an integer between 16 and 25!");
+            ui->widthInput->setText("");
+        } else this->width = ui->widthInput->text().toInt();
+        changeMap();
+    });
+
     for (int i = 0; i < MaxSize; i++)
         for (int j = 0; j < MaxSize; j++) {
             VisualMap[i][j] = new QPushButton(this);
+            connect(VisualMap[i][j], &QPushButton::clicked, this, [=] {
+                switch (map->getCell(i, j)->getType()) {
+                case CellType::BLANK :
+                    map->getCell(i, j)->setType(CellType::CITY);
+                    break;
+                case CellType::CITY :
+                    map->getCell(i, j)->setType(CellType::MOUNTAIN);
+                    break;
+                case CellType::MOUNTAIN :
+                    map->getCell(i, j)->setType(CellType::BLANK);
+                    break;
+                case CellType::CAPITAL :
+                    break;
+                }
+                drawVisualMap(i, j);
+            });
         }
 
     QFont font("Consolas", 17);
@@ -98,35 +135,13 @@ QBrush MapPage::getBrush(int colorId) const {
 }
 
 void MapPage::changeMap() {
-    int max = width > height ? width : height;
-    int ButtonSize = this->size().rheight();
-    if (ButtonSize > this->size().rwidth()) ButtonSize = this->size().rwidth();
-    ButtonSize /= (max * 1.2);
-    QFont font("Consolas", ButtonSize / 2.5);
-    for (int i = 0; i < height; i++)
-        for (int j = 0; j < width; j++) {
-            VisualMap[i][j]->setGeometry(i * ButtonSize, j * ButtonSize, ButtonSize, ButtonSize);
-            VisualMap[i][j]->setFont(font);
-            switch (map->getCell(i, j)->getType()) {
-            case CellType::BLANK :
-                VisualMap[i][j]->setStyleSheet(getColor(8, ""));
-                break;
-            case CellType::CAPITAL :
-                VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner(), ":/General.png"));
-                VisualMap[i][j]->setText(QString::number(map->getCell(i, j)->getArmy()));
-                break;
-            case CellType::CITY :
-                VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner(), ":/City.png"));
-                VisualMap[i][j]->setText(QString::number(map->getCell(i, j)->getArmy()));
-                break;
-            case CellType::MOUNTAIN :
-                VisualMap[i][j]->setIcon(QIcon(":/Mountain.png"));
-                VisualMap[i][j]->setIconSize(QSize(ButtonSize, ButtonSize));
-                VisualMap[i][j]->setStyleSheet("QPushButton {background: grey; border-radius: 0px; border: 1px solid black;}");
-                break;
-            }
-            VisualMap[i][j]->setStyleSheet(getColor(8, ""));
-        }
+    for (int i = 0; i < MaxSize; i++)
+        for (int j = 0; j < MaxSize; j++)
+            if (i < height && j < width) {
+                VisualMap[i][j]->show();
+                drawVisualMap(i, j);
+            } else
+                VisualMap[i][j]->hide();
 }
 
 void MapPage::paintEvent(QPaintEvent *event) {
@@ -165,8 +180,34 @@ void MapPage::paintEvent(QPaintEvent *event) {
                                  "QPushButton:pressed{background:blue;}"\
                                  "QPushButton{background: #029FFF; border-radius: 8px;}");
 
-    ui->heightLabel->move(ButtonSize * width + windowWidth * 0.02, windowHeight * 0.01);
-    ui->heightInput->move(ButtonSize * width + ui->heightLabel->width() + windowWidth * 0.03, windowHeight * 0.01);
-    ui->widthLabel->move(ButtonSize * width + ui->heightLabel->width() + ui->heightInput->width() + windowWidth * 0.04, windowHeight * 0.01);
-    ui->widthInput->move(ButtonSize * width + ui->heightLabel->width() + ui->heightInput->width() + ui->widthLabel->width() + windowWidth * 0.05, windowHeight * 0.01);
+    ui->heightLabel->move(ButtonSize * width + windowWidth * 0.03, windowHeight * 0.01);
+    ui->heightInput->move(ButtonSize * width + ui->heightLabel->width() + windowWidth * 0.04, windowHeight * 0.01);
+    ui->widthLabel->move(ButtonSize * width + ui->heightLabel->width() + ui->heightInput->width() + windowWidth * 0.05, windowHeight * 0.01);
+    ui->widthInput->move(ButtonSize * width + ui->heightLabel->width() + ui->heightInput->width() + ui->widthLabel->width() + windowWidth * 0.06, windowHeight * 0.01);
+}
+
+void MapPage::drawVisualMap(int i, int j) {
+    int max = width > height ? width : height;
+    int ButtonSize = this->size().rheight();
+    if (ButtonSize > this->size().rwidth()) ButtonSize = this->size().rwidth();
+    ButtonSize /= (max * 1.2);
+    QFont font("Consolas", 17);
+    VisualMap[i][j]->setGeometry(j * ButtonSize, i * ButtonSize, ButtonSize, ButtonSize);
+    VisualMap[i][j]->setFont(font);
+    switch (map->getCell(i, j)->getType()) {
+        case CellType::BLANK :
+            VisualMap[i][j]->setIcon(QIcon());
+            VisualMap[i][j]->setStyleSheet(getColor(8, ""));
+            break;
+        case CellType::CITY :
+            VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner(), ":/City.png"));
+            break;
+        case CellType::MOUNTAIN :
+            VisualMap[i][j]->setIcon(QIcon(":/Mountain.png"));
+            VisualMap[i][j]->setIconSize(QSize(ButtonSize, ButtonSize));
+            VisualMap[i][j]->setStyleSheet("QPushButton {background: grey; border-radius: 0px; border: 1px solid black;}");
+            break;
+        case CellType::CAPITAL :
+            break;
+    }
 }
