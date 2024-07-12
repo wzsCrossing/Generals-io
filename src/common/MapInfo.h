@@ -24,8 +24,8 @@ private:
     int army_;
     bool isLighted_;
 public:
-    Cell() : type_(BLANK), owner_(-1), army_(0) {}
-    Cell(CellType type, int owner, int army) : type_(type), owner_(owner), army_(army) {}
+    Cell() : type_(BLANK), owner_(-1), army_(0), isLighted_(false) {}
+    Cell(CellType type, int owner, int army) : type_(type), owner_(owner), army_(army), isLighted_(false) {}
 
     CellType getType();
     int getOwner();
