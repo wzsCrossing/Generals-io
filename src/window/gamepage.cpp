@@ -60,9 +60,8 @@ void GamePage::Init() {
      * board
      */
     this->show();
-    QFont font("Consolas", 17);
+    QFont font("Consolas", 13);
     font.setBold(false);
-    font.setPointSize(15);
     ui->board->setFont(font);
     ui->board->setReadOnly(true);
     ui->board->setText("Hello! " + playerName + "!");
