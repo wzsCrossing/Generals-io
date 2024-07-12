@@ -64,3 +64,7 @@ void GeneralsViewModel::updateGame() {
     m_GeneralsModel->updateArrow();
     emit mapChanged();
 }
+
+void GeneralsViewModel::endGame() {
+    m_GeneralsModel->endGame();
+}

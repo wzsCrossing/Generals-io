@@ -194,10 +194,18 @@ void GeneralsGameModel::cancelMove(int playerID) {
 
 void GeneralsGameModel::surrender(int playerID) {
     playerInfos[playerID]->setLose(round);
-    if (playerID == 0) {
+    /*if (playerID == 0) {
         surrendered = true;
         endGame();
-    }
+    }*/
+    auto map = playerMap->getMap();
+    for (int i = 0; i < height; i++)
+        for (int j = 0; j < width; j++)
+            if (map[i][j]->getOwner() == playerID) {
+                map[i][j]->setOwner(-1);
+                if (map[i][j]->getType() == CellType::BLANK) map[i][j]->setArmy(0);
+                    else map[i][j]->setType(CellType::CITY);
+            }
 }
 
 void GeneralsGameModel::updateView() {

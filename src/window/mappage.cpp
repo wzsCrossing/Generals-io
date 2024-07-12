@@ -30,7 +30,7 @@ MapPage::MapPage(QWidget *parent)
         gamepage->Init();
     });
     connect(ui->BackToMain, &QPushButton::clicked, this, [=] {emit backToMain();});
-    connect(gamepage, &GamePage::surrender, this, [=] {
+    connect(gamepage, &GamePage::gameEnded, this, [=] {
         for (int i = 0; i < height; ++i) {
             for (int j = 0; j < width; ++j) {
                 map->getCell(i, j)->setArmy(0);

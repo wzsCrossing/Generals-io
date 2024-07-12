@@ -20,8 +20,8 @@ private:
     bool isLighted_;
     int direction_;
 public:
-    Cell() : type_(BLANK), owner_(-1), army_(0), isLighted_(false) {}
-    Cell(CellType type, int owner, int army) : type_(type), owner_(owner), army_(army), isLighted_(false) {}
+    Cell() : type_(BLANK), owner_(-1), army_(0), isLighted_(false), direction_(-1) {}
+    Cell(CellType type, int owner, int army) : type_(type), owner_(owner), army_(army), isLighted_(false), direction_(-1) {}
 
     CellType getType();
     int getOwner();
