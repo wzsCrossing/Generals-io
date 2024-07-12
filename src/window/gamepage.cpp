@@ -20,7 +20,7 @@ GamePage::GamePage(QWidget *parent)
     for (int i = 0; i < MaxSize; i++)
         for (int j = 0; j < MaxSize; j++) {
             VisualMap[i][j] = new QPushButton(this);
-            connect(VisualMap[i][j], &QPushButton::clicked, this, [=]{paintFocus(focus_X, focus_Y, i, j);focus_X = i; focus_Y = j;});
+            connect(VisualMap[i][j], &QPushButton::clicked, this, [=]{paintFocus(focus_X, focus_Y , j, i);focus_X = j; focus_Y = i;});
         }
     QFont font("Consolas", 17);
     font.setBold(true);
@@ -246,7 +246,7 @@ void GamePage::paintEvent(QPaintEvent *event) {
     ButtonSize /= (max * 1.2);
     QFont font("Consolas", ButtonSize / 2.5);
     if (focus_X >= 0 && focus_X < width && focus_Y >= 0 && focus_Y < height)
-        drawVisualMap(focus_X, focus_Y, true);
+        drawVisualMap(focus_Y, focus_X, true);
 
     /*
      * To construct half button
@@ -298,16 +298,16 @@ void GamePage::paintEvent(QPaintEvent *event) {
 void GamePage::keyPressEvent(QKeyEvent * event) {
     switch (event->key()) {
         case  Qt::Key_W :
-            emit moveSignal(focus_X, focus_Y, Direction::UP, half);
+            emit moveSignal( focus_Y,focus_X, Direction::UP, half);
             break;
         case Qt::Key_A:
-            emit moveSignal(focus_X, focus_Y, Direction::LEFT, half);
+            emit moveSignal( focus_Y,focus_X, Direction::LEFT, half);
             break;
         case Qt::Key_S:
-            emit moveSignal(focus_X, focus_Y, Direction::DOWN, half);
+            emit moveSignal( focus_Y,focus_X, Direction::DOWN, half);
             break;
         case Qt::Key_D:
-            emit moveSignal(focus_X, focus_Y, Direction::RIGHT, half);
+            emit moveSignal( focus_Y,focus_X, Direction::RIGHT, half);
             break;
         case Qt::Key_P:
             emit ui->ChangeHalf->clicked();
@@ -317,9 +317,9 @@ void GamePage::keyPressEvent(QKeyEvent * event) {
 
 void GamePage::paintFocus(int origin_x, int origin_y, int new_x, int new_y) {
     if (origin_x >= 0 && origin_x < width && origin_y >= 0 && origin_y < height)
-        drawVisualMap(origin_x, origin_y, false);
+        drawVisualMap(origin_y, origin_x, false);
     if (new_x >= 0 && new_x < width && new_y >= 0 && new_y < height)
-        drawVisualMap(new_x, new_y, true);
+        drawVisualMap(new_y, new_x, true);
 }
 
 void GamePage::moveFocus(Direction dir) {

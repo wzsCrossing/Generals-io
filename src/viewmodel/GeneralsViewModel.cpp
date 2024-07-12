@@ -32,10 +32,6 @@ void GeneralsViewModel::startGame() {
     emit mapChanged();
 }
 
-void GeneralsViewModel::setFocus(int x, int y) {
-    m_GeneralsModel->setFocus(x, y);
-}
-
 void GeneralsViewModel::move(int x, int y, Direction dir, bool half) {
     if (m_GeneralsModel->move(0, x, y, dir, half)) emit successfulMove(dir);
 }
