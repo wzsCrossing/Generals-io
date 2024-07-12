@@ -23,6 +23,14 @@ void GeneralsGameModel::initPlayers(int playerNum) {
         playerInfos[i] = std::make_shared<PlayerInfo>("Bot " + QString::number(i), i);
     }
     playerMap->capitalDistribution(cntPlayer);
+    auto map = playerMap->getMap();
+    for (int i = 0; i < height; ++i) {
+        for (int j = 0; j < width; ++j) {
+            if (map[i][j]->getType() == CAPITAL) {
+                playerInfos[map[i][j]->getOwner()]->setCapital(Point(i, j));
+            }
+        }
+    }
 }
 
 void GeneralsGameModel::endGame() {
