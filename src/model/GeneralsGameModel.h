@@ -24,6 +24,7 @@ public:
     void surrender(int playerID);
     void addRound();
     void execMove();
+    void updateView();
 
 private:
     void generateRandomGame(int cityDense, int mountainDense, int playerNum);

@@ -46,6 +46,7 @@ void GeneralsViewModel::surrender() {
 
 void GeneralsViewModel::updateGame() {
     m_GeneralsModel->execMove();
+    m_GeneralsModel->updateView();
     m_GeneralsModel->addRound();
     emit mapChanged();
 }

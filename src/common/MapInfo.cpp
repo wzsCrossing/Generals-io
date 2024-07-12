@@ -15,6 +15,10 @@ int Cell::getArmy() {
     return army_;
 }
 
+bool Cell::isLighted() {
+    return isLighted_;
+}
+
 void Cell::setType(CellType type) {
     type_ = type;
 }
@@ -29,6 +33,10 @@ void Cell::setArmy(int army) {
 
 void Cell::addArmy(int army) {
     army_ += army;
+}
+
+void Cell::setLighted(bool isLighted) {
+    isLighted_ = isLighted;
 }
 
 MapInfo::MapInfo() {
@@ -119,7 +127,7 @@ void MapInfo::generateRandomMap(int cityDense, int mountainDense) {
         int x = pos / width_, y = pos % width_;
         map[x][y] = MOUNTAIN;
 
-        if (checkConnectivity(map, width_, height_)) {
+        if (count < pm && checkConnectivity(map, width_, height_)) {
             count++;
             if (count <= pc) {
                 map[x][y] = CITY;
