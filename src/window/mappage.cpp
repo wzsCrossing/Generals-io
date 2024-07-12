@@ -30,8 +30,18 @@ MapPage::MapPage(QWidget *parent)
         gamepage->Init();
     });
     connect(ui->BackToMain, &QPushButton::clicked, this, [=] {emit backToMain();});
-    connect(gamepage, &GamePage::surrender, this, [=] {this->show();gamepage->hide();});
-    connect(gamepage, &GamePage::gameEnded, this, [=] {this->show();gamepage->hide();});
+    connect(gamepage, &GamePage::gameEnded, this, [=] {
+        for (int i = 0; i < height; ++i) {
+            for (int j = 0; j < width; ++j) {
+                map->getCell(i, j)->setArmy(0);
+                map->getCell(i, j)->setOwner(-1);
+                if (map->getCell(i, j)->getType() == CAPITAL) {
+                    map->getCell(i, j)->setType(BLANK);
+                }
+            }
+        }
+        this->show();gamepage->hide();
+    });
 
     ui->heightInput->setText("25");
     ui->widthInput->setText("25");

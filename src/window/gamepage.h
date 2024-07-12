@@ -33,6 +33,7 @@ public:
     QString playerName;
 
 private:
+    QString getDirection(int dir);
     int focus_X, focus_Y;
     int playerNum;
     int round;
@@ -54,6 +55,7 @@ signals:
     void moveSignal(int x, int y, Direction dir, bool half);
     void surrender();
     void gameEnded();
+    //void backToMap();
 
 public slots:
     void changeMapInfo();
