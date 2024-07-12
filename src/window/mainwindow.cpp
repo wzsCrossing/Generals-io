@@ -30,7 +30,8 @@ MainWindow::MainWindow(QWidget *parent)
                                                                     this->hide();
                                                                     mappage->show();
                                                                     mappage->playerName = ui->Input_Nickname->text();
-                                                                    emit sendNickname(ui->Input_Nickname->text());
+                                                                    if (mappage->playerName == "") mappage->playerName = "Anonymous";
+                                                                    emit sendNickname(mappage->playerName);
                                                                 });
     connect(mappage, &MapPage::backToMain, this, [=] {this->show();
                                                       mappage->hide();
