@@ -145,3 +145,21 @@ bool GeneralsGameModel::moveArmy(int playerId, int x1, int y1, int x2, int y2, i
 
     return true;
 }
+
+void GeneralsGameModel::updateView() {
+    auto map = playerMap->getMap();
+
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            map[i][j]->setLighted(false);
+            for (int k = 0; k < 4; k++) {
+                int x = i + directions[k].first, y = j + directions[k].second;
+                if (x < 0 || x >= height || y < 0 || y >= width) continue;
+                if (map[x][y]->getOwner() == 0) {
+                    map[i][j]->setLighted(true);
+                    break;
+                }
+            }
+        }
+    }
+}
