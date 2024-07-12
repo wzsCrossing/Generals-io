@@ -28,6 +28,7 @@ public:
 
 private:
     void generateRandomGame(int cityDense, int mountainDense, int playerNum);
+    void endGame();
 
     const std::pair<int, int> directions[4] = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
     bool gameStarted{}, surrendered{};

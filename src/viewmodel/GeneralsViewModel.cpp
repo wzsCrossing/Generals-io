@@ -32,16 +32,20 @@ void GeneralsViewModel::startGame() {
     emit mapChanged();
 }
 
-void GeneralsViewModel::setFocus(int x, int y) {
-    m_GeneralsModel->setFocus(x, y);
-}
-
 void GeneralsViewModel::move(int x, int y, Direction dir, bool half) {
     if (m_GeneralsModel->move(0, x, y, dir, half)) emit successfulMove(dir);
 }
 
 void GeneralsViewModel::surrender() {
-    // m_GeneralsModel->surrender();
+    m_GeneralsModel->surrender(0);
+}
+
+void GeneralsViewModel::cancelMove() {
+    m_GeneralsModel->cancelMove(0);
+}
+
+void GeneralsViewModel::clearMove() {
+    m_GeneralsModel->clearMove(0);
 }
 
 void GeneralsViewModel::updateGame() {

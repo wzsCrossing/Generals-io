@@ -24,9 +24,10 @@ public:
 public slots:
     void setPlayerName(const QString &nickname);
     void startGame();
-    void setFocus(int x, int y);
     void move(int x, int y, Direction dir, bool half);
     void surrender();
+    void cancelMove();
+    void clearMove();
     void updateGame();
 
 signals:
