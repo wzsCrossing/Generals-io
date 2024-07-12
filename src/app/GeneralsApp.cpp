@@ -11,6 +11,7 @@ GeneralsApp::GeneralsApp() {
     GamePage *gamepage = mappage->getGamePage();
 
     connect(mappage, &MapPage::startGameRandom, viewModel, &GeneralsViewModel::startGameRandom);
+    connect(mappage, &MapPage::startGame, viewModel, &GeneralsViewModel::startGame);
     connect(mainWindow, &MainWindow::sendNickname, viewModel, &GeneralsViewModel::setPlayerName);
     connect(gamepage, &GamePage::moveSignal, viewModel, &GeneralsViewModel::move);
     connect(viewModel, &GeneralsViewModel::mapChanged, gamepage, [=]{

@@ -27,7 +27,7 @@ void GeneralsViewModel::setPlayerName(const QString &nickname) {
     m_GeneralsModel->setPlayerName(nickname);
 }
 
-void GeneralsViewModel::startGame(int playerNum, bool mode) {
+void GeneralsViewModel::startGameRandom(int playerNum, bool mode) {
     m_GeneralsModel->startGame(playerNum, mode);
     emit mapChanged();
 }

@@ -35,7 +35,8 @@ private:
 
 signals:
     void backToMain();
-    void startGameRandom(int playerNum, GameMode mode);
+    void startGameRandom(int playerNum, bool mode);
+    void startGame(int playerNum, bool mode, std::shared_ptr<MapInfo> map);
 
 public slots:
     void changeMap();

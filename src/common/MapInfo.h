@@ -67,6 +67,8 @@ public:
 
     int getWidth();
     int getHeight();
+    void setWidth(int width);
+    void setHeight(int height);
     QVector<QVector<Cell*>> getMap();
     Cell* getCell(int x, int y);
 

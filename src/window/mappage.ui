@@ -171,6 +171,19 @@
      <string>Not Leap Frog</string>
     </property>
    </widget>
+   <widget class="QCheckBox" name="isRandom">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>140</y>
+      <width>81</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Random Map</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

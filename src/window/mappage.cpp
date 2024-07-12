@@ -19,7 +19,12 @@ MapPage::MapPage(QWidget *parent)
     this->setPalette(pal);
 
     connect(ui->StartGame, &QPushButton::clicked, this, [=] {this->hide();
-        emit startGameRandom(8, GameMode::CRYSTALCLEAR);
+        if (ui->isRandom->isChecked()) emit startGameRandom(ui->playerNumberInput->text().toInt(), ui->isFrog);
+        else {
+            map->setHeight(height);
+            map->setWidth(width);
+            emit startGame(ui->playerNumberInput->text().toInt(), ui->isFrog, map);
+        }
         gamepage->setMode(ui->isVisible->isChecked(), ui->isSilent->isChecked());
         gamepage->playerName = playerName;
         gamepage->Init();
@@ -30,7 +35,7 @@ MapPage::MapPage(QWidget *parent)
     ui->heightInput->setText("25");
     ui->widthInput->setText("25");
     ui->playerNumberInput->setText("8");
-    ui->playerNameInput->setReadOnly(true);
+    ui->playerNameInput->setDisabled(true);
     connect(ui->heightInput, &QLineEdit::editingFinished, this, [=] {
         int h = ui->heightInput->text().toInt();
         if (h < 16 || h > 25) {
@@ -47,23 +52,32 @@ MapPage::MapPage(QWidget *parent)
         } else this->width = ui->widthInput->text().toInt();
         changeMap();
     });
+    connect(ui->playerNumberInput, &QLineEdit::editingFinished, this, [=] {
+        int num = ui->playerNumberInput->text().toInt();
+        if (num < 2 || num > 8) {
+            QMessageBox::information(this, "Warning", "Invalid player number! The number must be an integer between 2 and 8!");
+            ui->playerNumberInput->setText("");
+        }
+    });
 
     for (int i = 0; i < MaxSize; i++)
         for (int j = 0; j < MaxSize; j++) {
             VisualMap[i][j] = new QPushButton(this);
             connect(VisualMap[i][j], &QPushButton::clicked, this, [=] {
-                switch (map->getCell(i, j)->getType()) {
-                case CellType::BLANK :
-                    map->getCell(i, j)->setType(CellType::CITY);
-                    break;
-                case CellType::CITY :
-                    map->getCell(i, j)->setType(CellType::MOUNTAIN);
-                    break;
-                case CellType::MOUNTAIN :
-                    map->getCell(i, j)->setType(CellType::BLANK);
-                    break;
-                case CellType::CAPITAL :
-                    break;
+                if (!ui->isRandom->isChecked()) {
+                    switch (map->getCell(i, j)->getType()) {
+                    case CellType::BLANK :
+                        map->getCell(i, j)->setType(CellType::CITY);
+                        break;
+                    case CellType::CITY :
+                        map->getCell(i, j)->setType(CellType::MOUNTAIN);
+                        break;
+                    case CellType::MOUNTAIN :
+                        map->getCell(i, j)->setType(CellType::BLANK);
+                        break;
+                    case CellType::CAPITAL :
+                        break;
+                    }
                 }
                 drawVisualMap(i, j);
             });
@@ -106,7 +120,21 @@ MapPage::MapPage(QWidget *parent)
     ui->playerNameInput->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     ui->playerNameInput->resize(160, 40);
 
+    ui->isRandom->setFont(font);
+    ui->isRandom->resize(160, 40);
+    ui->isRandom->setStyleSheet("QCheckBox::indicator:checked{border-radius: 5px; background: #81D4FA;}");
+    connect(ui->isRandom, &QCheckBox::checkStateChanged, this, [=] {
+        if (ui->isRandom->isChecked()) {
+            ui->heightInput->setDisabled(true);
+            ui->widthInput->setDisabled(true);
+        } else {
+            ui->heightInput->setDisabled(false);
+            ui->widthInput->setDisabled(false);
+        }
+    });
+
     font.setPointSize(14);
+
     ui->isVisible->setFont(font);
     ui->isVisible->resize(160, 40);
     ui->isVisible->setStyleSheet("QCheckBox::indicator:checked{border-radius: 5px; background: #81D4FA;}");
@@ -226,7 +254,10 @@ void MapPage::paintEvent(QPaintEvent *event) {
                                  "QPushButton:pressed{background:blue;}"\
                                  "QPushButton{background: #029FFF; border-radius: 8px;}");
 
-    int y = windowHeight * 0.015;
+    int y = windowHeight * 0.05;
+    ui->isRandom->move(ButtonSize * width + windowWidth * 0.03, y);
+
+    y += ui->isRandom->height() + windowHeight * 0.015;
     ui->heightLabel->move(ButtonSize * width + windowWidth * 0.03, y);
     ui->heightInput->move(ButtonSize * width + ui->heightLabel->width() + windowWidth * 0.04, y);
     ui->widthLabel->move(ButtonSize * width + ui->heightLabel->width() + ui->heightInput->width() + windowWidth * 0.05, y);
