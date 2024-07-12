@@ -19,11 +19,11 @@ MapPage::MapPage(QWidget *parent)
     this->setPalette(pal);
 
     connect(ui->StartGame, &QPushButton::clicked, this, [=] {this->hide();
-        if (ui->isRandom->isChecked()) emit startGameRandom(ui->playerNumberInput->text().toInt(), ui->isFrog);
+        if (ui->isRandom->isChecked()) emit startGameRandom(ui->playerNumberInput->text().toInt(), ui->isFrog->isChecked());
         else {
             map->setHeight(height);
             map->setWidth(width);
-            emit startGame(ui->playerNumberInput->text().toInt(), ui->isFrog, map);
+            emit startGame(ui->playerNumberInput->text().toInt(), ui->isFrog->isChecked(), map);
         }
         gamepage->setMode(ui->isVisible->isChecked(), ui->isSilent->isChecked());
         gamepage->playerName = playerName;
@@ -122,7 +122,7 @@ MapPage::MapPage(QWidget *parent)
 
     ui->isRandom->setFont(font);
     ui->isRandom->resize(160, 40);
-    ui->isRandom->setStyleSheet("QCheckBox::indicator:checked{border-radius: 5px; background: #81D4FA;}");
+    ui->isRandom->setStyleSheet("color: white; QCheckBox::indicator:checked{border-radius: 5px; background: #81D4FA;}");
     connect(ui->isRandom, &QCheckBox::checkStateChanged, this, [=] {
         if (ui->isRandom->isChecked()) {
             ui->heightInput->setDisabled(true);
@@ -137,7 +137,7 @@ MapPage::MapPage(QWidget *parent)
 
     ui->isVisible->setFont(font);
     ui->isVisible->resize(160, 40);
-    ui->isVisible->setStyleSheet("QCheckBox::indicator:checked{border-radius: 5px; background: #81D4FA;}");
+    ui->isVisible->setStyleSheet("color: white; QCheckBox::indicator:checked{border-radius: 5px; background: #81D4FA;}");
     connect(ui->isVisible, &QCheckBox::checkStateChanged, this, [=] {
         if (ui->isVisible->isChecked()) ui->isVisible->setText("Crystal Clear");
         else ui->isVisible->setText("Misty Veil");
@@ -145,7 +145,7 @@ MapPage::MapPage(QWidget *parent)
 
     ui->isSilent->setFont(font);
     ui->isSilent->resize(180, 40);
-    ui->isSilent->setStyleSheet("QCheckBox::indicator:checked{border-radius: 5px; background: #81D4FA;}");
+    ui->isSilent->setStyleSheet("color: white; QCheckBox::indicator:checked{border-radius: 5px; background: #81D4FA;}");
     connect(ui->isSilent, &QCheckBox::checkStateChanged, this, [=] {
         if (ui->isSilent->isChecked()) ui->isSilent->setText("Silent War");
         else ui->isSilent->setText("Not Silent War");
@@ -153,7 +153,7 @@ MapPage::MapPage(QWidget *parent)
 
     ui->isFrog->setFont(font);
     ui->isFrog->resize(160, 40);
-    ui->isFrog->setStyleSheet("QCheckBox::indicator:checked{border-radius: 5px; background: #81D4FA;}");
+    ui->isFrog->setStyleSheet("color: white; QCheckBox::indicator:checked{border-radius: 5px; background: #81D4FA;}");
     connect(ui->isFrog, &QCheckBox::checkStateChanged, this, [=] {
         if (ui->isFrog->isChecked()) ui->isFrog->setText("LeapFrog");
         else ui->isFrog->setText("Not LeapFrog");
