@@ -16,12 +16,9 @@ int PlayerInfo::getPlayerId() {
     return playerId_;
 }
 
-bool PlayerInfo::isReady() {
-    return isReady_;
-}
-
 bool PlayerInfo::isAlive() {
-    return isAlive_;
+    // return isAlive_;
+    return loseRound_ == -1;
 }
 
 int PlayerInfo::getSlientRound() {
@@ -36,12 +33,9 @@ void PlayerInfo::setArmyNum(int armyNum) {
     armyNum_ = armyNum;
 }
 
-void PlayerInfo::setReady(bool isReady) {
-    isReady_ = isReady;
-}
-
-void PlayerInfo::setAlive(bool isAlive) {
-    isAlive_ = isAlive;
+void PlayerInfo::setLose(int loseRound) {
+    loseRound_ = loseRound;
+    isAlive_ = false;
 }
 
 void PlayerInfo::setSlientRound(int silentRound) {
@@ -62,6 +56,12 @@ bool PlayerInfo::hasMove() {
     return !moveList_.empty();
 }
 
+void PlayerInfo::cancelMove() {
+    moveList_.pop_back();
+}
+
 void PlayerInfo::clearMoveList() {
-    moveList_.clear();
+    while (!moveList_.empty()) {
+        cancelMove();
+    }
 }

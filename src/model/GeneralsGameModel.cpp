@@ -64,11 +64,6 @@ void GeneralsGameModel::startGame() {
     gameStarted = true;
 }
 
-void GeneralsGameModel::setFocus(int x, int y) {
-    if (!gameStarted || surrendered || x < 0 || x >= width || y < 0 || y >= height) return;
-    focus = std::make_shared<Focus>(x, y);
-}
-
 bool GeneralsGameModel::move(int playerID, int x, int y, Direction dir, bool half) {
     int x_ = x + directions[dir].first, y_ = y + directions[dir].second;
     if (x_ < 0 || x_ >= height || y_ < 0 || y_ >= width || playerMap->getCell(x_, y_)->getType() == MOUNTAIN) return false;
@@ -132,7 +127,7 @@ bool GeneralsGameModel::moveArmy(int playerId, int x1, int y1, int x2, int y2, i
             map[x2][y2]->setArmy(army - army2);
             if (map[x2][y2]->getType() == CAPITAL) {
                 map[x2][y2]->setType(CITY);
-                playerInfos[map[x2][y2]->getOwner()]->setAlive(false);
+                playerInfos[map[x2][y2]->getOwner()]->setLose(round);
                 changeOwner(map[x2][y2]->getOwner(), playerId);
             } else {
                 map[x2][y2]->setOwner(playerId);
@@ -144,4 +139,37 @@ bool GeneralsGameModel::moveArmy(int playerId, int x1, int y1, int x2, int y2, i
     }
 
     return true;
+}
+
+void GeneralsGameModel::clearMove(int playerID) {
+    playerInfos[playerID]->clearMoveList();
+}
+
+void GeneralsGameModel::cancelMove(int playerID) {
+    playerInfos[playerID]->cancelMove();
+}
+
+void GeneralsGameModel::surrender(int playerID) {
+    playerInfos[playerID]->setLose(round);
+    if (playerID == 0) {
+        surrendered = true;
+    }
+}
+
+void GeneralsGameModel::updateView() {
+    auto map = playerMap->getMap();
+
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            map[i][j]->setLighted(false);
+            for (int k = 0; k < 4; k++) {
+                int x = i + directions[k].first, y = j + directions[k].second;
+                if (x < 0 || x >= height || y < 0 || y >= width) continue;
+                if (map[x][y]->getOwner() == 0) {
+                    map[i][j]->setLighted(true);
+                    break;
+                }
+            }
+        }
+    }
 }

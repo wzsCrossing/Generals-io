@@ -25,13 +25,13 @@ private:
     int playerId_;
     int landNum_;
     int armyNum_;
-    bool isReady_;
     bool isAlive_;
     int silentRound_;
+    int loseRound_;
     QQueue<Move> moveList_;
 public:
     PlayerInfo(const QString& nickName, int playerId)
-        : nickName_(nickName), playerId_(playerId), isReady_(false), isAlive_(true), silentRound_(0) {}
+        : nickName_(nickName), playerId_(playerId), isAlive_(true), silentRound_(0), loseRound_(-1) {}
 
     QString getNickName();
     int getLandNum();
@@ -42,12 +42,12 @@ public:
     int getSlientRound();
     void setLandNum(int landNum);
     void setArmyNum(int armyNum);
-    void setReady(bool isReady);
-    void setAlive(bool isAlive);
+    void setLose(int loseRound);
     void setSlientRound(int silentRound);
 
     void addMove(int x, int y, Direction dir, bool half);
     Move getFirstMove();
     bool hasMove();
+    void cancelMove();
     void clearMoveList();
 };
