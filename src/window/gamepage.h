@@ -54,7 +54,6 @@ signals:
 public slots:
     void changeMapInfo();
     void moveFocus(Direction dir);
-    void playerDie(const QString &playerName);
 };
 
 #endif // GAMEPAGE_H

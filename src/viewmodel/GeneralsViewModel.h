@@ -33,7 +33,6 @@ public slots:
 signals:
     void mapChanged();
     void successfulMove(Direction dir);
-    void playerDie(const QString &playerName);
 
 private:
     std::shared_ptr<GeneralsGameModel> m_GeneralsModel;

@@ -5,6 +5,7 @@ GeneralsViewModel::GeneralsViewModel() {
 
 void GeneralsViewModel::setModel(const std::shared_ptr<GeneralsGameModel>& model) {
     m_GeneralsModel = model;
+    connect(m_GeneralsModel.get(), &GeneralsGameModel::playerDie, this, [=](const QString &playerName) {emit playerDie(playerName);});
 }
 
 std::shared_ptr<GeneralsGameModel> GeneralsViewModel::getModel() throw() {

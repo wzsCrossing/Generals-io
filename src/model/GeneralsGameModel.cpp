@@ -137,6 +137,7 @@ bool GeneralsGameModel::moveArmy(int playerId, int x1, int y1, int x2, int y2, i
             if (map[x2][y2]->getType() == CAPITAL) {
                 map[x2][y2]->setType(CITY);
                 playerInfos[map[x2][y2]->getOwner()]->setLose(round);
+                emit(playerInfos[map[x2][y2]->getOwner()]->getNickName());
                 changeOwner(map[x2][y2]->getOwner(), playerId);
             } else {
                 map[x2][y2]->setOwner(playerId);

@@ -83,7 +83,7 @@ void GamePage::drawVisualMap(int i, int j, bool focus, int gameMode) {
             VisualMap[i][j]->setIcon(QIcon(":/Obstacle.png"));
         }
         else VisualMap[i][j]->setIcon(QIcon());
-        VisualMap[i][j]->setStyleSheet("QPushButton {background: #383838; border-radius: 0px; border: 3px solid black;}");
+        VisualMap[i][j]->setStyleSheet("QPushButton {background: #383838; border-radius: 0px; border: 1px solid black;}");
         VisualMap[i][j]->setText("");
         return;
     }
@@ -299,7 +299,6 @@ void GamePage::paintEvent(QPaintEvent *event) {
     /*
      * To construct ranking list
      */
-    //ui->rankinglist->item(0, 0)->setText("Round : " + QString::number(ranklist))
     ui->rankinglist->move(this->size().rwidth() - ui->rankinglist->size().rwidth(), 0);
     QTableWidget *UR = ui->rankinglist;
     for (int i = 2; i < playerNum + 2; i++) {
@@ -368,10 +367,6 @@ void GamePage::moveFocus(Direction dir) {
             focus_X++;
             break;
     }
-}
-
-void GamePage::playerDie(const QString &playerName) {
-    ui->board->append("Oh no! Player " + playerName + " dies!");
 }
 
 QTimer* GamePage::getTimer() {

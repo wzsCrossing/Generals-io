@@ -12,6 +12,13 @@ enum CellType {
     BLANK
 };
 
+enum GameMode {
+    MISTYVEIL = 0,
+    CRYSTALCLEAR = 1,
+    SILENTWAR = 2,
+    LEAPFROG = 4
+};
+
 struct Focus {
     int x, y;
     Focus(int x, int y) : x(x), y(y) {}
