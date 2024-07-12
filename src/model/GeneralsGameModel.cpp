@@ -60,7 +60,7 @@ void GeneralsGameModel::setPlayerName(const QString &nickname) {
     playerName = nickname;
 }
 
-void GeneralsGameModel::startGame(int playerNum, GameMode mode) {
+void GeneralsGameModel::startGame(int playerNum, bool mode) {
     if (gameStarted) return;
     round = 0;
     gameMode = mode;
@@ -75,7 +75,7 @@ void GeneralsGameModel::startGame(int playerNum, GameMode mode) {
     gameStarted = true;
 }
 
-void GeneralsGameModel::startGame(int playerNum, GameMode mode, std::shared_ptr<MapInfo> map) {
+void GeneralsGameModel::startGame(int playerNum, bool mode, std::shared_ptr<MapInfo> map) {
     if (gameStarted) return;
     round = 0;
     gameMode = mode;
@@ -154,7 +154,7 @@ bool GeneralsGameModel::moveArmy(int playerId, int x1, int y1, int x2, int y2, i
                 playerInfos[map[x2][y2]->getOwner()]->setLose(round);
                 emit(playerInfos[map[x2][y2]->getOwner()]->getNickName());
                 changeOwner(map[x2][y2]->getOwner(), playerId);
-                if (gameMode & LEAPFROG) {
+                if (gameMode) {
                     map[x2][y2]->setType(CAPITAL);
                     Point capital = playerInfos[playerId]->getCapital();
                     map[capital.first][capital.second]->setType(CITY);
@@ -197,7 +197,7 @@ void GeneralsGameModel::updateView() {
 
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
-            if (map[i][j]->getOwner() == 0 || gameMode & CRYSTALCLEAR) {
+            if (map[i][j]->getOwner() == 0) {
                 map[i][j]->setLighted(true);
             } else {
                 map[i][j]->setLighted(false);
