@@ -49,6 +49,7 @@ void GeneralsViewModel::clearMove() {
 }
 
 void GeneralsViewModel::updateGame() {
+    m_GeneralsModel->addBotMove();
     m_GeneralsModel->execMove();
     m_GeneralsModel->updateView();
     m_GeneralsModel->addRound();
