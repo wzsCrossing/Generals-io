@@ -169,16 +169,22 @@ void GeneralsGameModel::surrender(int playerID) {
 
 void GeneralsGameModel::updateView() {
     auto map = playerMap->getMap();
+    int dx[] = {-1, -1, -1, 0, 0, 1, 1, 1};
+    int dy[] = {-1, 0, 1, -1, 1, -1, 0, 1};
 
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
-            map[i][j]->setLighted(false);
-            for (int k = 0; k < 4; k++) {
-                int x = i + directions[k].first, y = j + directions[k].second;
-                if (x < 0 || x >= height || y < 0 || y >= width) continue;
-                if (map[x][y]->getOwner() == 0) {
-                    map[i][j]->setLighted(true);
-                    break;
+            if (map[i][j]->getOwner() == 0) {
+                map[i][j]->setLighted(true);
+            } else {
+                map[i][j]->setLighted(false);
+                for (int k = 0; k < 8; k++) {
+                    int x = i + dx[k], y = j + dy[k];
+                    if (x < 0 || x >= height || y < 0 || y >= width) continue;
+                    if (map[x][y]->getOwner() == 0) {
+                        map[i][j]->setLighted(true);
+                        break;
+                    }
                 }
             }
         }
