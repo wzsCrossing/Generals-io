@@ -38,8 +38,20 @@ void PlayerInfo::setLose(int loseRound) {
     isAlive_ = false;
 }
 
+int PlayerInfo::getLoseRound() {
+    return loseRound_;
+}
+
 void PlayerInfo::setSlientRound(int silentRound) {
     silentRound_ = silentRound;
+}
+
+void PlayerInfo::setCapital(Point capital) {
+    capital_ = capital;
+}
+
+Point PlayerInfo::getCapital() {
+    return capital_;
 }
 
 void PlayerInfo::addMove(int x, int y, Direction dir, bool half) {
