@@ -1,4 +1,5 @@
 #include "GeneralsGameModel.h"
+#include <random>
 
 GeneralsGameModel::GeneralsGameModel() : gameStarted(false), surrendered(false) {}
 
@@ -83,6 +84,7 @@ void GeneralsGameModel::startGame(int playerNum, bool mode, std::shared_ptr<MapI
     playerMap = map;
     width = playerMap->getWidth();
     height = playerMap->getHeight();
+    playerMap->initMap();
 
     initPlayers(playerNum);
     surrendered = false;
@@ -212,4 +214,159 @@ void GeneralsGameModel::updateView() {
             }
         }
     }
+}
+
+void GeneralsGameModel::addBotMove() {
+    srand(time(nullptr));
+    for (int i = 1; i < cntPlayer; i++) {
+        if (!playerInfos[i]->isAlive() || playerInfos[i]->hasMove()) continue;
+        if (movePriority(i)) continue;
+        if (rand() % 3 == 0) {
+            if (!moveToward(i)) {
+                moveOutward(i);
+            }
+        } else {
+            moveOutward(i);
+        }
+    }
+}
+
+bool GeneralsGameModel::movePriority(int playerID) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+
+    QVector<int> cellPos;
+    for (int i = 0; i < height * width; i++) {
+        cellPos.push_back(i);
+    }
+    std::shuffle(cellPos.begin(), cellPos.end(), gen);
+
+    auto map = playerMap->getMap();
+    for (auto& pos : cellPos) {
+        int i = pos / width, j = pos % width;
+        if (map[i][j]->getOwner() == playerID || map[i][j]->getOwner() == -1) continue;
+        for (int k = 0; k < 4; k++) {
+            int x = i + directions[k].first, y = j + directions[k].second;
+            if (x < 0 || x >= height || y < 0 || y >= width || map[x][y]->getOwner() != playerID) continue;
+            if (map[x][y]->getArmy() <= map[i][j]->getArmy() + 1) continue;
+            playerInfos[playerID]->addMove(x, y, (Direction)(k ^ 1), 0);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void GeneralsGameModel::moveOutward(int playerID) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+
+    QVector<int> cellPos;
+    for (int i = 0; i < height * width; i++) {
+        cellPos.push_back(i);
+    }
+    std::shuffle(cellPos.begin(), cellPos.end(), gen);
+
+    auto map = playerMap->getMap();
+    for (auto& pos : cellPos) {
+        int i = pos / width, j = pos % width;
+        if (map[i][j]->getOwner() != playerID) continue;
+        for (int k = 0; k < 4; k++) {
+            int x = i + directions[k].first, y = j + directions[k].second;
+            if (x < 0 || x >= height || y < 0 || y >= width || map[x][y]->getOwner() != -1 || map[x][y]->getType() == MOUNTAIN) continue;
+            if (map[i][j]->getArmy() <= map[x][y]->getArmy() + 1) continue;
+            playerInfos[playerID]->addMove(i, j, (Direction)k, 0);
+            return;
+        }
+    }
+}
+
+static int getDistance(int x1, int y1, int x2, int y2) {
+    return abs(x1 - x2) + abs(y1 - y2);
+}
+bool GeneralsGameModel::moveToward(int playerID) {
+    auto map = playerMap->getMap();
+
+    int x1 = -1, y1 = -1, x2 = -1, y2 = -1;
+    int maxArmy = 0;
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            if (map[i][j]->getOwner() != playerID) continue;
+            if (map[i][j]->getArmy() > maxArmy) {
+                maxArmy = map[i][j]->getArmy();
+                x1 = i, y1 = j;
+            }
+        }
+    }
+
+    double minDist = height * width;
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            if (map[i][j]->getOwner() == playerID || map[i][j]->getType() == MOUNTAIN) continue;
+            if (map[i][j]->getArmy() > 4 * maxArmy) continue;
+
+
+            double dist = getDistance(x1, y1, i, j);
+            if (map[i][j]->getType() == CAPITAL) {
+                dist = dist * 0.09;
+            } else if (map[i][j]->getType() == CITY) {
+                if (map[i][j]->getOwner() != -1) {
+                    dist = dist * std::max(0.17, std::min(map[i][j]->getArmy() / (3.2 * maxArmy), 20.0));
+                } else {
+                    dist = dist * 1.6;
+                }
+            } else if (map[i][j]->getType() == BLANK && map[i][j]->getOwner() == -1) {
+                dist = dist * 4.3;
+            }
+            if (map[i][j]->getArmy() > maxArmy) {
+                dist = dist * (1.6 * map[i][j]->getArmy() / maxArmy);
+            }
+
+            if (dist < minDist) {
+                minDist = dist;
+                x2 = i, y2 = j;
+            }
+        }
+    }
+
+    if (x1 == -1 || x2 == -1) return false;
+    return findMoveWay(playerID, x1, y1, x2, y2);
+}
+
+bool GeneralsGameModel::findMoveWay(int playerID, int x1, int y1, int x2, int y2) {
+    auto map = playerMap->getMap();
+
+    int start = x1 * width + y1, end = x2 * width + y2;
+    QVector<int> preDir(height * width, -1);
+
+    QQueue<int> q;
+    q.push_back(end);
+
+    while (!q.empty()) {
+        int pos = q.front();
+        q.pop_front();
+        int x = pos / width, y = pos % width;
+        if (pos == start) break;
+
+        for (int k = 0; k < 4; k++) {
+            int x_ = x + directions[k].first, y_ = y + directions[k].second;
+            if (x_ < 0 || x_ >= height || y_ < 0 || y_ >= width || (map[x_][y_]->getOwner() != playerID && (map[x_][y_]->getType() == CITY || map[x_][y_]->getType() == CAPITAL)) || map[x_][y_]->getType() == MOUNTAIN) continue;
+            if (preDir[x_ * width + y_] == -1) {
+                preDir[x_ * width + y_] = k ^ 1;
+                q.push_back(x_ * width + y_);
+            }
+        }
+    }
+
+    if (preDir[start] == -1) return false;
+
+    int pos = start;
+    while (pos != end) {
+        int x = pos / width, y = pos % width;
+        playerInfos[playerID]->addMove(x, y, (Direction)preDir[pos], 0);
+        x += directions[preDir[pos]].first;
+        y += directions[preDir[pos]].second;
+        pos = x * width + y;
+    }
+    return true;
 }

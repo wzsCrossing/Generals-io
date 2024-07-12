@@ -64,6 +64,7 @@ public:
     void exportMap(const QString& fileName);
     void generateRandomMap(int cityDense, int mountainDense);
     void capitalDistribution(int playerNum);
+    void initMap();
 
     int getWidth();
     int getHeight();

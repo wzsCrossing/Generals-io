@@ -26,8 +26,14 @@ public:
     void addRound();
     void execMove();
     void updateView();
+    void addBotMove();
 
 private:
+    void generateRandomGame(int cityDense, int mountainDense, int playerNum);
+    bool movePriority(int playerID);
+    void moveOutward(int playerID);
+    bool moveToward(int playerID);
+    bool findMoveWay(int playerID, int x1, int y1, int x2, int y2);
     void initPlayers(int playerNum);
     void endGame();
 
