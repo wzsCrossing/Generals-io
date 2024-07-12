@@ -60,3 +60,7 @@ void GeneralsViewModel::updateGame() {
     m_GeneralsModel->addRound();
     emit mapChanged();
 }
+
+void GeneralsViewModel::endGame() {
+    m_GeneralsModel->endGame();
+}

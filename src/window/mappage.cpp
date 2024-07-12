@@ -31,6 +31,7 @@ MapPage::MapPage(QWidget *parent)
     });
     connect(ui->BackToMain, &QPushButton::clicked, this, [=] {emit backToMain();});
     connect(gamepage, &GamePage::surrender, this, [=] {this->show();gamepage->hide();});
+    connect(gamepage, &GamePage::gameEnded, this, [=] {this->show();gamepage->hide();});
 
     ui->heightInput->setText("25");
     ui->widthInput->setText("25");

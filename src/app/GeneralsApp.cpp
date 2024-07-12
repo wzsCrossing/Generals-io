@@ -24,6 +24,7 @@ GeneralsApp::GeneralsApp() {
     connect(viewModel, &GeneralsViewModel::successfulMove, gamepage, &GamePage::moveFocus);
     connect(gamepage->getTimer(), &QTimer::timeout, viewModel, &GeneralsViewModel::updateGame);
     connect(gamepage, &GamePage::surrender, viewModel, &GeneralsViewModel::surrender);
+    connect(gamepage, &GamePage::gameEnded, viewModel, &GeneralsViewModel::endGame);
 }
 
 void GeneralsApp::show() const {

@@ -27,6 +27,7 @@ public:
     void execMove();
     void updateView();
     void addBotMove();
+    void endGame();
 
 private:
     void generateRandomGame(int cityDense, int mountainDense, int playerNum);
@@ -35,7 +36,6 @@ private:
     bool moveToward(int playerID);
     bool findMoveWay(int playerID, int x1, int y1, int x2, int y2);
     void initPlayers(int playerNum);
-    void endGame();
 
     const std::pair<int, int> directions[4] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
     bool gameStarted{}, surrendered{};

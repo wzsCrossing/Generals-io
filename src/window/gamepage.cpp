@@ -43,6 +43,7 @@ GamePage::GamePage(QWidget *parent)
     ui->surrender->setText("Surrender");
     connect(ui->surrender, &QPushButton::clicked, this, [=] {
         QMessageBox::information(this, "Game Over", "You Lose!");
+        gameTimer->stop();
         emit surrender();
     });
 
@@ -69,7 +70,7 @@ void GamePage::Init() {
     ui->board->append("Press W/A/S/D to move up/left/down/right.");
     ui->board->append("Press P to change move mode(full/half)!");
     ui->board->append("Good luck to YOU!");
-
+    gameTimer->start(500);
     changeMapInfo();
 }
 
@@ -220,8 +221,6 @@ void GamePage::changeMapInfo() {
             URit->setFont(font);
         }
 
-    gameTimer->start(500);
-
     int max = width > height ? width : height;
     int ButtonSize = this->size().rheight();
     if (ButtonSize > this->size().rwidth()) ButtonSize = this->size().rwidth();
@@ -235,6 +234,11 @@ void GamePage::changeMapInfo() {
         for (int i = 0; i < playerNum; i++)
             if (round == 1 + (*ranklist)[i]->getLoseRound() && round != 0)
                 ui->board->append("Oh no! Player " + (*ranklist)[i]->getNickName() + " dies!");
+    }
+    if (!(*ranklist)[1]->isAlive()) {
+        QMessageBox::information(this, "Game Ended", "Player " + (*ranklist)[0]->getNickName() + " wins!");
+        gameTimer->stop();
+        emit gameEnded();
     }
 }
 

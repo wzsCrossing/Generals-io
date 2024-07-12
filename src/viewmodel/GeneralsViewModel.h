@@ -30,6 +30,7 @@ public slots:
     void cancelMove();
     void clearMove();
     void updateGame();
+    void endGame();
 
 signals:
     void mapChanged();

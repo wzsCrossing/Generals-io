@@ -53,6 +53,7 @@ private:
 signals:
     void moveSignal(int x, int y, Direction dir, bool half);
     void surrender();
+    void gameEnded();
 
 public slots:
     void changeMapInfo();
