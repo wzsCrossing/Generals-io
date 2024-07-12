@@ -3,6 +3,7 @@
 #include <QPushButton>
 #include <QIcon>
 #include <QPainter>
+#include <QMessageBox>
 
 GamePage::GamePage(QWidget *parent)
     : QMainWindow(parent)
@@ -40,7 +41,10 @@ GamePage::GamePage(QWidget *parent)
                                   "QPushButton:pressed{background:blue;}"\
                                   "QPushButton{background: #029FFF; border-radius: 8px;}");
     ui->surrender->setText("Surrender");
-    connect(ui->surrender, &QPushButton::clicked, this, [=] {emit surrender();});
+    connect(ui->surrender, &QPushButton::clicked, this, [=] {
+        QMessageBox::information(this, "Game Over", "You Lose!");
+        emit surrender();
+    });
 
     this->hide();
 }
@@ -61,6 +65,8 @@ void GamePage::Init() {
     ui->board->append("Press W/A/S/D to move up/left/down/right.");
     ui->board->append("Press P to change move mode(full/half)!");
     ui->board->append("Good luck to YOU!");
+
+    changeMapInfo();
 }
 
 void GamePage::drawVisualMap(int i, int j, bool focus) {
@@ -74,31 +80,41 @@ void GamePage::drawVisualMap(int i, int j, bool focus) {
     if (focus) {
         switch (map->getCell(i, j)->getType()) {
         case CellType::BLANK :
+            VisualMap[i][j]->setIcon(QIcon());
             VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getArmy() > 0 ? map->getCell(i, j)->getOwner() : 8, "", true));
+            VisualMap[i][j]->setText(map->getCell(i, j)->getArmy() > 0 ? QString::number(map->getCell(i, j)->getArmy()) : "");
             break;
         case CellType::CAPITAL :
+            VisualMap[i][j]->setIcon(QIcon());
             VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner(), ":/General-Focus.png", false));
+            VisualMap[i][j]->setText(QString::number(map->getCell(i, j)->getArmy()));
             break;
         case CellType::CITY :
+            VisualMap[i][j]->setIcon(QIcon());
             VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner(), ":/City-Focus.png" , false));
+            VisualMap[i][j]->setText(QString::number(map->getCell(i, j)->getArmy()));
             break;
         case CellType::MOUNTAIN :
             VisualMap[i][j]->setIcon(QIcon(":/Mountain.png"));
             VisualMap[i][j]->setIconSize(QSize(ButtonSize, ButtonSize));
             VisualMap[i][j]->setStyleSheet("QPushButton {background: grey; border-radius: 0px; border: 3px solid black;}");
+            VisualMap[i][j]->setText("");
             break;
         }
     } else {
         switch (map->getCell(i, j)->getType()) {
         case CellType::BLANK :
+            VisualMap[i][j]->setIcon(QIcon());
             VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getArmy() > 0 ? map->getCell(i, j)->getOwner() : 8, "", false));
             VisualMap[i][j]->setText(map->getCell(i, j)->getArmy() > 0 ? QString::number(map->getCell(i, j)->getArmy()) : "");
             break;
         case CellType::CAPITAL :
+            VisualMap[i][j]->setIcon(QIcon());
             VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner(), ":/General.png", false));
             VisualMap[i][j]->setText(QString::number(map->getCell(i, j)->getArmy()));
             break;
         case CellType::CITY :
+            VisualMap[i][j]->setIcon(QIcon());
             VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner(), ":/City.png", false));
             VisualMap[i][j]->setText(QString::number(map->getCell(i, j)->getArmy()));
             break;
@@ -106,6 +122,7 @@ void GamePage::drawVisualMap(int i, int j, bool focus) {
             VisualMap[i][j]->setIcon(QIcon(":/Mountain.png"));
             VisualMap[i][j]->setIconSize(QSize(ButtonSize, ButtonSize));
             VisualMap[i][j]->setStyleSheet("QPushButton {background: grey; border-radius: 0px; border: 1px solid black;}");
+            VisualMap[i][j]->setText("");
             break;
         }
     }

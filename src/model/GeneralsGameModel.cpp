@@ -19,9 +19,10 @@ int GeneralsGameModel::getRound() {
 void GeneralsGameModel::generateRandomGame(int cityDense, int mountainDense, int playerNum) {
     round = 0;
     cntPlayer = playerNum;
-    playerInfos.push_back(std::make_shared<PlayerInfo>(playerName, 0));
+    playerInfos.resize(playerNum);
+    playerInfos[0] = std::make_shared<PlayerInfo>(playerName, 0);
     for (int i = 1; i < cntPlayer; ++i) {
-        playerInfos.push_back(std::make_shared<PlayerInfo>("Bot " + QString::number(i), i));
+        playerInfos[i] = std::make_shared<PlayerInfo>("Bot " + QString::number(i), i);
     }
     playerMap = std::make_shared<MapInfo>();
     playerMap->generateRandomMap(cityDense, mountainDense);
@@ -30,7 +31,9 @@ void GeneralsGameModel::generateRandomGame(int cityDense, int mountainDense, int
 
 void GeneralsGameModel::endGame() {
     gameStarted = false;
-    playerInfos.clear();
+    for (auto &player : playerInfos) {
+        player->clearMoveList();
+    }
 }
 
 QString GeneralsGameModel::getPlayerName() {
@@ -156,7 +159,7 @@ void GeneralsGameModel::cancelMove(int playerID) {
 }
 
 void GeneralsGameModel::surrender(int playerID) {
-    qDebug() << "Player " << playerID << "surrendered!";
+    // qDebug() << "Player " << playerID << "surrendered!";
     playerInfos[playerID]->setLose(round);
     if (playerID == 0) {
         surrendered = true;

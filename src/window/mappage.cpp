@@ -28,6 +28,8 @@ MapPage::MapPage(QWidget *parent)
 
     ui->heightInput->setText("25");
     ui->widthInput->setText("25");
+    ui->playerNumberInput->setText("8");
+    ui->playerNameInput->setReadOnly(true);
     connect(ui->heightInput, &QLineEdit::editingFinished, this, [=] {
         int h = ui->heightInput->text().toInt();
         if (h < 16 || h > 25) {
@@ -84,6 +86,25 @@ MapPage::MapPage(QWidget *parent)
     ui->widthInput->setFont(font);
     ui->widthInput->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     ui->widthInput->resize(120, 40);
+
+    ui->playerNumberLabel->setFont(font);
+    ui->playerNumberLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    ui->playerNumberLabel->setStyleSheet("color: #81D4FA");
+    ui->playerNumberLabel->resize(200, 40);
+
+    ui->playerNumberInput->setFont(font);
+    ui->playerNumberInput->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    ui->playerNumberInput->resize(120, 40);
+
+    ui->playerNameLabel->setFont(font);
+    ui->playerNameLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    ui->playerNameLabel->setStyleSheet("color: #81D4FA");
+    ui->playerNameLabel->resize(200, 40);
+
+    ui->playerNameInput->setFont(font);
+    ui->playerNameInput->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    ui->playerNameInput->resize(160, 40);
+
 
     changeMap();
 }
@@ -180,10 +201,17 @@ void MapPage::paintEvent(QPaintEvent *event) {
                                  "QPushButton:pressed{background:blue;}"\
                                  "QPushButton{background: #029FFF; border-radius: 8px;}");
 
-    ui->heightLabel->move(ButtonSize * width + windowWidth * 0.03, windowHeight * 0.01);
-    ui->heightInput->move(ButtonSize * width + ui->heightLabel->width() + windowWidth * 0.04, windowHeight * 0.01);
-    ui->widthLabel->move(ButtonSize * width + ui->heightLabel->width() + ui->heightInput->width() + windowWidth * 0.05, windowHeight * 0.01);
-    ui->widthInput->move(ButtonSize * width + ui->heightLabel->width() + ui->heightInput->width() + ui->widthLabel->width() + windowWidth * 0.06, windowHeight * 0.01);
+    ui->heightLabel->move(ButtonSize * width + windowWidth * 0.03, windowHeight * 0.015);
+    ui->heightInput->move(ButtonSize * width + ui->heightLabel->width() + windowWidth * 0.04, windowHeight * 0.015);
+    ui->widthLabel->move(ButtonSize * width + ui->heightLabel->width() + ui->heightInput->width() + windowWidth * 0.05, windowHeight * 0.015);
+    ui->widthInput->move(ButtonSize * width + ui->heightLabel->width() + ui->heightInput->width() + ui->widthLabel->width() + windowWidth * 0.06, windowHeight * 0.015);
+
+    ui->playerNumberLabel->move(ButtonSize * width + windowWidth * 0.03, ui->heightLabel->height() + windowHeight * 0.03);
+    ui->playerNumberInput->move(ButtonSize * width + ui->playerNumberLabel->width() + windowWidth * 0.04, ui->heightLabel->height() + windowHeight * 0.03);
+
+    ui->playerNameInput->setText(playerName);
+    ui->playerNameLabel->move(ButtonSize * width + windowWidth * 0.03, ui->heightLabel->height() + ui->playerNumberLabel->height() + windowHeight * 0.045);
+    ui->playerNameInput->move(ButtonSize * width + ui->playerNameLabel->width() + windowWidth * 0.04, ui->heightLabel->height() + ui->playerNumberLabel->height() + windowHeight * 0.045);
 }
 
 void MapPage::drawVisualMap(int i, int j) {
