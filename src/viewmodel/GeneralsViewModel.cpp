@@ -5,7 +5,6 @@ GeneralsViewModel::GeneralsViewModel() {
 
 void GeneralsViewModel::setModel(const std::shared_ptr<GeneralsGameModel>& model) {
     m_GeneralsModel = model;
-    connect(m_GeneralsModel.get(), &GeneralsGameModel::playerDie, this, [=](const QString &playerName) {emit playerDie(playerName);});
 }
 
 std::shared_ptr<GeneralsGameModel> GeneralsViewModel::getModel() throw() {
@@ -28,7 +27,7 @@ void GeneralsViewModel::setPlayerName(const QString &nickname) {
     m_GeneralsModel->setPlayerName(nickname);
 }
 
-void GeneralsViewModel::startGame(int playerNum, GameMode mode) {
+void GeneralsViewModel::startGameRandom(int playerNum, GameMode mode) {
     m_GeneralsModel->startGame(playerNum, mode);
     emit mapChanged();
 }

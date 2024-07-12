@@ -49,6 +49,11 @@ GamePage::GamePage(QWidget *parent)
     this->hide();
 }
 
+void GamePage::setMode(bool isVisible, bool isSilent) {
+    this->isSilent = isSilent;
+    this->isVisible = isVisible;
+}
+
 void GamePage::Init() {
 
     /*
@@ -69,7 +74,7 @@ void GamePage::Init() {
     changeMapInfo();
 }
 
-void GamePage::drawVisualMap(int i, int j, bool focus, int gameMode) {
+void GamePage::drawVisualMap(int i, int j, bool focus) {
     int max = width > height ? width : height;
     int ButtonSize = this->size().rheight();
     if (ButtonSize > this->size().rwidth()) ButtonSize = this->size().rwidth();
@@ -77,7 +82,7 @@ void GamePage::drawVisualMap(int i, int j, bool focus, int gameMode) {
     QFont font("Consolas", ButtonSize / 2.5);
     VisualMap[i][j]->setGeometry(j * ButtonSize, i * ButtonSize, ButtonSize, ButtonSize);
     VisualMap[i][j]->setFont(font);
-    if (gameMode == 0 && !map->getCell(i, j)->isLighted()) {
+    if (!isVisible && !map->getCell(i, j)->isLighted()) {
         if (map->getCell(i, j)->getType() == CellType::CITY || map->getCell(i, j)->getType() == CellType::MOUNTAIN) {
             VisualMap[i][j]->setIconSize(QSize(ButtonSize, ButtonSize));
             VisualMap[i][j]->setIcon(QIcon(":/Obstacle.png"));
@@ -226,7 +231,12 @@ void GamePage::changeMapInfo() {
     font.setBold(false);
     for (int i = 0; i < height; i++)
         for (int j = 0; j < width; j++)
-            drawVisualMap(i, j, false, 0);
+            drawVisualMap(i, j, false);
+    if (!isSilent) {
+        for (int i = 0; i < playerNum; i++)
+            if (round == 1 + (*ranklist)[i]->getLoseRound() && round != 0)
+                ui->board->append("Oh no! Player " + (*ranklist)[i]->getNickName() + " dies!");
+    }
 }
 
 QString GamePage::getColor(int colorId, const QString &Pic, bool isFocus) const{
@@ -273,7 +283,7 @@ void GamePage::paintEvent(QPaintEvent *event) {
     ButtonSize /= (max * 1.2);
     QFont font("Consolas", ButtonSize / 2.5);
     if (focus_X >= 0 && focus_X < width && focus_Y >= 0 && focus_Y < height)
-        drawVisualMap(focus_Y, focus_X, true, 0);
+        drawVisualMap(focus_Y, focus_X, true);
 
     /*
      * To construct half button
@@ -299,19 +309,21 @@ void GamePage::paintEvent(QPaintEvent *event) {
     /*
      * To construct ranking list
      */
-    ui->rankinglist->move(this->size().rwidth() - ui->rankinglist->size().rwidth(), 0);
-    QTableWidget *UR = ui->rankinglist;
-    for (int i = 2; i < playerNum + 2; i++) {
-        UR->item(i, 0)->setBackground(getBrush((*ranklist)[i - 2]->getPlayerId()));
-        UR->item(i, 1)->setBackground(getBrush(8));
-        UR->item(i, 2)->setBackground(getBrush(8));
-        UR->item(i, 0)->setText((*ranklist)[i - 2]->getNickName());
-        if ((*ranklist)[i - 2]->isAlive()) {
-            UR->item(i, 1)->setText(QString::number((*ranklist)[i - 2]->getArmyNum()));
-            UR->item(i, 2)->setText(QString::number((*ranklist)[i - 2]->getLandNum()));
-        } else {
-            UR->item(i, 1)->setText("OUT");
-            UR->item(i, 2)->setText("OUT");
+    if (!isSilent) {
+        ui->rankinglist->move(this->size().rwidth() - ui->rankinglist->size().rwidth(), 0);
+        QTableWidget *UR = ui->rankinglist;
+        for (int i = 2; i < playerNum + 2; i++) {
+            UR->item(i, 0)->setBackground(getBrush((*ranklist)[i - 2]->getPlayerId()));
+            UR->item(i, 1)->setBackground(getBrush(8));
+            UR->item(i, 2)->setBackground(getBrush(8));
+            UR->item(i, 0)->setText((*ranklist)[i - 2]->getNickName());
+            if ((*ranklist)[i - 2]->isAlive()) {
+                UR->item(i, 1)->setText(QString::number((*ranklist)[i - 2]->getArmyNum()));
+                UR->item(i, 2)->setText(QString::number((*ranklist)[i - 2]->getLandNum()));
+            } else {
+                UR->item(i, 1)->setText("OUT");
+                UR->item(i, 2)->setText("OUT");
+            }
         }
     }
 
@@ -343,9 +355,9 @@ void GamePage::keyPressEvent(QKeyEvent * event) {
 
 void GamePage::paintFocus(int origin_x, int origin_y, int new_x, int new_y) {
     if (origin_x >= 0 && origin_x < width && origin_y >= 0 && origin_y < height)
-        drawVisualMap(origin_y, origin_x, false, 0);
+        drawVisualMap(origin_y, origin_x, false);
     if (new_x >= 0 && new_x < width && new_y >= 0 && new_y < height)
-        drawVisualMap(new_y, new_x, true, 0);
+        drawVisualMap(new_y, new_x, true);
 }
 
 void GamePage::moveFocus(Direction dir) {

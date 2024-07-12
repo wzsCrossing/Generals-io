@@ -26,6 +26,7 @@ private:
     int height = MaxSize;
     QPushButton *VisualMap[MaxSize][MaxSize];
     std::shared_ptr<MapInfo> map;
+    int gameMode;
     QBrush getBrush(int colorId) const;
     QString getColor(int colorId, const QString &Pic) const;
 
@@ -34,7 +35,7 @@ private:
 
 signals:
     void backToMain();
-    void startGame();
+    void startGameRandom(int playerNum, GameMode mode);
 
 public slots:
     void changeMap();

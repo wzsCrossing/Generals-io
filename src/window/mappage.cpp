@@ -19,10 +19,11 @@ MapPage::MapPage(QWidget *parent)
     this->setPalette(pal);
 
     connect(ui->StartGame, &QPushButton::clicked, this, [=] {this->hide();
-                                                             emit startGame();
-                                                             gamepage->playerName = playerName;
-                                                             gamepage->Init();
-                                                            });
+        emit startGameRandom(8, GameMode::CRYSTALCLEAR);
+        gamepage->setMode(ui->isVisible->isChecked(), ui->isSilent->isChecked());
+        gamepage->playerName = playerName;
+        gamepage->Init();
+    });
     connect(ui->BackToMain, &QPushButton::clicked, this, [=] {emit backToMain();});
     connect(gamepage, &GamePage::surrender, this, [=] {this->show();gamepage->hide();});
 
