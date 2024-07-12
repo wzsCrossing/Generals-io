@@ -51,6 +51,7 @@ public:
     Point getCapital();
 
     void addMove(int x, int y, Direction dir, bool half);
+    QQueue<Move> getMoveList();
     Move getFirstMove();
     bool hasMove();
     void cancelMove();

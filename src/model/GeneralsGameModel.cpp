@@ -22,6 +22,7 @@ void GeneralsGameModel::initPlayers(int playerNum) {
     for (int i = 1; i < cntPlayer; ++i) {
         playerInfos[i] = std::make_shared<PlayerInfo>("Bot " + QString::number(i), i);
     }
+    rankList = std::make_shared<QVector<std::shared_ptr<PlayerInfo>>>(playerInfos);
     playerMap->capitalDistribution(cntPlayer);
     auto map = playerMap->getMap();
     for (int i = 0; i < height; ++i) {
@@ -58,11 +59,10 @@ std::shared_ptr<QVector<std::shared_ptr<PlayerInfo>>> GeneralsGameModel::getRank
             player->setArmyNum(player->getArmyNum() + map[i][j]->getArmy());
         }
     }
-    rankList = playerInfos;
-    std::sort(rankList.begin(), rankList.end(), [](std::shared_ptr<PlayerInfo> a, std::shared_ptr<PlayerInfo> b) {
+    std::sort(rankList->begin(), rankList->end(), [](std::shared_ptr<PlayerInfo> a, std::shared_ptr<PlayerInfo> b) {
         return a->getArmyNum() > b->getArmyNum() || (a->getArmyNum() == b->getArmyNum() && a->getLandNum() > b->getLandNum());
     });
-    return std::make_shared<QVector<std::shared_ptr<PlayerInfo>>>(rankList);
+    return rankList;
 }
 
 void GeneralsGameModel::setPlayerName(const QString &nickname) {
@@ -377,4 +377,24 @@ bool GeneralsGameModel::findMoveWay(int playerID, int x1, int y1, int x2, int y2
         pos = x * width + y;
     }
     return true;
+}
+
+void GeneralsGameModel::updateArrow() {
+    auto map = playerMap->getMap();
+
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            map[i][j]->setDirection(-1);
+        }
+    }
+
+    auto moveList = playerInfos[0]->getMoveList();
+    while (!moveList.empty()) {
+        auto move = moveList.front();
+        moveList.pop_front();
+        int x = move.x, y = move.y;
+        if (map[x][y]->getDirection() == -1) {
+            map[x][y]->setDirection(move.dir);
+        }
+    }
 }
