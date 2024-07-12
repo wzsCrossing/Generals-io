@@ -18,6 +18,7 @@ private:
     int owner_;
     int army_;
     bool isLighted_;
+    int direction_;
 public:
     Cell() : type_(BLANK), owner_(-1), army_(0), isLighted_(false) {}
     Cell(CellType type, int owner, int army) : type_(type), owner_(owner), army_(army), isLighted_(false) {}
@@ -26,11 +27,13 @@ public:
     int getOwner();
     int getArmy();
     bool isLighted();
+    int getDirection();
     void setType(CellType type);
     void setOwner(int owner);
     void setArmy(int army);
     void addArmy(int army);
     void setLighted(bool isLighted);
+    void setDirection(int direction);
 };
 
 class MapInfo : public QObject {

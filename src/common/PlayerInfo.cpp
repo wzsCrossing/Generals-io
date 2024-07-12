@@ -58,6 +58,10 @@ void PlayerInfo::addMove(int x, int y, Direction dir, bool half) {
     moveList_.push_back((Move) {x, y, dir, half});
 }
 
+QQueue<Move> PlayerInfo::getMoveList() {
+    return moveList_;
+}
+
 Move PlayerInfo::getFirstMove() {
     auto move = moveList_.front();
     moveList_.pop_front();

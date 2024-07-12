@@ -19,6 +19,10 @@ bool Cell::isLighted() {
     return isLighted_;
 }
 
+int Cell::getDirection() {
+    return direction_;
+}
+
 void Cell::setType(CellType type) {
     type_ = type;
 }
@@ -37,6 +41,10 @@ void Cell::addArmy(int army) {
 
 void Cell::setLighted(bool isLighted) {
     isLighted_ = isLighted;
+}
+
+void Cell::setDirection(int direction) {
+    direction_ = direction;
 }
 
 MapInfo::MapInfo() {

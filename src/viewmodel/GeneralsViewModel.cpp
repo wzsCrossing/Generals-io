@@ -38,7 +38,10 @@ void GeneralsViewModel::startGame(int playerNum, bool mode, std::shared_ptr<MapI
 }
 
 void GeneralsViewModel::move(int x, int y, Direction dir, bool half) {
-    if (m_GeneralsModel->move(0, x, y, dir, half)) emit successfulMove(dir);
+    if (m_GeneralsModel->move(0, x, y, dir, half)) {
+        m_GeneralsModel->updateArrow();
+        emit successfulMove(dir);
+    }
 }
 
 void GeneralsViewModel::surrender() {
@@ -58,5 +61,6 @@ void GeneralsViewModel::updateGame() {
     m_GeneralsModel->execMove();
     m_GeneralsModel->updateView();
     m_GeneralsModel->addRound();
+    m_GeneralsModel->updateArrow();
     emit mapChanged();
 }
