@@ -5,13 +5,6 @@
 #include <QDebug>
 #include <QObject>
 
-enum GameMode {
-    MISTYVEIL = 0,
-    CRYSTALCLEAR = 1,
-    SILENTWAR = 2,
-    LEAPFROG = 4
-};
-
 enum CellType {
     MOUNTAIN,
     CAPITAL,

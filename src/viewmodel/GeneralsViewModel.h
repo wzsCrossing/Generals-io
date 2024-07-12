@@ -23,8 +23,8 @@ public:
 
 public slots:
     void setPlayerName(const QString &nickname);
-    void startGame(int playerNum, GameMode mode);
-    void startGame(int playerNum, GameMode mode, std::shared_ptr<MapInfo> map);
+    void startGame(int playerNum, bool mode);
+    void startGame(int playerNum, bool mode, std::shared_ptr<MapInfo> map);
     void move(int x, int y, Direction dir, bool half);
     void surrender();
     void cancelMove();
