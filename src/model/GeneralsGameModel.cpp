@@ -1,8 +1,7 @@
 #include "GeneralsGameModel.h"
 
 GeneralsGameModel::GeneralsGameModel() :
-    gameStarted(false), surrendered(false), gameMode(0), round(0) {
-    playerMap = std::make_shared<MapInfo>();
+    gameStarted(false), surrendered(false), gameMode(0) {
 }
 
 std::shared_ptr<MapInfo> GeneralsGameModel::getMapInfo() throw() {
@@ -18,13 +17,20 @@ int GeneralsGameModel::getRound() {
 }
 
 void GeneralsGameModel::generateRandomGame(int cityDense, int mountainDense, int playerNum) {
+    round = 0;
     cntPlayer = playerNum;
     playerInfos.push_back(std::make_shared<PlayerInfo>(playerName, 0));
     for (int i = 1; i < cntPlayer; ++i) {
         playerInfos.push_back(std::make_shared<PlayerInfo>("Bot " + QString::number(i), i));
     }
+    playerMap = std::make_shared<MapInfo>();
     playerMap->generateRandomMap(cityDense, mountainDense);
     playerMap->capitalDistribution(cntPlayer);
+}
+
+void GeneralsGameModel::endGame() {
+    gameStarted = false;
+    playerInfos.clear();
 }
 
 QString GeneralsGameModel::getPlayerName() {
@@ -45,7 +51,7 @@ std::shared_ptr<QVector<std::shared_ptr<PlayerInfo>>> GeneralsGameModel::getRank
             player->setArmyNum(player->getArmyNum() + map[i][j]->getArmy());
         }
     }
-    QVector<std::shared_ptr<PlayerInfo>> rankList = playerInfos;
+    rankList = playerInfos;
     std::sort(rankList.begin(), rankList.end(), [](std::shared_ptr<PlayerInfo> a, std::shared_ptr<PlayerInfo> b) {
         return a->getArmyNum() > b->getArmyNum() || (a->getArmyNum() == b->getArmyNum() && a->getLandNum() > b->getLandNum());
     });
@@ -150,9 +156,11 @@ void GeneralsGameModel::cancelMove(int playerID) {
 }
 
 void GeneralsGameModel::surrender(int playerID) {
+    qDebug() << "Player " << playerID << "surrendered!";
     playerInfos[playerID]->setLose(round);
     if (playerID == 0) {
         surrendered = true;
+        endGame();
     }
 }
 

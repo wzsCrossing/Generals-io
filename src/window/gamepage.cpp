@@ -39,7 +39,7 @@ GamePage::GamePage(QWidget *parent)
     ui->surrender->setStyleSheet("QPushButton:hover{background:#81D4FA;}"\
                                   "QPushButton:pressed{background:blue;}"\
                                   "QPushButton{background: #029FFF; border-radius: 8px;}");
-    ui->surrender->setText("Serrender");
+    ui->surrender->setText("Surrender");
     connect(ui->surrender, &QPushButton::clicked, this, [=] {emit surrender();});
 
     this->hide();

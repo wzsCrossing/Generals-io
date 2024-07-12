@@ -37,7 +37,15 @@ void GeneralsViewModel::move(int x, int y, Direction dir, bool half) {
 }
 
 void GeneralsViewModel::surrender() {
-    // m_GeneralsModel->surrender();
+    m_GeneralsModel->surrender(0);
+}
+
+void GeneralsViewModel::cancelMove() {
+    m_GeneralsModel->cancelMove(0);
+}
+
+void GeneralsViewModel::clearMove() {
+    m_GeneralsModel->clearMove(0);
 }
 
 void GeneralsViewModel::updateGame() {
