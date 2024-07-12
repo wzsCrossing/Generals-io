@@ -1,8 +1,6 @@
 #include "GeneralsGameModel.h"
 
-GeneralsGameModel::GeneralsGameModel() :
-    gameStarted(false), surrendered(false), gameMode(0) {
-}
+GeneralsGameModel::GeneralsGameModel() : gameStarted(false), surrendered(false) {}
 
 std::shared_ptr<MapInfo> GeneralsGameModel::getMapInfo() throw() {
     return playerMap;
@@ -16,21 +14,21 @@ int GeneralsGameModel::getRound() {
     return round;
 }
 
-void GeneralsGameModel::generateRandomGame(int cityDense, int mountainDense, int playerNum) {
-    round = 0;
+void GeneralsGameModel::initPlayers(int playerNum) {
     cntPlayer = playerNum;
-    playerInfos.push_back(std::make_shared<PlayerInfo>(playerName, 0));
+    playerInfos.resize(playerNum);
+    playerInfos[0] = std::make_shared<PlayerInfo>(playerName, 0);
     for (int i = 1; i < cntPlayer; ++i) {
-        playerInfos.push_back(std::make_shared<PlayerInfo>("Bot " + QString::number(i), i));
+        playerInfos[i] = std::make_shared<PlayerInfo>("Bot " + QString::number(i), i);
     }
-    playerMap = std::make_shared<MapInfo>();
-    playerMap->generateRandomMap(cityDense, mountainDense);
     playerMap->capitalDistribution(cntPlayer);
 }
 
 void GeneralsGameModel::endGame() {
     gameStarted = false;
-    playerInfos.clear();
+    for (auto &player : playerInfos) {
+        player->clearMoveList();
+    }
 }
 
 QString GeneralsGameModel::getPlayerName() {
@@ -62,11 +60,32 @@ void GeneralsGameModel::setPlayerName(const QString &nickname) {
     playerName = nickname;
 }
 
-void GeneralsGameModel::startGame() {
+void GeneralsGameModel::startGame(int playerNum, GameMode mode) {
     if (gameStarted) return;
-    generateRandomGame(100, 100, 4); // TODO
+    round = 0;
+    gameMode = mode;
+
+    playerMap = std::make_shared<MapInfo>();
+    playerMap->generateRandomMap(100, 100);
     width = playerMap->getWidth();
     height = playerMap->getHeight();
+
+    initPlayers(playerNum);
+    surrendered = false;
+    gameStarted = true;
+}
+
+void GeneralsGameModel::startGame(int playerNum, GameMode mode, std::shared_ptr<MapInfo> map) {
+    if (gameStarted) return;
+    round = 0;
+    gameMode = mode;
+
+    playerMap = map;
+    width = playerMap->getWidth();
+    height = playerMap->getHeight();
+
+    initPlayers(playerNum);
+    surrendered = false;
     gameStarted = true;
 }
 
@@ -132,9 +151,16 @@ bool GeneralsGameModel::moveArmy(int playerId, int x1, int y1, int x2, int y2, i
         if (army > army2) {
             map[x2][y2]->setArmy(army - army2);
             if (map[x2][y2]->getType() == CAPITAL) {
-                map[x2][y2]->setType(CITY);
                 playerInfos[map[x2][y2]->getOwner()]->setLose(round);
                 changeOwner(map[x2][y2]->getOwner(), playerId);
+                if (gameMode & LEAPFROG) {
+                    map[x2][y2]->setType(CAPITAL);
+                    Point capital = playerInfos[playerId]->getCapital();
+                    map[capital.first][capital.second]->setType(CITY);
+                    playerInfos[playerId]->setCapital(Point(x2, y2));
+                } else {
+                    map[x2][y2]->setType(CITY);
+                }
             } else {
                 map[x2][y2]->setOwner(playerId);
             }
@@ -156,7 +182,6 @@ void GeneralsGameModel::cancelMove(int playerID) {
 }
 
 void GeneralsGameModel::surrender(int playerID) {
-    qDebug() << "Player " << playerID << "surrendered!";
     playerInfos[playerID]->setLose(round);
     if (playerID == 0) {
         surrendered = true;
@@ -166,9 +191,12 @@ void GeneralsGameModel::surrender(int playerID) {
 
 void GeneralsGameModel::updateView() {
     auto map = playerMap->getMap();
-
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
+            if (gameMode & CRYSTALCLEAR) {
+                map[i][j]->setLighted(true);
+                continue;
+            }
             map[i][j]->setLighted(false);
             for (int k = 0; k < 4; k++) {
                 int x = i + directions[k].first, y = j + directions[k].second;

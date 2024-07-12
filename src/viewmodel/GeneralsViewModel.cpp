@@ -27,8 +27,13 @@ void GeneralsViewModel::setPlayerName(const QString &nickname) {
     m_GeneralsModel->setPlayerName(nickname);
 }
 
-void GeneralsViewModel::startGame() {
-    m_GeneralsModel->startGame();
+void GeneralsViewModel::startGame(int playerNum, GameMode mode) {
+    m_GeneralsModel->startGame(playerNum, mode);
+    emit mapChanged();
+}
+
+void GeneralsViewModel::startGame(int playerNum, GameMode mode, std::shared_ptr<MapInfo> map) {
+    m_GeneralsModel->startGame(playerNum, mode, map);
     emit mapChanged();
 }
 

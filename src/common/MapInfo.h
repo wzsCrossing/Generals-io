@@ -5,16 +5,18 @@
 #include <QDebug>
 #include <QObject>
 
+enum GameMode {
+    MISTYVEIL = 0,
+    CRYSTALCLEAR = 1,
+    SILENTWAR = 2,
+    LEAPFROG = 4
+};
+
 enum CellType {
     MOUNTAIN,
     CAPITAL,
     CITY,
     BLANK
-};
-
-struct Focus {
-    int x, y;
-    Focus(int x, int y) : x(x), y(y) {}
 };
 
 class Cell {
