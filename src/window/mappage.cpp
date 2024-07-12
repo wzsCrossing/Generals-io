@@ -19,17 +19,23 @@ MapPage::MapPage(QWidget *parent)
     this->setPalette(pal);
 
     connect(ui->StartGame, &QPushButton::clicked, this, [=] {this->hide();
-                                                             emit startGame();
-                                                             gamepage->playerName = playerName;
-                                                             gamepage->Init();
-                                                            });
+        if (ui->isRandom->isChecked()) emit startGameRandom(ui->playerNumberInput->text().toInt(), ui->isFrog);
+        else {
+            map->setHeight(height);
+            map->setWidth(width);
+            emit startGame(ui->playerNumberInput->text().toInt(), ui->isFrog, map);
+        }
+        gamepage->setMode(ui->isVisible->isChecked(), ui->isSilent->isChecked());
+        gamepage->playerName = playerName;
+        gamepage->Init();
+    });
     connect(ui->BackToMain, &QPushButton::clicked, this, [=] {emit backToMain();});
     connect(gamepage, &GamePage::surrender, this, [=] {this->show();gamepage->hide();});
 
     ui->heightInput->setText("25");
     ui->widthInput->setText("25");
     ui->playerNumberInput->setText("8");
-    ui->playerNameInput->setReadOnly(true);
+    ui->playerNameInput->setDisabled(true);
     connect(ui->heightInput, &QLineEdit::editingFinished, this, [=] {
         int h = ui->heightInput->text().toInt();
         if (h < 16 || h > 25) {
@@ -46,23 +52,32 @@ MapPage::MapPage(QWidget *parent)
         } else this->width = ui->widthInput->text().toInt();
         changeMap();
     });
+    connect(ui->playerNumberInput, &QLineEdit::editingFinished, this, [=] {
+        int num = ui->playerNumberInput->text().toInt();
+        if (num < 2 || num > 8) {
+            QMessageBox::information(this, "Warning", "Invalid player number! The number must be an integer between 2 and 8!");
+            ui->playerNumberInput->setText("");
+        }
+    });
 
     for (int i = 0; i < MaxSize; i++)
         for (int j = 0; j < MaxSize; j++) {
             VisualMap[i][j] = new QPushButton(this);
             connect(VisualMap[i][j], &QPushButton::clicked, this, [=] {
-                switch (map->getCell(i, j)->getType()) {
-                case CellType::BLANK :
-                    map->getCell(i, j)->setType(CellType::CITY);
-                    break;
-                case CellType::CITY :
-                    map->getCell(i, j)->setType(CellType::MOUNTAIN);
-                    break;
-                case CellType::MOUNTAIN :
-                    map->getCell(i, j)->setType(CellType::BLANK);
-                    break;
-                case CellType::CAPITAL :
-                    break;
+                if (!ui->isRandom->isChecked()) {
+                    switch (map->getCell(i, j)->getType()) {
+                    case CellType::BLANK :
+                        map->getCell(i, j)->setType(CellType::CITY);
+                        break;
+                    case CellType::CITY :
+                        map->getCell(i, j)->setType(CellType::MOUNTAIN);
+                        break;
+                    case CellType::MOUNTAIN :
+                        map->getCell(i, j)->setType(CellType::BLANK);
+                        break;
+                    case CellType::CAPITAL :
+                        break;
+                    }
                 }
                 drawVisualMap(i, j);
             });
@@ -105,6 +120,44 @@ MapPage::MapPage(QWidget *parent)
     ui->playerNameInput->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     ui->playerNameInput->resize(160, 40);
 
+    ui->isRandom->setFont(font);
+    ui->isRandom->resize(160, 40);
+    ui->isRandom->setStyleSheet("QCheckBox::indicator:checked{border-radius: 5px; background: #81D4FA;}");
+    connect(ui->isRandom, &QCheckBox::checkStateChanged, this, [=] {
+        if (ui->isRandom->isChecked()) {
+            ui->heightInput->setDisabled(true);
+            ui->widthInput->setDisabled(true);
+        } else {
+            ui->heightInput->setDisabled(false);
+            ui->widthInput->setDisabled(false);
+        }
+    });
+
+    font.setPointSize(14);
+
+    ui->isVisible->setFont(font);
+    ui->isVisible->resize(160, 40);
+    ui->isVisible->setStyleSheet("QCheckBox::indicator:checked{border-radius: 5px; background: #81D4FA;}");
+    connect(ui->isVisible, &QCheckBox::checkStateChanged, this, [=] {
+        if (ui->isVisible->isChecked()) ui->isVisible->setText("Crystal Clear");
+        else ui->isVisible->setText("Misty Veil");
+    });
+
+    ui->isSilent->setFont(font);
+    ui->isSilent->resize(180, 40);
+    ui->isSilent->setStyleSheet("QCheckBox::indicator:checked{border-radius: 5px; background: #81D4FA;}");
+    connect(ui->isSilent, &QCheckBox::checkStateChanged, this, [=] {
+        if (ui->isSilent->isChecked()) ui->isSilent->setText("Silent War");
+        else ui->isSilent->setText("Not Silent War");
+    });
+
+    ui->isFrog->setFont(font);
+    ui->isFrog->resize(160, 40);
+    ui->isFrog->setStyleSheet("QCheckBox::indicator:checked{border-radius: 5px; background: #81D4FA;}");
+    connect(ui->isFrog, &QCheckBox::checkStateChanged, this, [=] {
+        if (ui->isFrog->isChecked()) ui->isFrog->setText("LeapFrog");
+        else ui->isFrog->setText("Not LeapFrog");
+    });
 
     changeMap();
 }
@@ -201,17 +254,28 @@ void MapPage::paintEvent(QPaintEvent *event) {
                                  "QPushButton:pressed{background:blue;}"\
                                  "QPushButton{background: #029FFF; border-radius: 8px;}");
 
-    ui->heightLabel->move(ButtonSize * width + windowWidth * 0.03, windowHeight * 0.015);
-    ui->heightInput->move(ButtonSize * width + ui->heightLabel->width() + windowWidth * 0.04, windowHeight * 0.015);
-    ui->widthLabel->move(ButtonSize * width + ui->heightLabel->width() + ui->heightInput->width() + windowWidth * 0.05, windowHeight * 0.015);
-    ui->widthInput->move(ButtonSize * width + ui->heightLabel->width() + ui->heightInput->width() + ui->widthLabel->width() + windowWidth * 0.06, windowHeight * 0.015);
+    int y = windowHeight * 0.05;
+    ui->isRandom->move(ButtonSize * width + windowWidth * 0.03, y);
 
-    ui->playerNumberLabel->move(ButtonSize * width + windowWidth * 0.03, ui->heightLabel->height() + windowHeight * 0.03);
-    ui->playerNumberInput->move(ButtonSize * width + ui->playerNumberLabel->width() + windowWidth * 0.04, ui->heightLabel->height() + windowHeight * 0.03);
+    y += ui->isRandom->height() + windowHeight * 0.015;
+    ui->heightLabel->move(ButtonSize * width + windowWidth * 0.03, y);
+    ui->heightInput->move(ButtonSize * width + ui->heightLabel->width() + windowWidth * 0.04, y);
+    ui->widthLabel->move(ButtonSize * width + ui->heightLabel->width() + ui->heightInput->width() + windowWidth * 0.05, y);
+    ui->widthInput->move(ButtonSize * width + ui->heightLabel->width() + ui->heightInput->width() + ui->widthLabel->width() + windowWidth * 0.06, y);
 
+    y += ui->heightLabel->height() + windowHeight * 0.015;
+    ui->playerNumberLabel->move(ButtonSize * width + windowWidth * 0.03, y);
+    ui->playerNumberInput->move(ButtonSize * width + ui->playerNumberLabel->width() + windowWidth * 0.04, y);
+
+    y += ui->playerNumberLabel->height() + windowHeight * 0.015;
     ui->playerNameInput->setText(playerName);
-    ui->playerNameLabel->move(ButtonSize * width + windowWidth * 0.03, ui->heightLabel->height() + ui->playerNumberLabel->height() + windowHeight * 0.045);
-    ui->playerNameInput->move(ButtonSize * width + ui->playerNameLabel->width() + windowWidth * 0.04, ui->heightLabel->height() + ui->playerNumberLabel->height() + windowHeight * 0.045);
+    ui->playerNameLabel->move(ButtonSize * width + windowWidth * 0.03, y);
+    ui->playerNameInput->move(ButtonSize * width + ui->playerNameLabel->width() + windowWidth * 0.04, y);
+
+    y += ui->playerNameLabel->height() + windowHeight * 0.015;
+    ui->isVisible->move(ButtonSize * width + windowWidth * 0.03, y);
+    ui->isSilent->move(ButtonSize * width + ui->isVisible->width() + windowWidth * 0.04, y);
+    ui->isFrog->move(ButtonSize * width + ui->isVisible->width() + ui->isSilent->width() + windowWidth * 0.05, y);
 }
 
 void MapPage::drawVisualMap(int i, int j) {

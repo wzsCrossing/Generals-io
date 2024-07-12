@@ -27,6 +27,7 @@ public:
     void setMap(std::shared_ptr<MapInfo> map) {this->map = map;}
     void setRanklist(std::shared_ptr<QVector<std::shared_ptr<PlayerInfo>>> ranklist) {this->ranklist = ranklist;}
     void setRound(int round) {this->round = round;};
+    void setMode(bool isVisible, bool isSilent);
     void Init();
     QTimer* getTimer();
     QString playerName;
@@ -37,6 +38,8 @@ private:
     int round;
     int width, height;
     bool half = false;
+    bool isVisible;
+    bool isSilent;
     Ui::GamePage *ui;
     std::shared_ptr<MapInfo> map;
     std::shared_ptr<QVector<std::shared_ptr<PlayerInfo>>> ranklist;
@@ -54,7 +57,6 @@ signals:
 public slots:
     void changeMapInfo();
     void moveFocus(Direction dir);
-    void playerDie(const QString &playerName);
 };
 
 #endif // GAMEPAGE_H

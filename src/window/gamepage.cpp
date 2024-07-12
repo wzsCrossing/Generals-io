@@ -49,6 +49,11 @@ GamePage::GamePage(QWidget *parent)
     this->hide();
 }
 
+void GamePage::setMode(bool isVisible, bool isSilent) {
+    this->isSilent = isSilent;
+    this->isVisible = isVisible;
+}
+
 void GamePage::Init() {
 
     /*
@@ -77,6 +82,16 @@ void GamePage::drawVisualMap(int i, int j, bool focus) {
     QFont font("Consolas", ButtonSize / 2.5);
     VisualMap[i][j]->setGeometry(j * ButtonSize, i * ButtonSize, ButtonSize, ButtonSize);
     VisualMap[i][j]->setFont(font);
+    if (!isVisible && !map->getCell(i, j)->isLighted()) {
+        if (map->getCell(i, j)->getType() == CellType::CITY || map->getCell(i, j)->getType() == CellType::MOUNTAIN) {
+            VisualMap[i][j]->setIconSize(QSize(ButtonSize, ButtonSize));
+            VisualMap[i][j]->setIcon(QIcon(":/Obstacle.png"));
+        }
+        else VisualMap[i][j]->setIcon(QIcon());
+        VisualMap[i][j]->setStyleSheet("QPushButton {background: #383838; border-radius: 0px; border: 1px solid black;}");
+        VisualMap[i][j]->setText("");
+        return;
+    }
     if (focus) {
         switch (map->getCell(i, j)->getType()) {
         case CellType::BLANK :
@@ -217,6 +232,11 @@ void GamePage::changeMapInfo() {
     for (int i = 0; i < height; i++)
         for (int j = 0; j < width; j++)
             drawVisualMap(i, j, false);
+    if (!isSilent) {
+        for (int i = 0; i < playerNum; i++)
+            if (round == 1 + (*ranklist)[i]->getLoseRound() && round != 0)
+                ui->board->append("Oh no! Player " + (*ranklist)[i]->getNickName() + " dies!");
+    }
 }
 
 QString GamePage::getColor(int colorId, const QString &Pic, bool isFocus) const{
@@ -289,20 +309,21 @@ void GamePage::paintEvent(QPaintEvent *event) {
     /*
      * To construct ranking list
      */
-    //ui->rankinglist->item(0, 0)->setText("Round : " + QString::number(ranklist))
-    ui->rankinglist->move(this->size().rwidth() - ui->rankinglist->size().rwidth(), 0);
-    QTableWidget *UR = ui->rankinglist;
-    for (int i = 2; i < playerNum + 2; i++) {
-        UR->item(i, 0)->setBackground(getBrush((*ranklist)[i - 2]->getPlayerId()));
-        UR->item(i, 1)->setBackground(getBrush(8));
-        UR->item(i, 2)->setBackground(getBrush(8));
-        UR->item(i, 0)->setText((*ranklist)[i - 2]->getNickName());
-        if ((*ranklist)[i - 2]->isAlive()) {
-            UR->item(i, 1)->setText(QString::number((*ranklist)[i - 2]->getArmyNum()));
-            UR->item(i, 2)->setText(QString::number((*ranklist)[i - 2]->getLandNum()));
-        } else {
-            UR->item(i, 1)->setText("OUT");
-            UR->item(i, 2)->setText("OUT");
+    if (!isSilent) {
+        ui->rankinglist->move(this->size().rwidth() - ui->rankinglist->size().rwidth(), 0);
+        QTableWidget *UR = ui->rankinglist;
+        for (int i = 2; i < playerNum + 2; i++) {
+            UR->item(i, 0)->setBackground(getBrush((*ranklist)[i - 2]->getPlayerId()));
+            UR->item(i, 1)->setBackground(getBrush(8));
+            UR->item(i, 2)->setBackground(getBrush(8));
+            UR->item(i, 0)->setText((*ranklist)[i - 2]->getNickName());
+            if ((*ranklist)[i - 2]->isAlive()) {
+                UR->item(i, 1)->setText(QString::number((*ranklist)[i - 2]->getArmyNum()));
+                UR->item(i, 2)->setText(QString::number((*ranklist)[i - 2]->getLandNum()));
+            } else {
+                UR->item(i, 1)->setText("OUT");
+                UR->item(i, 2)->setText("OUT");
+            }
         }
     }
 
@@ -358,10 +379,6 @@ void GamePage::moveFocus(Direction dir) {
             focus_X++;
             break;
     }
-}
-
-void GamePage::playerDie(const QString &playerName) {
-    ui->board->append("Oh no! Player " + playerName + " dies!");
 }
 
 QTimer* GamePage::getTimer() {

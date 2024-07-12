@@ -200,6 +200,14 @@ int MapInfo::getHeight() {
     return height_;
 }
 
+void MapInfo::setWidth(int width) {
+    width_ = width;
+}
+
+void MapInfo::setHeight(int height) {
+    height_ = height;
+}
+
 QVector<QVector<Cell*>> MapInfo::getMap() {
     return map_;
 }

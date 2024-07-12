@@ -153,6 +153,7 @@ bool GeneralsGameModel::moveArmy(int playerId, int x1, int y1, int x2, int y2, i
             map[x2][y2]->setArmy(army - army2);
             if (map[x2][y2]->getType() == CAPITAL) {
                 playerInfos[map[x2][y2]->getOwner()]->setLose(round);
+                emit(playerInfos[map[x2][y2]->getOwner()]->getNickName());
                 changeOwner(map[x2][y2]->getOwner(), playerId);
                 if (gameMode) {
                     map[x2][y2]->setType(CAPITAL);

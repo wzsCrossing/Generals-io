@@ -132,6 +132,58 @@
      </rect>
     </property>
    </widget>
+   <widget class="QCheckBox" name="isVisible">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>320</y>
+      <width>151</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Misty Veil</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="isSilent">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>340</y>
+      <width>81</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Not Silent War</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="isFrog">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>360</y>
+      <width>101</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Not Leap Frog</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="isRandom">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>140</y>
+      <width>81</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Random Map</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
