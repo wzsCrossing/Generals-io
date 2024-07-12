@@ -235,3 +235,15 @@ void MapInfo::increaseCityArmy() {
         }
     }
 }
+
+void MapInfo::initMap() {
+    for (int i = 0; i < height_; ++i) {
+        for (int j = 0; j < width_; ++j) {
+            map_[i][j]->setArmy(0);
+            map_[i][j]->setOwner(-1);
+            if (map_[i][j]->getType() == CAPITAL) {
+                map_[i][j]->setType(BLANK);
+            }
+        }
+    }
+}

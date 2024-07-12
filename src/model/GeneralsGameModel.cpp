@@ -84,6 +84,7 @@ void GeneralsGameModel::startGame(int playerNum, bool mode, std::shared_ptr<MapI
     playerMap = map;
     width = playerMap->getWidth();
     height = playerMap->getHeight();
+    playerMap->initMap();
 
     initPlayers(playerNum);
     surrendered = false;
