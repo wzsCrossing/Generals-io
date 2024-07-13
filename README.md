@@ -2,9 +2,15 @@
 
 ## 项目介绍
 
+### 项目说明
+
+- 项目名称：将军棋
+- 开发小组名称：Generals 组
+- 开发小组成员：王造时、胡思远、徐若禺
+
 ### 项目简介
 
-本项目是对多人在线策略塔防游戏[将军棋](http://generals.io/)的复刻，玩家可以在本地进行人机游戏，也可通过局域网联机对战。
+本项目是对多人在线策略塔防游戏[将军棋](http://generals.io/)的复刻，玩家可以在本地自定义地图元素、玩家数量与游戏模式，并进行人机对战。游戏结束后，玩家还可以观看对局回放。
 
 <center> <img src = "/docs/img/init.png" width = 50%> </center>
 
@@ -46,23 +52,58 @@
 
 对于其他不可见格子，若该格子是障碍物/要塞，则该格子被标记为**不可见的障碍物**，否则被标记为**不可见的空地**。
 
-<center> <img src = "/docs/img/demo1.png" width = 50%> </center>
+## 程序说明
 
-## 需求分析
+### 开始界面
 
-### 基本需求
+在开始界面中，玩家可以输入自己的昵称，然后点击 `Ready` 按钮开始游戏。由于本项目并没有实现服务器联机对战，因此 `Server Address` 与 `Connect` 按钮并没有实际功能。
 
-- 实现游戏地图的随机生成
-- 实现游戏的基本操作
-- 实现图形界面的即时显示
-- 实现离线人机对战（即实现游戏 bot）
+<center> <img src = "./img/startWindow.png" width = 40%> </center>
 
-### 进阶需求
+### 游戏设置界面
 
-- 实现自定义地图/导入地图功能
-- 实现对局回放功能
-- 丰富游戏模式与地图元素
-- 实现多人局域网联机对战
+在游戏设置界面中，玩家可以对游戏的若干选项进行自定义设置。如果勾选 `Random Map` 选项，则程序会随机生成大小在 16~25 之间的地图；否则，玩家可以手动输入地图大小，并在左侧地图中进行自定义编辑（在单元格中鼠标单击表示要塞，再单击表示障碍）。同时，玩家也可以自己输入 Bot 数量。除此之外，游戏也提供不同模式供玩家选择：
+
+| 模式 | 介绍 |
+| --- | --- |
+| Misty Veil | 默认模式，地图有战争迷雾（见「游戏规则简述」） |
+| Crystal Clear | 移除战争迷雾，地图所有玩家互相可见 |
+| Silent War | 移除游戏界面右边的排行榜与公告栏 |
+| Leap Frog | 玩家 A 占领玩家 B 基地时，A 的基地迁移至 B |
+
+点击 `Start Game` 按钮后，程序会根据玩家数量随机分配基地，游戏开始。
+
+<center> <img src = "./img/settingWindow.png" width = 60%> </center>
+
+### 游戏界面
+
+游戏界面的左侧为游戏地图，右侧分别是实时排行榜和公告栏，下方为可供鼠标点击的按钮：
+| 按钮 | 介绍 |
+| --- | --- |
+| Full/Half | 表示每次移动调动该格所有/一半兵力 |
+| Undo Move | 从移动序列中移除上一次移动 |
+| Clear Move | 清空移动序列 |
+| Surrender | 投降认输 |
+| Back to Map | 游戏结束后，返回设置界面 |
+| Replay | 游戏结束后，观看回放 |
+
+Misty Veil 模式
+
+<center> <img src = "./img/mistyVeil.png" width = 60%> </center>
+
+Crystal Clear 模式
+
+<center> <img src = "./img/crystalClear.png" width = 60%> </center>
+
+结算界面（Silent War 模式）
+
+<center> <img src = "./img/endWindow.png" width = 60%> </center>
+
+### 回放界面
+
+进入回放界面后，玩家可以通过自动/单步模式观看回放。
+
+<center> <img src = "./img/replayWindow.png" width = 60%> </center>
 
 ## 开发技术规划
 
@@ -95,5 +136,5 @@
 |  组员  | 分工 |
 | ----- |  - |
 | 王造时 | App 层、Common 层 |
-| 胡思远 | Window & View 层 |
+| 胡思远 | Window 层、View 层 |
 | 徐若禺 | Model 层、ViewModel 层 |
