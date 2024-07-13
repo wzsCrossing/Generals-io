@@ -327,15 +327,15 @@ bool GeneralsGameModel::moveToward(int playerID) {
 
             double dist = getDistance(x1, y1, i, j);
             if (map[i][j]->getType() == CAPITAL) {
-                dist = dist * 0.09;
+                dist = dist * 0.9;
             } else if (map[i][j]->getType() == CITY) {
                 if (map[i][j]->getOwner() != -1) {
-                    dist = dist * std::max(0.17, std::min(map[i][j]->getArmy() / (3.2 * maxArmy), 20.0));
+                    dist = dist * std::max(1.2, std::min(map[i][j]->getArmy() / (3.2 * maxArmy), 20.0));
                 } else {
                     dist = dist * 1.6;
                 }
             } else if (map[i][j]->getType() == BLANK && map[i][j]->getOwner() == -1) {
-                dist = dist * 4.3;
+                dist = dist * 2.5;
             }
             if (map[i][j]->getArmy() > maxArmy) {
                 dist = dist * (1.6 * map[i][j]->getArmy() / maxArmy);
