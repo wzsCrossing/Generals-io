@@ -8,8 +8,6 @@
 #include <QKeyEvent>
 #include <QTimer>
 #include "playbackpage.h"
-#include "MapInfo.h"
-#include "PlayerInfo.h"
 #define MaxSize 25
 
 namespace Ui {
@@ -30,8 +28,8 @@ public:
     void setRound(int round) {this->round = round;};
     void setMode(bool isVisible, bool isSilent);
     void Init();
-    PlaybackPage *playback;
     QTimer* getTimer();
+    PlaybackPage* getPlaybackPage();
     QString playerName;
 
 private:
@@ -43,6 +41,7 @@ private:
     bool half = false;
     bool isVisible;
     bool isSilent;
+    PlaybackPage *playback;
     Ui::GamePage *ui;
     std::shared_ptr<MapInfo> map;
     std::shared_ptr<QVector<std::shared_ptr<PlayerInfo>>> ranklist;

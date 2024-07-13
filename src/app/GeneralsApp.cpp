@@ -9,6 +9,7 @@ GeneralsApp::GeneralsApp() {
     mainWindow = new MainWindow();
     MapPage *mappage = mainWindow->getMapPage();
     GamePage *gamepage = mappage->getGamePage();
+    PlaybackPage *playback = gamepage->getPlaybackPage();
 
     connect(mappage, &MapPage::startGameRandom, viewModel, &GeneralsViewModel::startGameRandom);
     connect(mappage, &MapPage::startGame, viewModel, &GeneralsViewModel::startGame);
@@ -27,6 +28,7 @@ GeneralsApp::GeneralsApp() {
     connect(gamepage, &GamePage::gameEnded, viewModel, &GeneralsViewModel::endGame);
     connect(gamepage, &GamePage::undo, viewModel, &GeneralsViewModel::cancelMove);
     connect(gamepage, &GamePage::clearMove, viewModel, &GeneralsViewModel::clearMove);
+    connect(playback, &PlaybackPage::roundSignal, playback, [=](int round) {playback->changeMapInfo(viewModel->getPlaybackMapInfo(round));});
 }
 
 void GeneralsApp::show() const {
