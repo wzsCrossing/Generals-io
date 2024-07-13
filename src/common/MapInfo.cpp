@@ -62,12 +62,17 @@ MapInfo::MapInfo() {
     }
 }
 
-void MapInfo::importMap(const QString& fileName) {
+MapInfo::MapInfo(const MapInfo& other) {
+    width_ = other.width_;
+    height_ = other.height_;
 
-}
-
-void MapInfo::exportMap(const QString& fileName) {
-
+    map_.resize(height_);
+    for (int i = 0; i < height_; i++) {
+        map_[i].resize(width_);
+        for (int j = 0; j < width_; j++) {
+            map_[i][j] = new Cell(*(other.map_[i][j]));
+        }
+    }
 }
 
 static bool checkConnectivity(QVector<QVector<CellType>>& map, int width, int height) {

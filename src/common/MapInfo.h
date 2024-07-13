@@ -22,6 +22,7 @@ private:
 public:
     Cell() : type_(BLANK), owner_(-1), army_(0), isLighted_(false), direction_(-1) {}
     Cell(CellType type, int owner, int army) : type_(type), owner_(owner), army_(army), isLighted_(false), direction_(-1) {}
+    Cell(const Cell& other) : type_(other.type_), owner_(other.owner_), army_(other.army_), isLighted_(false), direction_(-1) {}
 
     CellType getType();
     int getOwner();
@@ -55,6 +56,8 @@ public:
             }
         }
     }
+    MapInfo(const MapInfo& other);
+
     ~MapInfo() {
         for (int i = 0; i < height_; i++) {
             for (int j = 0; j < width_; j++) {
@@ -63,8 +66,6 @@ public:
         }
     }
 
-    void importMap(const QString& fileName);
-    void exportMap(const QString& fileName);
     void generateRandomMap(int cityDense, int mountainDense);
     void capitalDistribution(int playerNum);
     void initMap();

@@ -10,6 +10,7 @@ class GeneralsGameModel {
 public:
     GeneralsGameModel();
     std::shared_ptr<MapInfo> getMapInfo() throw();
+    std::shared_ptr<MapInfo> getPlaybackMapInfo(int gameRound) throw();
     int getPlayerNum();
     QString getPlayerName();
     int getRound();
@@ -46,6 +47,7 @@ private:
 
     QString playerName;
     std::shared_ptr<MapInfo> playerMap;
+    QVector<std::shared_ptr<MapInfo>> playbackMaps;
     QVector<std::shared_ptr<PlayerInfo>> playerInfos; // 0: player, 1 ~ cntPlayer - 1: bots
     std::shared_ptr<QVector<std::shared_ptr<PlayerInfo>>> rankList;
 };

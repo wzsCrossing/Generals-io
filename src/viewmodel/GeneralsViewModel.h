@@ -18,6 +18,7 @@ public:
     std::shared_ptr<GeneralsGameModel> getModel() throw();
 
     std::shared_ptr<MapInfo> getMapInfo() throw();
+    std::shared_ptr<MapInfo> getPlaybackMapInfo(int gameRound) throw();
     QString getPlayerName();
     std::shared_ptr<QVector<std::shared_ptr<PlayerInfo>>> getRankList() throw();
 

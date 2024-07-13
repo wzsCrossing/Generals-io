@@ -7,6 +7,10 @@ std::shared_ptr<MapInfo> GeneralsGameModel::getMapInfo() throw() {
     return playerMap;
 }
 
+std::shared_ptr<MapInfo> GeneralsGameModel::getPlaybackMapInfo(int gameRound) throw() {
+    return playbackMaps[gameRound];
+}
+
 int GeneralsGameModel::getPlayerNum() {
     return cntPlayer;
 }
@@ -82,6 +86,9 @@ void GeneralsGameModel::startGame(int playerNum, bool mode) {
     initPlayers(playerNum);
     surrendered = false;
     gameStarted = true;
+
+    playbackMaps.clear();
+    playbackMaps.push_back(std::make_shared<MapInfo>(*playerMap));
 }
 
 void GeneralsGameModel::startGame(int playerNum, bool mode, std::shared_ptr<MapInfo> map) {
@@ -97,6 +104,9 @@ void GeneralsGameModel::startGame(int playerNum, bool mode, std::shared_ptr<MapI
     initPlayers(playerNum);
     surrendered = false;
     gameStarted = true;
+
+    playbackMaps.clear();
+    playbackMaps.push_back(std::make_shared<MapInfo>(*playerMap));
 }
 
 bool GeneralsGameModel::move(int playerID, int x, int y, Direction dir, bool half) {
@@ -113,6 +123,7 @@ void GeneralsGameModel::addRound() {
         playerMap->increaseCityArmy();
     }
     round++;
+    playbackMaps.push_back(std::make_shared<MapInfo>(*playerMap));
 }
 
 void GeneralsGameModel::execMove() {
