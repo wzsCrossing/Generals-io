@@ -7,8 +7,7 @@
 #include <QScopedPointer>
 #include <QKeyEvent>
 #include <QTimer>
-#include "MapInfo.h"
-#include "PlayerInfo.h"
+#include "playbackpage.h"
 #define MaxSize 25
 
 namespace Ui {
@@ -30,6 +29,7 @@ public:
     void setMode(bool isVisible, bool isSilent);
     void Init();
     QTimer* getTimer();
+    PlaybackPage* getPlaybackPage();
     QString playerName;
 
 private:
@@ -41,6 +41,7 @@ private:
     bool half = false;
     bool isVisible;
     bool isSilent;
+    PlaybackPage *playback;
     Ui::GamePage *ui;
     std::shared_ptr<MapInfo> map;
     std::shared_ptr<QVector<std::shared_ptr<PlayerInfo>>> ranklist;

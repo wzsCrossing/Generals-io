@@ -11,6 +11,7 @@ GamePage::GamePage(QWidget *parent)
     , focus_X(-1)
     , focus_Y(-1)
     , gameTimer(new QTimer(this))
+    , playback(new PlaybackPage)
 {
     ui->setupUi(this);
     this->setWindowTitle("Generals.io");
@@ -71,12 +72,27 @@ GamePage::GamePage(QWidget *parent)
         emit gameEnded();
     });
 
+    ui->playBack->setFont(font);
+    ui->playBack->setStyleSheet("QPushButton:hover{background:#81D4FA;}"\
+                                 "QPushButton:pressed{background:blue;}"\
+                                 "QPushButton{background: #029FFF; border-radius: 8px;}");
+    ui->playBack->setText("Replay");
+    connect(ui->playBack, &QPushButton::clicked, this, [=] {
+        gameTimer->stop();
+        playback->Init();
+        playback->show();
+    });
+
     this->hide();
 }
 
 void GamePage::setMode(bool isVisible, bool isSilent) {
     this->isSilent = isSilent;
     this->isVisible = isVisible;
+}
+
+PlaybackPage* GamePage::getPlaybackPage() {
+    return playback;
 }
 
 void GamePage::Init() {
@@ -99,6 +115,7 @@ void GamePage::Init() {
     gameTimer->start(500);
     ui->surrender->setDisabled(false);
     ui->backToMap->setDisabled(true);
+    ui->playBack->setDisabled(true);
     changeMapInfo();
 }
 
@@ -136,51 +153,51 @@ void GamePage::drawVisualMap(int i, int j, bool focus) {
     }
     if (focus) {
         switch (map->getCell(i, j)->getType()) {
-        case CellType::BLANK :
-            VisualMap[i][j]->setIcon(QIcon());
-            VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getArmy() > 0 ? map->getCell(i, j)->getOwner() : 8, "", true));
-            VisualMap[i][j]->setText((map->getCell(i, j)->getArmy() > 0 ? QString::number(map->getCell(i, j)->getArmy()) : "") + getDirection(map->getCell(i, j)->getDirection()));
-            break;
-        case CellType::CAPITAL :
-            VisualMap[i][j]->setIcon(QIcon());
-            VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner(), ":/General-Focus.png", false));
-            VisualMap[i][j]->setText((QString::number(map->getCell(i, j)->getArmy())) + getDirection(map->getCell(i, j)->getDirection()));
-            break;
-        case CellType::CITY :
-            VisualMap[i][j]->setIcon(QIcon());
-            VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner(), ":/City-Focus.png" , false));
-            VisualMap[i][j]->setText((QString::number(map->getCell(i, j)->getArmy())) + getDirection(map->getCell(i, j)->getDirection()));
-            break;
-        case CellType::MOUNTAIN :
-            VisualMap[i][j]->setIcon(QIcon(":/Mountain.png"));
-            VisualMap[i][j]->setIconSize(QSize(ButtonSize, ButtonSize));
-            VisualMap[i][j]->setStyleSheet("QPushButton {background: grey; border-radius: 0px; border: 3px solid black;}");
-            VisualMap[i][j]->setText("" + getDirection(map->getCell(i, j)->getDirection()));
-            break;
+            case CellType::BLANK :
+                VisualMap[i][j]->setIcon(QIcon());
+                VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getArmy() > 0 ? map->getCell(i, j)->getOwner() : 8, "", true));
+                VisualMap[i][j]->setText((map->getCell(i, j)->getArmy() > 0 ? QString::number(map->getCell(i, j)->getArmy()) : "") + getDirection(map->getCell(i, j)->getDirection()));
+                break;
+            case CellType::CAPITAL :
+                VisualMap[i][j]->setIcon(QIcon());
+                VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner(), ":/General-Focus.png", false));
+                VisualMap[i][j]->setText((QString::number(map->getCell(i, j)->getArmy())) + getDirection(map->getCell(i, j)->getDirection()));
+                break;
+            case CellType::CITY :
+                VisualMap[i][j]->setIcon(QIcon());
+                VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner(), ":/City-Focus.png" , false));
+                VisualMap[i][j]->setText((QString::number(map->getCell(i, j)->getArmy())) + getDirection(map->getCell(i, j)->getDirection()));
+                break;
+            case CellType::MOUNTAIN :
+                VisualMap[i][j]->setIcon(QIcon(":/Mountain.png"));
+                VisualMap[i][j]->setIconSize(QSize(ButtonSize, ButtonSize));
+                VisualMap[i][j]->setStyleSheet("QPushButton {background: grey; border-radius: 0px; border: 3px solid black;}");
+                VisualMap[i][j]->setText("" + getDirection(map->getCell(i, j)->getDirection()));
+                break;
         }
     } else {
         switch (map->getCell(i, j)->getType()) {
-        case CellType::BLANK :
-            VisualMap[i][j]->setIcon(QIcon());
-            VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getArmy() > 0 ? map->getCell(i, j)->getOwner() : 8, "", false));
-            VisualMap[i][j]->setText((map->getCell(i, j)->getArmy() > 0 ? QString::number(map->getCell(i, j)->getArmy()) : "") + getDirection(map->getCell(i, j)->getDirection()));
-            break;
-        case CellType::CAPITAL :
-            VisualMap[i][j]->setIcon(QIcon());
-            VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner(), ":/General.png", false));
-            VisualMap[i][j]->setText((QString::number(map->getCell(i, j)->getArmy())) + getDirection(map->getCell(i, j)->getDirection()));
-            break;
-        case CellType::CITY :
-            VisualMap[i][j]->setIcon(QIcon());
-            VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner(), ":/City.png", false));
-            VisualMap[i][j]->setText((QString::number(map->getCell(i, j)->getArmy())) + getDirection(map->getCell(i, j)->getDirection()));
-            break;
-        case CellType::MOUNTAIN :
-            VisualMap[i][j]->setIcon(QIcon(":/Mountain.png"));
-            VisualMap[i][j]->setIconSize(QSize(ButtonSize, ButtonSize));
-            VisualMap[i][j]->setStyleSheet("QPushButton {background: grey; border-radius: 0px; border: 1px solid black;}");
-            VisualMap[i][j]->setText("" + getDirection(map->getCell(i, j)->getDirection()));
-            break;
+            case CellType::BLANK :
+                VisualMap[i][j]->setIcon(QIcon());
+                VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getArmy() > 0 ? map->getCell(i, j)->getOwner() : 8, "", false));
+                VisualMap[i][j]->setText((map->getCell(i, j)->getArmy() > 0 ? QString::number(map->getCell(i, j)->getArmy()) : "") + getDirection(map->getCell(i, j)->getDirection()));
+                break;
+            case CellType::CAPITAL :
+                VisualMap[i][j]->setIcon(QIcon());
+                VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner(), ":/General.png", false));
+                VisualMap[i][j]->setText((QString::number(map->getCell(i, j)->getArmy())) + getDirection(map->getCell(i, j)->getDirection()));
+                break;
+            case CellType::CITY :
+                VisualMap[i][j]->setIcon(QIcon());
+                VisualMap[i][j]->setStyleSheet(getColor(map->getCell(i, j)->getOwner(), ":/City.png", false));
+                VisualMap[i][j]->setText((QString::number(map->getCell(i, j)->getArmy())) + getDirection(map->getCell(i, j)->getDirection()));
+                break;
+            case CellType::MOUNTAIN :
+                VisualMap[i][j]->setIcon(QIcon(":/Mountain.png"));
+                VisualMap[i][j]->setIconSize(QSize(ButtonSize, ButtonSize));
+                VisualMap[i][j]->setStyleSheet("QPushButton {background: grey; border-radius: 0px; border: 1px solid black;}");
+                VisualMap[i][j]->setText("" + getDirection(map->getCell(i, j)->getDirection()));
+                break;
         }
     }
 }
@@ -279,13 +296,21 @@ void GamePage::changeMapInfo() {
                 this->isVisible = true;
                 ui->surrender->setDisabled(true);
                 ui->backToMap->setDisabled(false);
+                ui->playBack->setDisabled(true);
                 QMessageBox::information(this, "You Lose", "You lose! You can click 'Back To Map' button to stop watching the rest of the game!");
             }
         }
     if (!(*ranklist)[1]->isAlive()) {
-        QMessageBox::information(this, "Game Ended", "Player " + (*ranklist)[0]->getNickName() + " wins!");
+        this->isVisible = true;
         gameTimer->stop();
-        emit gameEnded();
+        ui->surrender->setDisabled(true);
+        ui->backToMap->setDisabled(false);
+        ui->playBack->setDisabled(false);
+        for (int i = 0; i < height; i++)
+            for (int j = 0; j < width; j++)
+                drawVisualMap(i, j, false);
+        QMessageBox::information(this, "Game Ended", "Player " + (*ranklist)[0]->getNickName() + " wins!");
+        playback->setMaxRound(round);
     }
 }
 
@@ -374,7 +399,7 @@ void GamePage::paintEvent(QPaintEvent *event) {
     font.setBold(true);
     int Surrender_Button_Width = 140;
     int Surrender_Button_Height = 40;
-    int Surrender_Button_X = width * ButtonSize / 4 - Surrender_Button_Width / 2;
+    int Surrender_Button_X = width * ButtonSize / 6 - Surrender_Button_Width / 2;
     int Surrender_Button_Y = Half_Button_Y + Half_Button_Height + ButtonSize / 2;
     ui->surrender->setGeometry(Surrender_Button_X, Surrender_Button_Y, Surrender_Button_Width, Surrender_Button_Height);
 
@@ -385,9 +410,20 @@ void GamePage::paintEvent(QPaintEvent *event) {
     font.setBold(true);
     int Back_Button_Width = 180;
     int Back_Button_Height = 40;
-    int Back_Button_X = width * ButtonSize * 3 / 4 - Back_Button_Width / 2;
+    int Back_Button_X = width * ButtonSize * 3 / 6 - Back_Button_Width / 2;
     int Back_Button_Y = Half_Button_Y + Half_Button_Height + ButtonSize / 2;
     ui->backToMap->setGeometry(Back_Button_X, Back_Button_Y, Back_Button_Width, Back_Button_Height);
+
+    /*
+     * To construct playback button
+     */
+
+    font.setBold(true);
+    int Playback_Button_Width = 180;
+    int Playback_Button_Height = 40;
+    int Playback_Button_X = width * ButtonSize * 5 / 6 - Playback_Button_Width / 2;
+    int Playback_Button_Y = Half_Button_Y + Half_Button_Height + ButtonSize / 2;
+    ui->playBack->setGeometry(Playback_Button_X, Playback_Button_Y, Playback_Button_Width, Playback_Button_Height);
 
 
     /*
