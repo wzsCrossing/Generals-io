@@ -7,6 +7,10 @@ std::shared_ptr<MapInfo> GeneralsGameModel::getMapInfo() throw() {
     return playerMap;
 }
 
+std::shared_ptr<MapInfo> GeneralsGameModel::getPlaybackMapInfo(int gameRound) throw() {
+    return playbackMaps[gameRound];
+}
+
 int GeneralsGameModel::getPlayerNum() {
     return cntPlayer;
 }
@@ -82,6 +86,9 @@ void GeneralsGameModel::startGame(int playerNum, bool mode) {
     initPlayers(playerNum);
     surrendered = false;
     gameStarted = true;
+
+    playbackMaps.clear();
+    playbackMaps.push_back(std::make_shared<MapInfo>(*playerMap));
 }
 
 void GeneralsGameModel::startGame(int playerNum, bool mode, std::shared_ptr<MapInfo> map) {
@@ -97,6 +104,9 @@ void GeneralsGameModel::startGame(int playerNum, bool mode, std::shared_ptr<MapI
     initPlayers(playerNum);
     surrendered = false;
     gameStarted = true;
+
+    playbackMaps.clear();
+    playbackMaps.push_back(std::make_shared<MapInfo>(*playerMap));
 }
 
 bool GeneralsGameModel::move(int playerID, int x, int y, Direction dir, bool half) {
@@ -113,6 +123,7 @@ void GeneralsGameModel::addRound() {
         playerMap->increaseCityArmy();
     }
     round++;
+    playbackMaps.push_back(std::make_shared<MapInfo>(*playerMap));
 }
 
 void GeneralsGameModel::execMove() {
@@ -327,15 +338,15 @@ bool GeneralsGameModel::moveToward(int playerID) {
 
             double dist = getDistance(x1, y1, i, j);
             if (map[i][j]->getType() == CAPITAL) {
-                dist = dist * 0.09;
+                dist = dist * 0.9;
             } else if (map[i][j]->getType() == CITY) {
                 if (map[i][j]->getOwner() != -1) {
-                    dist = dist * std::max(0.17, std::min(map[i][j]->getArmy() / (3.2 * maxArmy), 20.0));
+                    dist = dist * std::max(1.2, std::min(map[i][j]->getArmy() / (3.2 * maxArmy), 20.0));
                 } else {
                     dist = dist * 1.6;
                 }
             } else if (map[i][j]->getType() == BLANK && map[i][j]->getOwner() == -1) {
-                dist = dist * 4.3;
+                dist = dist * 2.5;
             }
             if (map[i][j]->getArmy() > maxArmy) {
                 dist = dist * (1.6 * map[i][j]->getArmy() / maxArmy);

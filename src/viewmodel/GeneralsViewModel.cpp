@@ -15,6 +15,10 @@ std::shared_ptr<MapInfo> GeneralsViewModel::getMapInfo() throw() {
     return m_GeneralsModel->getMapInfo();
 }
 
+std::shared_ptr<MapInfo> GeneralsViewModel::getPlaybackMapInfo(int gameRound) throw() {
+    return m_GeneralsModel->getPlaybackMapInfo(gameRound);
+}
+
 QString GeneralsViewModel::getPlayerName() {
     return m_GeneralsModel->getPlayerName();
 }

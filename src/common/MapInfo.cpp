@@ -62,12 +62,17 @@ MapInfo::MapInfo() {
     }
 }
 
-void MapInfo::importMap(const QString& fileName) {
+MapInfo::MapInfo(const MapInfo& other) {
+    width_ = other.width_;
+    height_ = other.height_;
 
-}
-
-void MapInfo::exportMap(const QString& fileName) {
-
+    map_.resize(height_);
+    for (int i = 0; i < height_; i++) {
+        map_[i].resize(width_);
+        for (int j = 0; j < width_; j++) {
+            map_[i][j] = new Cell(*(other.map_[i][j]));
+        }
+    }
 }
 
 static bool checkConnectivity(QVector<QVector<CellType>>& map, int width, int height) {
@@ -111,7 +116,7 @@ static bool checkConnectivity(QVector<QVector<CellType>>& map, int width, int he
 void MapInfo::generateRandomMap(int cityDense, int mountainDense) {
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<> rnd(40, 55);
+    std::uniform_int_distribution<> rnd(20, 35);
 
     QVector<QVector<CellType>> map(height_);
     for (int i = 0; i < height_; i++) {
@@ -250,7 +255,7 @@ void MapInfo::increaseCityArmy() {
 void MapInfo::initMap() {
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<> rnd(40, 55);
+    std::uniform_int_distribution<> rnd(20, 35);
 
     for (int i = 0; i < height_; ++i) {
         for (int j = 0; j < width_; ++j) {
