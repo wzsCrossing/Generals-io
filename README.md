@@ -12,7 +12,7 @@
 
 本项目是对多人在线策略塔防游戏[将军棋](http://generals.io/)的复刻，玩家可以在本地自定义地图元素、玩家数量与游戏模式，并进行人机对战。游戏结束后，玩家还可以观看对局回放。
 
-<center> <img src = "/docs/img/init.png" width = 50%> </center>
+<center> <img src = "./docs/img/init.png" width = 50%> </center>
 
 ### 游戏规则简述
 
@@ -58,7 +58,7 @@
 
 在开始界面中，玩家可以输入自己的昵称，然后点击 `Ready` 按钮开始游戏。由于本项目并没有实现服务器联机对战，因此 `Server Address` 与 `Connect` 按钮并没有实际功能。
 
-<center> <img src = "./img/startWindow.png" width = 40%> </center>
+<center> <img src = "./docs/img/startWindow.png" width = 40%> </center>
 
 ### 游戏设置界面
 
@@ -73,7 +73,7 @@
 
 点击 `Start Game` 按钮后，程序会根据玩家数量随机分配基地，游戏开始。
 
-<center> <img src = "./img/settingWindow.png" width = 60%> </center>
+<center> <img src = "./docs/img/settingWindow.png" width = 60%> </center>
 
 ### 游戏界面
 
@@ -89,21 +89,21 @@
 
 Misty Veil 模式
 
-<center> <img src = "./img/mistyVeil.png" width = 60%> </center>
+<center> <img src = "./docs/img/mistyVeil.png" width = 60%> </center>
 
 Crystal Clear 模式
 
-<center> <img src = "./img/crystalClear.png" width = 60%> </center>
+<center> <img src = "./docs/img/crystalClear.png" width = 60%> </center>
 
 结算界面（Silent War 模式）
 
-<center> <img src = "./img/endWindow.png" width = 60%> </center>
+<center> <img src = "./docs/img/endWindow.png" width = 60%> </center>
 
 ### 回放界面
 
 进入回放界面后，玩家可以通过自动/单步模式观看回放。
 
-<center> <img src = "./img/replayWindow.png" width = 60%> </center>
+<center> <img src = "./docs/img/replayWindow.png" width = 60%> </center>
 
 ## 开发技术规划
 
