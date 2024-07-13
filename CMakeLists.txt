@@ -50,6 +50,9 @@ set(
     src/window/gamepage.cpp
     src/window/gamepage.h
     src/window/gamepage.ui
+    src/window/playbackpage.cpp
+    src/window/playbackpage.h
+    src/window/playbackpage.ui
 
     src/app/GeneralsApp.cpp
     src/app/GeneralsApp.h
@@ -60,7 +63,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 5)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         img/resources.qrc
-        src/window/playbackpage.h src/window/playbackpage.cpp src/window/playbackpage.ui
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Generals-io APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
