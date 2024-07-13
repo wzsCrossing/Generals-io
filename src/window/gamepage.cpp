@@ -43,6 +43,13 @@ GamePage::GamePage(QWidget *parent)
     ui->undo->setText("undo");
     connect(ui->undo, &QPushButton::clicked, this, [=] {emit undo();});
 
+    ui->clearMove->setFont(font);
+    ui->clearMove->setStyleSheet("QPushButton:hover{background:#81D4FA;}"\
+                            "QPushButton:pressed{background:blue;}"\
+                            "QPushButton{background: #029FFF; border-radius: 8px;}");
+    ui->clearMove->setText("ClearMove");
+    connect(ui->clearMove, &QPushButton::clicked, this, [=] {emit clearMove();});
+
     ui->surrender->setFont(font);
     ui->surrender->setStyleSheet("QPushButton:hover{background:#81D4FA;}"\
                                   "QPushButton:pressed{background:blue;}"\
@@ -87,6 +94,7 @@ void GamePage::Init() {
     ui->board->append("Press W/A/S/D to move up/left/down/right.");
     ui->board->append("Press P to change move mode(full/half)!");
     ui->board->append("Press U to undo your last move!");
+    ui->board->append("Press M to clear your move!");
     ui->board->append("Good luck to YOU!");
     gameTimer->start(500);
     ui->surrender->setDisabled(false);
@@ -333,7 +341,7 @@ void GamePage::paintEvent(QPaintEvent *event) {
     font.setBold(true);
     int Half_Button_Width = 80;
     int Half_Button_Height = 40;
-    int Half_Button_X = width * ButtonSize / 4 - Half_Button_Width / 2;
+    int Half_Button_X = width * ButtonSize / 6 - Half_Button_Width / 2;
     int Half_Button_Y = height * ButtonSize + ButtonSize / 2;
     ui->ChangeHalf->setGeometry(Half_Button_X, Half_Button_Y, Half_Button_Width, Half_Button_Height);
 
@@ -344,9 +352,20 @@ void GamePage::paintEvent(QPaintEvent *event) {
     font.setBold(true);
     int Undo_Button_Width = 80;
     int Undo_Button_Height = 40;
-    int Undo_Button_X = width * ButtonSize * 3 / 4 - Undo_Button_Width / 2;
+    int Undo_Button_X = width * ButtonSize * 3 / 6 - Undo_Button_Width / 2;
     int Undo_Button_Y = height * ButtonSize + ButtonSize / 2;
     ui->undo->setGeometry(Undo_Button_X, Undo_Button_Y, Undo_Button_Width, Undo_Button_Height);
+
+    /*
+     * To construct clearMove button
+     */
+
+    font.setBold(true);
+    int Clear_Button_Width = 160;
+    int Clear_Button_Height = 40;
+    int Clear_Button_X = width * ButtonSize * 5 / 6 - Clear_Button_Width / 2;
+    int Clear_Button_Y = height * ButtonSize + ButtonSize / 2;
+    ui->clearMove->setGeometry(Clear_Button_X, Clear_Button_Y, Clear_Button_Width, Clear_Button_Height);
 
     /*
      * To construct surrender button
@@ -418,6 +437,8 @@ void GamePage::keyPressEvent(QKeyEvent * event) {
         case Qt::Key_U:
             emit ui->undo->clicked();
             break;
+        case Qt::Key_M:
+            emit ui->clearMove->clicked();
     }
 }
 

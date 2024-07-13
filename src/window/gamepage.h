@@ -56,6 +56,7 @@ signals:
     void surrender();
     void gameEnded();
     void undo();
+    void clearMove();
 
 public slots:
     void changeMapInfo();
