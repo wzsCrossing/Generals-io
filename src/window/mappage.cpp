@@ -35,12 +35,14 @@ MapPage::MapPage(QWidget *parent)
             for (int j = 0; j < width; ++j) {
                 map->getCell(i, j)->setArmy(0);
                 map->getCell(i, j)->setOwner(-1);
-                if (map->getCell(i, j)->getType() == CAPITAL) {
-                    map->getCell(i, j)->setType(BLANK);
+                if (map->getCell(i, j)->getType() == CellType::CAPITAL) {
+                    map->getCell(i, j)->setType(CellType::BLANK);
                 }
             }
         }
-        this->show();gamepage->hide();
+        this->show();
+        gamepage->hide();
+        changeMap();
     });
 
     ui->heightInput->setText("25");
