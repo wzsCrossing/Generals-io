@@ -131,6 +131,9 @@ void GeneralsGameModel::execMove() {
             player->clearMoveList();
         }
     }
+    if (!playerInfos[0]->isAlive()) {
+        clearMove(0);
+    }
 }
 
 void GeneralsGameModel::changeOwner(int owner, int new_owner) {

@@ -46,7 +46,7 @@ void GeneralsViewModel::move(int x, int y, Direction dir, bool half) {
 
 void GeneralsViewModel::surrender() {
     m_GeneralsModel->surrender(0);
-    m_GeneralsModel->updateArrow();
+    clearMove();
 }
 
 void GeneralsViewModel::cancelMove() {
