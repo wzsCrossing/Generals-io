@@ -55,7 +55,8 @@ signals:
     void moveSignal(int x, int y, Direction dir, bool half);
     void surrender();
     void gameEnded();
-    //void backToMap();
+    void undo();
+    void clearMove();
 
 public slots:
     void changeMapInfo();

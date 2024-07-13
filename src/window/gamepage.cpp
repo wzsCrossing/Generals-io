@@ -36,6 +36,20 @@ GamePage::GamePage(QWidget *parent)
             else ui->ChangeHalf->setText("full");
     });
 
+    ui->undo->setFont(font);
+    ui->undo->setStyleSheet("QPushButton:hover{background:#81D4FA;}"\
+                                  "QPushButton:pressed{background:blue;}"\
+                                  "QPushButton{background: #029FFF; border-radius: 8px;}");
+    ui->undo->setText("undo");
+    connect(ui->undo, &QPushButton::clicked, this, [=] {emit undo();});
+
+    ui->clearMove->setFont(font);
+    ui->clearMove->setStyleSheet("QPushButton:hover{background:#81D4FA;}"\
+                            "QPushButton:pressed{background:blue;}"\
+                            "QPushButton{background: #029FFF; border-radius: 8px;}");
+    ui->clearMove->setText("ClearMove");
+    connect(ui->clearMove, &QPushButton::clicked, this, [=] {emit clearMove();});
+
     ui->surrender->setFont(font);
     ui->surrender->setStyleSheet("QPushButton:hover{background:#81D4FA;}"\
                                   "QPushButton:pressed{background:blue;}"\
@@ -79,6 +93,8 @@ void GamePage::Init() {
     ui->board->append("Welcome to Generals.io!");
     ui->board->append("Press W/A/S/D to move up/left/down/right.");
     ui->board->append("Press P to change move mode(full/half)!");
+    ui->board->append("Press U to undo your last move!");
+    ui->board->append("Press M to clear your move!");
     ui->board->append("Good luck to YOU!");
     gameTimer->start(500);
     ui->surrender->setDisabled(false);
@@ -109,10 +125,13 @@ void GamePage::drawVisualMap(int i, int j, bool focus) {
         if (map->getCell(i, j)->getType() == CellType::CITY || map->getCell(i, j)->getType() == CellType::MOUNTAIN) {
             VisualMap[i][j]->setIconSize(QSize(ButtonSize, ButtonSize));
             VisualMap[i][j]->setIcon(QIcon(":/Obstacle.png"));
+            VisualMap[i][j]->setText("");
         }
-        else VisualMap[i][j]->setIcon(QIcon());
+        else {
+            VisualMap[i][j]->setIcon(QIcon());
+            VisualMap[i][j]->setText("" + getDirection(map->getCell(i, j)->getDirection()));
+        }
         VisualMap[i][j]->setStyleSheet("QPushButton {background: #383838; border-radius: 0px; border: 1px solid black;}");
-        VisualMap[i][j]->setText("" + getDirection(map->getCell(i, j)->getDirection()));
         return;
     }
     if (focus) {
@@ -253,17 +272,16 @@ void GamePage::changeMapInfo() {
     for (int i = 0; i < height; i++)
         for (int j = 0; j < width; j++)
             drawVisualMap(i, j, false);
-    if (!isSilent) {
-        for (int i = 0; i < playerNum; i++)
-            if (round == 1 + (*ranklist)[i]->getLoseRound() && round != 0) {
-                ui->board->append("Oh no! Player " + (*ranklist)[i]->getNickName() + " dies!");
-                if ((*ranklist)[i]->getPlayerId() == 0) {
-                    this->isVisible = true;
-                    ui->backToMap->setDisabled(false);
-                    QMessageBox::information(this, "You Lose", "You lose! You can click 'Back To Map' button to stop watching the rest of the game!");
-                }
+    for (int i = 0; i < playerNum; i++)
+        if (round == 1 + (*ranklist)[i]->getLoseRound() && round != 0) {
+            if (!isSilent) ui->board->append("Oh no! Player " + (*ranklist)[i]->getNickName() + " dies!");
+            if ((*ranklist)[i]->getPlayerId() == 0) {
+                this->isVisible = true;
+                ui->surrender->setDisabled(true);
+                ui->backToMap->setDisabled(false);
+                QMessageBox::information(this, "You Lose", "You lose! You can click 'Back To Map' button to stop watching the rest of the game!");
             }
-    }
+        }
     if (!(*ranklist)[1]->isAlive()) {
         QMessageBox::information(this, "Game Ended", "Player " + (*ranklist)[0]->getNickName() + " wins!");
         gameTimer->stop();
@@ -323,9 +341,31 @@ void GamePage::paintEvent(QPaintEvent *event) {
     font.setBold(true);
     int Half_Button_Width = 80;
     int Half_Button_Height = 40;
-    int Half_Button_X = width * ButtonSize / 2 - Half_Button_Width / 2;
+    int Half_Button_X = width * ButtonSize / 6 - Half_Button_Width / 2;
     int Half_Button_Y = height * ButtonSize + ButtonSize / 2;
     ui->ChangeHalf->setGeometry(Half_Button_X, Half_Button_Y, Half_Button_Width, Half_Button_Height);
+
+    /*
+     * To construct undo button
+     */
+
+    font.setBold(true);
+    int Undo_Button_Width = 80;
+    int Undo_Button_Height = 40;
+    int Undo_Button_X = width * ButtonSize * 3 / 6 - Undo_Button_Width / 2;
+    int Undo_Button_Y = height * ButtonSize + ButtonSize / 2;
+    ui->undo->setGeometry(Undo_Button_X, Undo_Button_Y, Undo_Button_Width, Undo_Button_Height);
+
+    /*
+     * To construct clearMove button
+     */
+
+    font.setBold(true);
+    int Clear_Button_Width = 160;
+    int Clear_Button_Height = 40;
+    int Clear_Button_X = width * ButtonSize * 5 / 6 - Clear_Button_Width / 2;
+    int Clear_Button_Y = height * ButtonSize + ButtonSize / 2;
+    ui->clearMove->setGeometry(Clear_Button_X, Clear_Button_Y, Clear_Button_Width, Clear_Button_Height);
 
     /*
      * To construct surrender button
@@ -353,8 +393,8 @@ void GamePage::paintEvent(QPaintEvent *event) {
     /*
      * To construct ranking list
      */
+    ui->rankinglist->move(this->size().rwidth() - ui->rankinglist->size().rwidth(), 0);
     if (!isSilent) {
-        ui->rankinglist->move(this->size().rwidth() - ui->rankinglist->size().rwidth(), 0);
         QTableWidget *UR = ui->rankinglist;
         for (int i = 2; i < playerNum + 2; i++) {
             UR->item(i, 0)->setBackground(getBrush((*ranklist)[i - 2]->getPlayerId()));
@@ -394,6 +434,11 @@ void GamePage::keyPressEvent(QKeyEvent * event) {
         case Qt::Key_P:
             emit ui->ChangeHalf->clicked();
             break;
+        case Qt::Key_U:
+            emit ui->undo->clicked();
+            break;
+        case Qt::Key_M:
+            emit ui->clearMove->clicked();
     }
 }
 

@@ -73,7 +73,7 @@ bool PlayerInfo::hasMove() {
 }
 
 void PlayerInfo::cancelMove() {
-    moveList_.pop_back();
+    if (hasMove()) moveList_.pop_back();
 }
 
 void PlayerInfo::clearMoveList() {

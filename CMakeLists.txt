@@ -47,9 +47,6 @@ set(
     src/window/mappage.cpp
     src/window/mappage.h
     src/window/mappage.ui
-    src/window/settingpage.cpp
-    src/window/settingpage.h
-    src/window/settingpage.ui
     src/window/gamepage.cpp
     src/window/gamepage.h
     src/window/gamepage.ui
@@ -63,6 +60,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 5)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         img/resources.qrc
+        src/window/playbackpage.h src/window/playbackpage.cpp src/window/playbackpage.ui
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Generals-io APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
