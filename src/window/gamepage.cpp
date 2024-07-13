@@ -11,6 +11,7 @@ GamePage::GamePage(QWidget *parent)
     , focus_X(-1)
     , focus_Y(-1)
     , gameTimer(new QTimer(this))
+    , playback(new PlaybackPage)
 {
     ui->setupUi(this);
     this->setWindowTitle("Generals.io");
@@ -71,6 +72,16 @@ GamePage::GamePage(QWidget *parent)
         emit gameEnded();
     });
 
+    ui->playBack->setFont(font);
+    ui->playBack->setStyleSheet("QPushButton:hover{background:#81D4FA;}"\
+                                 "QPushButton:pressed{background:blue;}"\
+                                 "QPushButton{background: #029FFF; border-radius: 8px;}");
+    ui->playBack->setText("Playback");
+    connect(ui->playBack, &QPushButton::clicked, this, [=] {
+        gameTimer->stop();
+        playback->show();
+    });
+
     this->hide();
 }
 
@@ -99,6 +110,7 @@ void GamePage::Init() {
     gameTimer->start(500);
     ui->surrender->setDisabled(false);
     ui->backToMap->setDisabled(true);
+    ui->playBack->setDisabled(true);
     changeMapInfo();
 }
 
@@ -279,13 +291,20 @@ void GamePage::changeMapInfo() {
                 this->isVisible = true;
                 ui->surrender->setDisabled(true);
                 ui->backToMap->setDisabled(false);
+                ui->playBack->setDisabled(true);
                 QMessageBox::information(this, "You Lose", "You lose! You can click 'Back To Map' button to stop watching the rest of the game!");
             }
         }
     if (!(*ranklist)[1]->isAlive()) {
-        QMessageBox::information(this, "Game Ended", "Player " + (*ranklist)[0]->getNickName() + " wins!");
+        this->isVisible = true;
         gameTimer->stop();
-        emit gameEnded();
+        ui->surrender->setDisabled(true);
+        ui->backToMap->setDisabled(false);
+        ui->playBack->setDisabled(false);
+        for (int i = 0; i < height; i++)
+            for (int j = 0; j < width; j++)
+                drawVisualMap(i, j, false);
+        QMessageBox::information(this, "Game Ended", "Player " + (*ranklist)[0]->getNickName() + " wins!");
     }
 }
 
@@ -374,7 +393,7 @@ void GamePage::paintEvent(QPaintEvent *event) {
     font.setBold(true);
     int Surrender_Button_Width = 140;
     int Surrender_Button_Height = 40;
-    int Surrender_Button_X = width * ButtonSize / 4 - Surrender_Button_Width / 2;
+    int Surrender_Button_X = width * ButtonSize / 6 - Surrender_Button_Width / 2;
     int Surrender_Button_Y = Half_Button_Y + Half_Button_Height + ButtonSize / 2;
     ui->surrender->setGeometry(Surrender_Button_X, Surrender_Button_Y, Surrender_Button_Width, Surrender_Button_Height);
 
@@ -385,9 +404,20 @@ void GamePage::paintEvent(QPaintEvent *event) {
     font.setBold(true);
     int Back_Button_Width = 180;
     int Back_Button_Height = 40;
-    int Back_Button_X = width * ButtonSize * 3 / 4 - Back_Button_Width / 2;
+    int Back_Button_X = width * ButtonSize * 3 / 6 - Back_Button_Width / 2;
     int Back_Button_Y = Half_Button_Y + Half_Button_Height + ButtonSize / 2;
     ui->backToMap->setGeometry(Back_Button_X, Back_Button_Y, Back_Button_Width, Back_Button_Height);
+
+    /*
+     * To construct playback button
+     */
+
+    font.setBold(true);
+    int Playback_Button_Width = 180;
+    int Playback_Button_Height = 40;
+    int Playback_Button_X = width * ButtonSize * 5 / 6 - Playback_Button_Width / 2;
+    int Playback_Button_Y = Half_Button_Y + Half_Button_Height + ButtonSize / 2;
+    ui->playBack->setGeometry(Playback_Button_X, Playback_Button_Y, Playback_Button_Width, Playback_Button_Height);
 
 
     /*

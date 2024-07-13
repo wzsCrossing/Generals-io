@@ -17,6 +17,7 @@ public:
 
 private:
     Ui::PlaybackPage *ui;
+    void paintEvent(QPaintEvent *event);
 };
 
 #endif // PLAYBACKPAGE_H

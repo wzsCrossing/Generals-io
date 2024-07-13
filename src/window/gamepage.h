@@ -7,6 +7,7 @@
 #include <QScopedPointer>
 #include <QKeyEvent>
 #include <QTimer>
+#include "playbackpage.h"
 #include "MapInfo.h"
 #include "PlayerInfo.h"
 #define MaxSize 25
@@ -29,6 +30,7 @@ public:
     void setRound(int round) {this->round = round;};
     void setMode(bool isVisible, bool isSilent);
     void Init();
+    PlaybackPage *playback;
     QTimer* getTimer();
     QString playerName;
 

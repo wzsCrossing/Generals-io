@@ -18,7 +18,8 @@ MapPage::MapPage(QWidget *parent)
     pal.setColor(QPalette::Window, QColor(QColor::fromRgb(36, 36, 36)));
     this->setPalette(pal);
 
-    connect(ui->StartGame, &QPushButton::clicked, this, [=] {this->hide();
+    connect(ui->StartGame, &QPushButton::clicked, this, [=] {
+        this->hide();
         if (ui->isRandom->isChecked()) emit startGameRandom(ui->playerNumberInput->text().toInt(), ui->isFrog->isChecked());
         else {
             map->setHeight(height);
